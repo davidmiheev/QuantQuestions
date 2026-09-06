@@ -1,0 +1,2549 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,enumitem}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage[hidelinks]{hyperref}
+
+\usetikzlibrary{arrows.meta,positioning}
+\pgfplotsset{compat=1.18}
+
+\setmainfont{TeX Gyre Pagella}
+\setmathfont{TeX Gyre Pagella Math}
+
+\setlist[itemize]{leftmargin=*, itemsep=2pt, topsep=4pt}
+\setlist[enumerate]{leftmargin=*, itemsep=2pt, topsep=4pt}
+
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Corr}{\operatorname{Corr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\trace}{\operatorname{tr}}
+
+\title{\textbf{Comprehensive Quant Interview Guide}}
+\author{}
+\date{XeLaTeX Edition}
+
+\begin{document}
+\maketitle
+
+This document is a compact but rigorous interview companion. Each section contains the definitions and formulas that are most often used in quant interviews, followed by worked examples with complete solutions. The emphasis is on tools that recur in trading, research, and mathematical finance interviews: linear algebra, analysis, combinatorics, and probability.
+
+\tableofcontents
+\newpage
+
+\section{Linear Algebra}
+Quant interviews use linear algebra for covariance matrices, regressions, factor models, optimization, and stability questions. The focus is usually on structure: what a matrix or operator can and cannot do.
+
+\subsection{Systems, Rank, Determinants, and Inverses}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A \emph{permutation} of $\{1,\dots,n\}$ is a bijection $\sigma$. Its sign is $\sgn(\sigma)=(-1)^{\mathrm{inv}(\sigma)}$, where $\mathrm{inv}(\sigma)$ is the number of inversions. Every permutation decomposes into disjoint cycles and also into a product of transpositions. These signs are exactly the coefficients that appear in determinant expansions.
+    \item A complex number has Cartesian and polar forms
+    \[
+        z=x+iy=r(\cos\theta+i\sin\theta)=re^{i\theta}, \qquad |z|=\sqrt{x^2+y^2}.
+    \]
+    De Moivre's formula gives $(re^{i\theta})^n=r^n e^{in\theta}$, and the $n$th roots of unity are $e^{2\pi i k/n}$ for $k=0,\dots,n-1$. These facts are useful whenever eigenvalues or characteristic roots are complex.
+    \item A linear system is written $Ax=b$. It is consistent if and only if
+    \[
+        \rank(A)=\rank([A\mid b]).
+    \]
+    If this common rank equals the number of unknowns, the solution is unique. Otherwise,
+    \[
+        x=x_p+x_h,
+    \]
+    where $x_p$ is one particular solution and $x_h$ runs over the nullspace of $A$. Rank counts the number of independent constraints, so free variables appear exactly when the rank is too small.
+    \item Elementary row operations preserve the solution set of a system, and Gaussian elimination reduces a system to echelon form. In practice this is the fastest way to detect pivots, free variables, and inconsistency.
+    \item For an invertible square matrix,
+    \[
+        A^{-1}=\frac{1}{\det(A)}\operatorname{adj}(A), \qquad \det(AB)=\det(A)\det(B).
+    \]
+    Also, $A$ is invertible if and only if $\det(A)\neq 0$. Invertibility means every right-hand side $b$ has a unique solution to $Ax=b$.
+    \item The determinant is multilinear in rows (or columns), alternates under row swaps, and measures signed volume. A zero determinant signals linear dependence of rows or columns.
+    \item A useful rank inequality is
+    \[
+        \rank(AB) \le \min\{\rank(A),\rank(B)\}.
+    \]
+    Composition cannot create more independent directions than either map already had.
+    \item Iterative solvers appear in numerical interviews. Writing $A=D+L+U$ gives the Jacobi iteration
+    \[
+        x^{(k+1)} = D^{-1}(b-(L+U)x^{(k)}),
+    \]
+    and Gauss--Seidel iteration
+    \[
+        x^{(k+1)} = (D+L)^{-1}(b-Ux^{(k)}).
+    \]
+    A sufficient condition for convergence is strict diagonal dominance. These methods trade exact elimination for repeated cheap updates.
+\end{itemize}
+
+\begin{example}[Consistency and general solution]
+Solve the system
+\[
+\begin{aligned}
+x+y+z&=1,\\
+2x+2y+2z&=2,\\
+x-y&=0.
+\end{aligned}
+\]
+Determine whether the solution is unique.
+\end{example}
+
+\begin{proof}[Solution]
+The second equation is just twice the first, so it contributes no new information. The third equation gives $x=y$. Substituting into the first equation yields
+\[
+2x+z=1.
+\]
+Let $z=t$. Then
+\[
+x=y=\frac{1-t}{2}, \qquad z=t.
+\]
+Therefore the solution set is
+\[
+\left\{\left(\frac{1-t}{2},\frac{1-t}{2},t\right): t\in\R\right\}.
+\]
+This matches the rank test: $\rank(A)=\rank([A\mid b])=2<3$, so the system is consistent but has infinitely many solutions.
+\end{proof}
+
+\subsection{Vector Spaces and Linear Maps}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A set $V$ is a vector space if it is closed under addition and scalar multiplication. A \emph{basis} is a linearly independent spanning set. The number of basis vectors is $\dim(V)$. A basis is the coordinate system intrinsic to the space.
+    \item For subspaces $U,V\subseteq \R^n$,
+    \[
+        \dim(U+V)=\dim(U)+\dim(V)-\dim(U\cap V).
+    \]
+    If $U\cap V=\{0\}$, then $U\oplus V$ is a direct sum and $\dim(U\oplus V)=\dim(U)+\dim(V)$. The overlap must be subtracted because it would otherwise be counted twice.
+    \item If $L:V\to W$ is linear, then
+    \[
+        \ker(L)=\{v\in V:L(v)=0\}, \qquad \operatorname{im}(L)=\{L(v):v\in V\},
+    \]
+    and the rank--nullity theorem says
+    \[
+        \dim(\ker L)+\dim(\operatorname{im}L)=\dim(V).
+    \]
+    The kernel measures directions lost by the map, while the image measures directions that survive.
+    \item If $C$ is the change-of-basis matrix from the new basis to the old one, then the matrix of an operator changes by similarity:
+    \[
+        A_{\text{new}}=C^{-1}A_{\text{old}}C.
+    \]
+    Similar matrices represent the same linear transformation in different coordinates.
+    \item In regression and least squares,
+    \[
+        \min_x \|Ax-b\|_2^2
+        \quad \Longrightarrow \quad
+        A^TAx=A^Tb.
+    \]
+    The normal equations say that the residual $b-Ax$ must be orthogonal to the column space of $A$.
+\end{itemize}
+
+\begin{example}[Dimension of a constrained symmetric matrix space]
+Let subspaces $V,U\subseteq \R^4$ be defined by
+\[
+V=\Span\{v_1,v_2,v_3\}, \qquad U=\{y\in\R^4:Ty=0\},
+\]
+where
+\[
+v_1=(3,-2,2,1)^T,\qquad
+v_2=(-1,2,-2,3)^T,\qquad
+v_3=(3,-3,-1,2)^T,
+\]
+and
+\[
+T=(2,-1,-3,-2).
+\]
+Define
+\[
+F=\left\{A\in M_4(\R): \text{every column of }A\text{ lies in }V,\ \text{every row of }A\text{ lies in }U\right\}.
+\]
+Find
+\[
+W=\{A\in M_4(\R): A=A^T,\ A\in F\}.
+\]
+Write an integer as the answer, or $-1$ if the set is not a linear space.
+\end{example}
+
+\begin{proof}[Solution]
+The set $W$ is a linear subspace because symmetry and the row/column constraints are all linear conditions.
+
+First compute the dimension of $V\cap U$.
+\begin{itemize}
+    \item The vectors $v_1,v_2,v_3$ are linearly independent, so $\dim(V)=3$.
+    \item Since $U=\ker(T)$ with $T\neq 0$, we have $\dim(U)=3$.
+    \item Now
+    \[
+        Tv_2 = 2(-1)-2+6-6 = -4 \neq 0,
+    \]
+    so $v_2\notin U$. Therefore $V$ is not contained in $U$, hence $V+U=\R^4$.
+\end{itemize}
+Therefore,
+\[
+\dim(V\cap U)=\dim(V)+\dim(U)-\dim(V+U)=3+3-4=2.
+\]
+Set $I=V\cap U$, so $\dim(I)=2$.
+
+Now let $A\in W$. Since the columns of $A$ lie in $V$ and $A=A^T$, each row is the transpose of a column. Because each row lies in $U$, each column also lies in $U$. Thus every column of $A$ lies in $I=V\cap U$. So the image of $A$ is contained in the two-dimensional space $I$.
+
+Because $A$ is symmetric, in an orthonormal basis adapted to the decomposition
+\[
+\R^4 = I \oplus I^\perp,
+\]
+the matrix of $A$ has block form
+\[
+\begin{pmatrix}
+B & 0 \\
+0 & 0
+\end{pmatrix},
+\]
+where $B$ is a symmetric $2\times 2$ real matrix. The space of symmetric $2\times 2$ matrices has dimension
+\[
+\frac{2(2+1)}{2}=3.
+\]
+Hence
+\[
+\boxed{\dim(W)=3}.
+\]
+\end{proof}
+
+\begin{example}[Least-squares solution via normal equations]
+Find the least-squares solution of
+\[
+A x \approx b,
+\qquad
+A=
+\begin{pmatrix}
+1&1\\
+1&-1\\
+1&0
+\end{pmatrix},
+\qquad
+b=
+\begin{pmatrix}
+1\\
+0\\
+2
+\end{pmatrix}.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+The least-squares solution satisfies the normal equations
+\[
+A^TAx=A^Tb.
+\]
+Compute
+\[
+A^TA=
+\begin{pmatrix}
+3&0\\
+0&2
+\end{pmatrix},
+\qquad
+A^Tb=
+\begin{pmatrix}
+3\\
+1
+\end{pmatrix}.
+\]
+Therefore
+\[
+\begin{pmatrix}
+3&0\\
+0&2
+\end{pmatrix}
+\begin{pmatrix}
+x_1\\
+x_2
+\end{pmatrix}
+=
+\begin{pmatrix}
+3\\
+1
+\end{pmatrix},
+\]
+so
+\[
+x_1=1,
+\qquad
+x_2=\frac12.
+\]
+Hence the least-squares solution is
+\[
+\boxed{x^*=\begin{pmatrix}1\\[2pt] \frac12\end{pmatrix}}.
+\]
+Indeed,
+\[
+Ax^*=
+\begin{pmatrix}
+3/2\\
+1/2\\
+1
+\end{pmatrix},
+\qquad
+r=b-Ax^*=
+\begin{pmatrix}
+-1/2\\
+-1/2\\
+1
+\end{pmatrix},
+\]
+and one checks that $r$ is orthogonal to both columns of $A$, as it should be.
+\end{proof}
+
+\subsection{Eigenvalues, Jordan Form, and Singular Value Decomposition}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A scalar $\lambda$ is an eigenvalue of $A$ if there exists $v\neq 0$ such that $Av=\lambda v$. The eigenspace is $E_\lambda=\ker(A-\lambda I)$. Eigenvectors are directions whose orientation is preserved by the transformation.
+    \item The characteristic polynomial is $p_A(\lambda)=\det(\lambda I-A)$. The Hamilton--Cayley theorem states that $p_A(A)=0$. This lets you reduce high powers of a matrix to lower ones.
+    \item For an $n\times n$ matrix, the sum of eigenvalues counted with algebraic multiplicity is $\trace(A)$ and the product is $\det(A)$. These are quick consistency checks when you compute a spectrum.
+    \item A matrix is diagonalizable if and only if for every eigenvalue, algebraic multiplicity equals geometric multiplicity. Equivalently, the space has a full basis of eigenvectors.
+    \item In particular, if the characteristic polynomial splits and has distinct roots, the matrix is automatically diagonalizable. Distinct eigenvalues automatically give linearly independent eigenvectors.
+    \item A nilpotent operator satisfies $N^k=0$ for some $k$. Its Jordan form is a direct sum of Jordan blocks with zero diagonal. Nilpotent parts measure failure of diagonalizability.
+    \item If $N$ is nilpotent on an $n$-dimensional space, then its only eigenvalue is $0$ and its characteristic polynomial is $\lambda^n$. Repeated application eventually kills every vector.
+    \item The singular value decomposition is
+    \[
+        A=U\Sigma V^T,
+    \]
+    where $U,V$ are orthogonal and $\Sigma$ is diagonal with nonnegative entries $\sigma_i=\sqrt{\lambda_i(A^TA)}$. The SVD separates input directions, stretching factors, and output directions.
+    \item The singular values measure the principal stretching factors of the linear map $x\mapsto Ax$. The rank of $A$ equals the number of nonzero singular values. For rectangular matrices they play the role that absolute eigenvalues play for symmetric matrices.
+    \item If $A$ is real symmetric, then the spectral theorem gives
+    \[
+        A=Q\Lambda Q^T,
+    \]
+    where $Q$ is orthogonal and $\Lambda$ is diagonal with real eigenvalues. Symmetric matrices therefore act like independent scalar multipliers along orthogonal directions.
+    \item The Frobenius norm is
+    \[
+        \|A\|_F=\sqrt{\trace(A^TA)}=\left(\sum_{i,j} a_{ij}^2\right)^{1/2}=\left(\sum_i \sigma_i^2\right)^{1/2}.
+    \]
+    It is the Euclidean norm of the matrix entries viewed as one long vector, and it is the natural norm for entrywise least-squares error.
+    \item The best rank-$k$ approximation in Frobenius norm is obtained by truncating the SVD:
+    \[
+        A_k=\sum_{i=1}^k \sigma_i u_i v_i^T.
+    \]
+    Keeping the largest singular values preserves the most important directions of variation.
+\end{itemize}
+
+\begin{example}[Using Hamilton--Cayley to compute powers]
+Let
+\[
+A=\begin{pmatrix}2&1\\0&2\end{pmatrix}.
+\]
+Find a formula for $A^n$.
+\end{example}
+
+\begin{proof}[Solution]
+Write
+\[
+A=2I+N, \qquad N=\begin{pmatrix}0&1\\0&0\end{pmatrix}, \qquad N^2=0.
+\]
+Because $N^2=0$, the binomial expansion truncates:
+\[
+A^n=(2I+N)^n=\sum_{k=0}^n \binom{n}{k}2^{n-k}N^k = 2^n I + n2^{n-1}N.
+\]
+Hence
+\[
+A^n=
+\begin{pmatrix}
+2^n & n2^{n-1} \\
+0 & 2^n
+\end{pmatrix}.
+\]
+This is exactly what Hamilton--Cayley predicts, since the characteristic polynomial is $(\lambda-2)^2$ and therefore $(A-2I)^2=0$.
+\end{proof}
+
+\begin{example}[Singular values of a rank-one matrix]
+Let
+\[
+A=\begin{pmatrix}3&0\\4&0\end{pmatrix}.
+\]
+Find the singular values of $A$ and write down one SVD.
+\end{example}
+
+\begin{proof}[Solution]
+Compute
+\[
+A^TA=\begin{pmatrix}25&0\\0&0\end{pmatrix}.
+\]
+Its eigenvalues are $25$ and $0$, so the singular values are
+\[
+\sigma_1=5, \qquad \sigma_2=0.
+\]
+Take
+\[
+v_1=\begin{pmatrix}1\\0\end{pmatrix}, \qquad v_2=\begin{pmatrix}0\\1\end{pmatrix}.
+\]
+Then
+\[
+u_1=\frac{Av_1}{\|Av_1\|}=\frac{1}{5}\begin{pmatrix}3\\4\end{pmatrix}=
+\begin{pmatrix}3/5\\4/5\end{pmatrix}.
+\]
+Choose an orthonormal vector perpendicular to $u_1$, for example
+\[
+u_2=\begin{pmatrix}-4/5\\3/5\end{pmatrix}.
+\]
+Therefore one valid SVD is
+\[
+U=\begin{pmatrix}3/5&-4/5\\4/5&3/5\end{pmatrix},
+\qquad
+\Sigma=\begin{pmatrix}5&0\\0&0\end{pmatrix},
+\qquad
+V=I.
+\]
+So
+\[
+\boxed{A=U\Sigma V^T}
+\]
+with singular values $5$ and $0$.
+\end{proof}
+
+\subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A bilinear form on $\R^n$ is a map $B(x,y)=x^TAy$ that is linear in each argument. If $A=A^T$, then the associated quadratic form is $Q(x)=x^TAx$. The quadratic form records what the bilinear form does when both inputs are the same vector.
+    \item Over $\R$, a symmetric bilinear form and its quadratic form determine each other through the polarization identity
+    \[
+        B(x,y)=\frac12\bigl(Q(x+y)-Q(x)-Q(y)\bigr).
+    \]
+    This is the precise connection between bilinear and quadratic viewpoints.
+    \item Under a change of basis with matrix $C$, the matrix of a bilinear form transforms by congruence:
+    \[
+        A_{\text{new}} = C^T A_{\text{old}} C.
+    \]
+    Congruence is the correct notion because both inputs of the form are being re-expressed in the new coordinates.
+    \item A symmetric matrix is positive definite if $x^TAx>0$ for all $x\neq 0$. Sylvester's criterion says this holds if and only if all leading principal minors are positive. Positive definiteness means the quadratic form behaves like a genuine squared length.
+    \item In Euclidean space,
+    \[
+        |\langle u,v\rangle|\le \|u\|\,\|v\|,
+    \]
+    and if $G=(\langle v_i,v_j\rangle)$ is the Gram matrix, then the squared volume of the parallelotope spanned by $v_1,\dots,v_k$ is $\det(G)$. The Gram matrix packages all pairwise inner products at once.
+    \item Gram--Schmidt orthogonalization turns a basis into an orthogonal basis. Orthogonal projections onto $\Span\{q_1,\dots,q_k\}$ are computed by
+    \[
+        P=Q(Q^TQ)^{-1}Q^T,
+    \]
+    where $Q=[q_1\ \cdots\ q_k]$. Orthogonal coordinates simplify both geometry and computation.
+    \item In complex vector spaces, Hermitian matrices satisfy $A=A^*$ and have real eigenvalues with orthonormal eigenvectors. They are the complex analog of real symmetric matrices.
+\end{itemize}
+
+\begin{example}[Why $A^TA$ is always positive semidefinite]
+Prove that for every real matrix $A$, the matrix $A^TA$ is positive semidefinite.
+\end{example}
+
+\begin{proof}[Solution]
+Take any vector $x\in\R^n$. Then
+\[
+x^T A^T A x = (Ax)^T(Ax)=\|Ax\|_2^2 \ge 0.
+\]
+Therefore $x^TA^TAx\ge 0$ for all $x$, which is exactly the definition of positive semidefinite. Equality holds if and only if $Ax=0$.
+\end{proof}
+
+\begin{example}[A bilinear-form matrix that is similar to an idempotent]
+Let $Q:V\times W\to \R$ be a bilinear map. In bases $\alpha$ of $V$ and $\beta$ of $W$, write
+\[
+Q(v,w)=v_{\alpha}^T Q_{\alpha,\beta} w_{\beta}.
+\]
+Now regard $Q_{\alpha,\beta}$ as the matrix of a linear operator on a $4$-dimensional real space. Suppose that in some other basis this operator has matrix $B$ satisfying
+\[
+B^2=B.
+\]
+It is also known that in some pair of bases $\omega,\gamma$ for the bilinear map,
+\[
+Q_{\omega,\gamma}=
+\begin{pmatrix}
+2&0&2&3\\
+0&0&0&2\\
+4&0&4&5\\
+2&0&2&2
+\end{pmatrix}.
+\]
+Find the maximum and minimum possible dimensions of an eigenspace of this operator.
+\end{example}
+
+\begin{proof}[Solution]
+For a bilinear map, changing the basis in $V$ and the basis in $W$ acts by left and right multiplication with invertible matrices:
+\[
+Q_{\omega,\gamma}=C^T Q_{\alpha,\beta} D.
+\]
+Therefore the rank of the matrix is invariant under such changes of bases.
+
+Now inspect the given matrix
+\[
+M=
+\begin{pmatrix}
+2&0&2&3\\
+0&0&0&2\\
+4&0&4&5\\
+2&0&2&2
+\end{pmatrix}.
+\]
+Its second column is zero and its third column equals its first column, so $\rank(M)\le 2$. On the other hand, the first and fourth columns are linearly independent, so $\rank(M)=2$. Hence
+\[
+\rank(Q_{\alpha,\beta})=2.
+\]
+
+Now switch to the operator point of view. The matrix $Q_{\alpha,\beta}$ is similar to $B$, and similarity preserves rank, so
+\[
+\rank(B)=2.
+\]
+Because $B^2=B$, the operator is idempotent. For any idempotent operator $T$,
+\[
+\operatorname{im}(T)=E_1(T), \qquad \ker(T)=E_0(T).
+\]
+Indeed, if $y=Tx$, then $Ty=T^2x=Tx=y$, so every vector in the image is a $1$-eigenvector. Conversely, if $Ty=y$, then $y=Tx$ with $x=y$, so $y\in \operatorname{im}(T)$. The kernel is exactly the eigenspace for eigenvalue $0$.
+
+Therefore for $B$ we get
+\[
+\dim E_1(B)=\rank(B)=2,
+\qquad
+\dim E_0(B)=4-\rank(B)=2.
+\]
+So both eigenspaces have the same dimension. Hence the maximum and minimum possible dimensions of an eigenspace are both
+\[
+\boxed{2}.
+\]
+
+Equivalently, the only possible answer is
+\[
+\boxed{\min=\max=2}.
+\]
+\end{proof}
+
+\begin{example}[Matrix-valued quadratic form induced by a positive definite matrix]
+Let $A\in \R^{n\times n}$ be symmetric positive definite. Define
+\[
+q(X)=\trace(X^TAX), \qquad X\in \R^{n\times m}.
+\]
+Is $q$ a positive definite quadratic form on the vector space $\R^{n\times m}$?
+\end{example}
+
+\begin{proof}[Solution]
+Yes. The expression is quadratic because for any scalar $c$,
+\[
+q(cX)=\trace((cX)^TA(cX))=c^2\trace(X^TAX)=c^2 q(X).
+\]
+The associated bilinear form is
+\[
+B(X,Y)=\trace(X^TAY),
+\]
+since, using the symmetry of $A$,
+\[
+q(X+Y)=q(X)+q(Y)+2\trace(X^TAY).
+\]
+
+To check positive definiteness, write the columns of $X$ as
+\[
+X=[x_1\ \cdots\ x_m].
+\]
+Then
+\[
+q(X)=\trace(X^TAX)=\sum_{j=1}^m x_j^T A x_j.
+\]
+Because $A$ is positive definite, each term satisfies $x_j^TAx_j\ge 0$, and it is strictly positive whenever $x_j\neq 0$. Therefore if $X\neq 0$, at least one column $x_j$ is nonzero, so
+\[
+q(X)>0.
+\]
+Hence $q$ is a positive definite quadratic form on $\R^{n\times m}$.
+
+There is also a useful norm interpretation. Since $A$ is positive definite, it has a symmetric square root $A^{1/2}$, and
+\[
+q(X)=\trace(X^TA^{1/2}A^{1/2}X)=\trace((A^{1/2}X)^T(A^{1/2}X))=\|A^{1/2}X\|_F^2.
+\]
+So $q$ is literally the squared Frobenius norm after the linear change of variables $X\mapsto A^{1/2}X$.
+\end{proof}
+
+\section{Calculus and Real Analysis}
+Interview analysis questions often look innocent but test whether you can move between definitions, expansions, and clean arguments. The core techniques are asymptotics, derivatives, optimization, integrals, and series.
+
+\subsection{Sequences, Limits, Continuity, and Asymptotics}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A sequence $(a_n)$ converges to $L$ if for every $\varepsilon>0$ there exists $N$ such that $|a_n-L|<\varepsilon$ for all $n\ge N$.
+    \item A bounded monotone sequence converges. Every bounded sequence has a convergent subsequence (Bolzano--Weierstrass).
+    \item Important limits:
+    \[
+        \lim_{x\to 0}\frac{\sin x}{x}=1,
+        \qquad
+        \lim_{x\to 0}\frac{1-\cos x}{x^2}=\frac12,
+        \qquad
+        \lim_{x\to \infty}\left(1+\frac1x\right)^x=e.
+    \]
+    \item A function is continuous at $a$ if $\lim_{x\to a}f(x)=f(a)$. Continuous functions on compact intervals are bounded and attain maxima and minima.
+    \item Asymptotic notation:
+    \[
+        f(x)=O(g(x)) \iff \frac{f(x)}{g(x)} \text{ is bounded},
+        \qquad
+        f(x)=o(g(x)) \iff \frac{f(x)}{g(x)}\to 0.
+    \]
+    \item Taylor expansions near $0$ that should be memorized:
+    \[
+        \sin x = x - \frac{x^3}{6}+O(x^5),
+        \qquad
+        \cos x = 1 - \frac{x^2}{2}+O(x^4),
+        \qquad
+        \log(1+x)=x-\frac{x^2}{2}+O(x^3).
+    \]
+\end{itemize}
+
+\begin{example}[A standard small-$x$ limit]
+Compute
+\[
+\lim_{x\to 0}\frac{\sin x - x}{x^3}.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Use the Taylor expansion
+\[
+\sin x = x - \frac{x^3}{6} + O(x^5).
+\]
+Then
+\[
+\sin x - x = -\frac{x^3}{6} + O(x^5),
+\]
+so
+\[
+\frac{\sin x - x}{x^3} = -\frac16 + O(x^2).
+\]
+Therefore
+\[
+\boxed{\lim_{x\to 0}\frac{\sin x - x}{x^3}=-\frac16}.
+\]
+\end{proof}
+
+\subsection{Trigonometric and Hyperbolic Identities for Reference}
+\textbf{Useful identities.}
+\begin{itemize}
+    \item Pythagorean identities:
+    \[
+        \sin^2 x + \cos^2 x = 1,
+        \qquad
+        1+\tan^2 x = \sec^2 x,
+        \qquad
+        1+\cot^2 x = \csc^2 x.
+    \]
+    \item Angle-sum formulas:
+    \[
+        \sin(a\pm b)=\sin a\cos b \pm \cos a\sin b,
+    \]
+    \[
+        \cos(a\pm b)=\cos a\cos b \mp \sin a\sin b.
+    \]
+    \item Double-angle and half-angle formulas:
+    \[
+        \sin 2x = 2\sin x\cos x,
+    \]
+    \[
+        \cos 2x = \cos^2 x - \sin^2 x = 1-2\sin^2 x = 2\cos^2 x -1,
+    \]
+    \[
+        \sin^2\frac{x}{2} = \frac{1-\cos x}{2},
+        \qquad
+        \cos^2\frac{x}{2} = \frac{1+\cos x}{2}.
+    \]
+    \item Product-to-sum formulas:
+    \[
+        \sin a\sin b = \frac{1}{2}\bigl(\cos(a-b)-\cos(a+b)\bigr),
+    \]
+    \[
+        \cos a\cos b = \frac{1}{2}\bigl(\cos(a-b)+\cos(a+b)\bigr),
+    \]
+    \[
+        \sin a\cos b = \frac{1}{2}\bigl(\sin(a+b)+\sin(a-b)\bigr).
+    \]
+    \item Hyperbolic identities:
+    \[
+        \sinh t = \frac{e^t-e^{-t}}{2},
+        \qquad
+        \cosh t = \frac{e^t+e^{-t}}{2},
+        \qquad
+        \cosh^2 t - \sinh^2 t = 1.
+    \]
+    \item Derivatives of hyperbolic functions:
+    \[
+        \frac{d}{dt}\sinh t = \cosh t,
+        \qquad
+        \frac{d}{dt}\cosh t = \sinh t.
+    \]
+    \item Useful substitution pattern:
+    \[
+        x=e^t \quad \Longrightarrow \quad x-\frac{1}{x}=2\sinh t.
+    \]
+    In some texts, especially older or Eastern European ones, $\sinh$ is denoted by $\mathrm{sh}$ and $\cosh$ by $\mathrm{ch}$.
+\end{itemize}
+
+\begin{example}[A power-reduction integral]
+Evaluate
+\[
+\int_0^{\pi/2} \sin^4 x\,dx.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Use the half-angle identity
+\[
+\sin^2 x=\frac{1-\cos 2x}{2}.
+\]
+Then
+\[
+\sin^4 x=\left(\frac{1-\cos 2x}{2}\right)^2
+=\frac14\left(1-2\cos 2x+\cos^2 2x\right).
+\]
+Since
+\[
+\cos^2 2x=\frac{1+\cos 4x}{2},
+\]
+we get
+\[
+\sin^4 x=\frac38-\frac12\cos 2x+\frac18\cos 4x.
+\]
+Therefore
+\[
+\int_0^{\pi/2} \sin^4 x\,dx
+=\int_0^{\pi/2}\left(\frac38-\frac12\cos 2x+\frac18\cos 4x\right)dx.
+\]
+The cosine terms integrate to $0$ on $[0,\pi/2]$, so
+\[
+\int_0^{\pi/2} \sin^4 x\,dx=\frac38\cdot \frac{\pi}{2}=\frac{3\pi}{16}.
+\]
+Hence
+\[
+\boxed{\int_0^{\pi/2} \sin^4 x\,dx=\frac{3\pi}{16}}.
+\]
+\end{proof}
+
+\subsection{Standard Substitutions for Reference}
+\textbf{Useful substitution patterns.}
+\begin{itemize}
+    \item For integrands involving $1+x^2$ or rational functions of $x$ and $1+x^2$, use
+    \[
+        x=\tan t, \qquad dx=\sec^2 t\,dt, \qquad 1+x^2=\sec^2 t.
+    \]
+    This turns expressions involving $1+x^2$ into trigonometric squares and is especially useful for integrals such as
+    \[
+        \int \frac{dx}{1+x^2}, \qquad \int \frac{x^2}{(1+x^2)^2}\,dx.
+    \]
+    \item For radicals of the form $\sqrt{1+x^2}$ or, more generally, $\sqrt{a^2+x^2}$, a hyperbolic substitution is often cleaner than a trigonometric one:
+    \[
+        x=\sinh t, \qquad dx=\cosh t\,dt, \qquad \sqrt{1+x^2}=\cosh t.
+    \]
+    More generally,
+    \[
+        x=a\sinh t, \qquad dx=a\cosh t\,dt, \qquad \sqrt{a^2+x^2}=a\cosh t.
+    \]
+    This is useful because $\cosh^2 t-\sinh^2 t=1$ has the same algebraic role as $1+\sinh^2 t=\cosh^2 t$.
+    \item For radicals of the form $\sqrt{a^2-x^2}$, the standard circular substitution is
+    \[
+        x=a\sin t, \qquad dx=a\cos t\,dt, \qquad \sqrt{a^2-x^2}=a\cos t.
+    \]
+    For radicals of the form $\sqrt{x^2-a^2}$, useful choices are
+    \[
+        x=a\sec t \quad \text{or} \quad x=a\cosh t.
+    \]
+    \item For rational functions of $\sin x$ and $\cos x$, use the tangent half-angle substitution
+    \[
+        u=\tan\frac{x}{2}.
+    \]
+    Then
+    \[
+        \sin x = \frac{2u}{1+u^2},
+        \qquad
+        \cos x = \frac{1-u^2}{1+u^2},
+        \qquad
+        dx = \frac{2}{1+u^2}\,du.
+    \]
+    This converts any rational expression in $\sin x$ and $\cos x$ into a rational function of $u$.
+    \item A useful decision rule is: if the integrand contains a quadratic expression under a square root, choose a substitution that turns that quadratic into a square; if the integrand is rational in $\sin x$ and $\cos x$, use $u=\tan(x/2)$; if exponentials create expressions like $x-1/x$, try $x=e^t$ and rewrite the result in terms of $\sinh t$ or $\cosh t$.
+\end{itemize}
+
+\begin{example}[Hyperbolic substitution in a definite integral]
+Evaluate
+\[
+\int_0^1 \sqrt{1+x^2}\,dx.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Because the integrand contains $\sqrt{1+x^2}$, use the substitution
+\[
+x=\sinh t,
+\qquad
+dx=\cosh t\,dt,
+\qquad
+\sqrt{1+x^2}=\cosh t.
+\]
+When $x=0$, we have $t=0$. When $x=1$, we have $t=\operatorname{arsinh}(1)$.
+
+Thus
+\[
+\int_0^1 \sqrt{1+x^2}\,dx
+=\int_0^{\operatorname{arsinh}(1)} \cosh^2 t\,dt.
+\]
+Using
+\[
+\cosh^2 t=\frac{1+\cosh 2t}{2},
+\]
+we obtain
+\[
+\int \cosh^2 t\,dt=\frac12\bigl(t+\sinh t\cosh t\bigr).
+\]
+Therefore
+\[
+\int_0^1 \sqrt{1+x^2}\,dx
+=\frac12\bigl(t+\sinh t\cosh t\bigr)\Big|_{0}^{\operatorname{arsinh}(1)}.
+\]
+At $t=\operatorname{arsinh}(1)$, we have $\sinh t=1$ and $\cosh t=\sqrt{2}$. Hence
+\[
+\int_0^1 \sqrt{1+x^2}\,dx
+=\frac12\bigl(\operatorname{arsinh}(1)+\sqrt{2}\bigr).
+\]
+Since
+\[
+\operatorname{arsinh}(1)=\log(1+\sqrt{2}),
+\]
+the final answer is
+\[
+\boxed{\int_0^1 \sqrt{1+x^2}\,dx = \frac{\sqrt{2}+\log(1+\sqrt{2})}{2}}.
+\]
+\end{proof}
+
+\subsection{One-Variable Differential Calculus}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item If $f$ is differentiable at $x$, then
+    \[
+        f'(x)=\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}.
+    \]
+    Differentiability implies continuity.
+    \item Rolle's theorem: if $f(a)=f(b)$ and $f$ is continuous on $[a,b]$ and differentiable on $(a,b)$, then $f'(c)=0$ for some $c\in(a,b)$.
+    \item Lagrange's mean value theorem:
+    \[
+        f'(c)=\frac{f(b)-f(a)}{b-a}
+    \]
+    for some $c\in(a,b)$.
+    \item Taylor's formula around $a$ is
+    \[
+        f(x)=\sum_{k=0}^n \frac{f^{(k)}(a)}{k!}(x-a)^k + R_n(x),
+    \]
+    with Lagrange remainder
+    \[
+        R_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}(x-a)^{n+1}
+    \]
+    for some $\xi$ between $a$ and $x$.
+    \item Critical point tests: if $f'(x_0)=0$ and $f''(x_0)>0$, then $x_0$ is a local minimum; if $f''(x_0)<0$, it is a local maximum.
+    \item L'Hopital's rule handles $0/0$ and $\infty/\infty$ forms when the relevant hypotheses are satisfied.
+\end{itemize}
+
+\begin{example}[Optimization on $(0,\infty)$]
+Find the global minimum of
+\[
+f(x)=x-\log x, \qquad x>0.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Differentiate:
+\[
+f'(x)=1-\frac1x = \frac{x-1}{x}.
+\]
+The only critical point is $x=1$. The second derivative is
+\[
+f''(x)=\frac{1}{x^2}>0,
+\]
+so $x=1$ is a strict local minimum. Since $f(x)\to\infty$ as $x\downarrow 0$ and also $f(x)\to\infty$ as $x\to\infty$, this local minimum is global. The minimum value is
+\[
+f(1)=1.
+\]
+\end{proof}
+
+\subsection{Multivariable Calculus and Constrained Optimization}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item For $f:\R^n\to\R$, the gradient is
+    \[
+        \nabla f = \left(\frac{\partial f}{\partial x_1},\dots,\frac{\partial f}{\partial x_n}\right),
+    \]
+    and the directional derivative along a unit vector $u$ is $D_u f = \nabla f \cdot u$.
+    \item The Hessian matrix is
+    \[
+        H_f = \left(\frac{\partial^2 f}{\partial x_i\partial x_j}\right)_{i,j}.
+    \]
+    At a critical point, a positive definite Hessian implies a local minimum; a negative definite Hessian implies a local maximum.
+    \item To optimize $f(x)$ subject to $g(x)=0$, introduce the Lagrangian
+    \[
+        \mathcal{L}(x,\lambda)=f(x)-\lambda g(x)
+    \]
+    and solve $\nabla_x\mathcal{L}=0$ together with $g(x)=0$.
+    \item In optimization algorithms, gradient descent updates
+    \[
+        x_{k+1}=x_k-\eta \nabla f(x_k).
+    \]
+    \item The implicit function theorem says that if $F(x,y)=0$ and $F_y(x_0,y_0)\neq 0$, then locally one can write $y$ as a differentiable function of $x$.
+\end{itemize}
+
+\begin{example}[Lagrange multipliers]
+Minimize
+\[
+f(x,y)=x^2+y^2
+\]
+subject to the linear constraint
+\[
+x+2y=1.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Set
+\[
+\mathcal{L}(x,y,\lambda)=x^2+y^2-\lambda(x+2y-1).
+\]
+Then
+\[
+2x-\lambda=0, \qquad 2y-2\lambda=0, \qquad x+2y=1.
+\]
+From the first two equations,
+\[
+x=\frac{\lambda}{2}, \qquad y=\lambda.
+\]
+Substitute into the constraint:
+\[
+\frac{\lambda}{2}+2\lambda=1 \quad \Longrightarrow \quad \frac{5\lambda}{2}=1 \quad \Longrightarrow \quad \lambda=\frac{2}{5}.
+\]
+Hence
+\[
+x=\frac{1}{5}, \qquad y=\frac{2}{5}.
+\]
+The minimum value is
+\[
+f\left(\frac15,\frac25\right)=\frac{1}{25}+\frac{4}{25}=\frac15.
+\]
+Because the objective is strictly convex and the constraint is affine, this minimizer is unique.
+\end{proof}
+
+\subsection{Vector Fields and Vector Calculus}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A vector field on $\R^n$ assigns a vector $F(x)$ to each point $x$. In coordinates, one writes
+    \[
+        F=(F_1,\dots,F_n).
+    \]
+    Vector fields model forces, velocities, gradients of scalar objectives, and fluxes.
+    \item If $\phi$ is a scalar field, then its gradient
+    \[
+        \nabla \phi = \left(\frac{\partial \phi}{\partial x_1},\dots,\frac{\partial \phi}{\partial x_n}\right)
+    \]
+    points in the direction of steepest increase. A field of the form $F=\nabla \phi$ is called \emph{conservative}.
+    \item For $F=(P,Q,R)$ in $\R^3$, the divergence and curl are
+    \[
+        \nabla\cdot F = \frac{\partial P}{\partial x}+\frac{\partial Q}{\partial y}+\frac{\partial R}{\partial z},
+        \qquad
+        \nabla\times F=
+        \left(
+        \frac{\partial R}{\partial y}-\frac{\partial Q}{\partial z},
+        \frac{\partial P}{\partial z}-\frac{\partial R}{\partial x},
+        \frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}
+        \right).
+    \]
+    Divergence measures local source or sink strength, while curl measures local rotation.
+    \item The line integral of a vector field along a curve $C$ is
+    \[
+        \int_C F\cdot dr.
+    \]
+    In mechanics this is the work done by a force field along the path.
+    \item If $F=\nabla \phi$, then the fundamental theorem for line integrals gives
+    \[
+        \int_C F\cdot dr = \phi(B)-\phi(A),
+    \]
+    so the value depends only on the endpoints.
+    \item Green's theorem is the planar bridge between line integrals and double integrals. If $C=\partial D$ is a positively oriented simple closed curve and $F=(P,Q)$ has continuously differentiable components, then
+    \[
+        \oint_C P\,dx+Q\,dy = \iint_D \left(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\right)dA.
+    \]
+    It converts circulation around the boundary into accumulated curl over the region. In flux form,
+    \[
+        \oint_C F\cdot n\,ds = \iint_D \nabla\cdot F\,dA.
+    \]
+    \item The divergence theorem converts flux through a closed surface into a volume integral:
+    \[
+        \iint_{\partial \Omega} F\cdot n\,dS = \iiint_{\Omega} \nabla\cdot F\,dV.
+    \]
+    This is often the fastest route when the divergence is simple and the region has easy volume.
+\end{itemize}
+
+\begin{example}[Flux of a radial field through the unit sphere]
+Let
+\[
+F(x,y,z)=(x,y,z).
+\]
+Compute the outward flux of $F$ through the unit sphere
+\[
+x^2+y^2+z^2=1.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Use the divergence theorem with $\Omega$ equal to the unit ball. First compute
+\[
+\nabla\cdot F = \frac{\partial x}{\partial x}+\frac{\partial y}{\partial y}+\frac{\partial z}{\partial z}=3.
+\]
+Therefore
+\[
+\iint_{\partial \Omega} F\cdot n\,dS = \iiint_{\Omega} 3\,dV = 3\,\operatorname{Vol}(\Omega).
+\]
+The unit ball has volume
+\[
+\operatorname{Vol}(\Omega)=\frac{4\pi}{3},
+\]
+so the flux is
+\[
+3\cdot \frac{4\pi}{3}=4\pi.
+\]
+Hence the outward flux is
+\[
+\boxed{4\pi}.
+\]
+
+As a quick check, on the unit sphere the outward unit normal is $n=(x,y,z)$, so $F\cdot n=x^2+y^2+z^2=1$, and the flux is just the surface area of the sphere, also equal to $4\pi$.
+\end{proof}
+
+\subsection{Integration, Parameter Integrals, and Special Functions}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item Fundamental theorem of calculus:
+    \[
+        \int_a^b f'(x)\,dx = f(b)-f(a).
+    \]
+    \item Integration by parts:
+    \[
+        \int u\,dv = uv - \int v\,du.
+    \]
+    \item In a change of variables for multiple integrals,
+    \[
+        \iint_D f(x,y)\,dx\,dy = \iint_{D'} f(x(u,v),y(u,v))\left|\frac{\partial(x,y)}{\partial(u,v)}\right|du\,dv.
+    \]
+    \item Differentiation under the integral sign is often valid when a dominated convergence argument applies:
+    \[
+        \frac{d}{d\theta}\int f(x,\theta)\,dx = \int \frac{\partial}{\partial\theta}f(x,\theta)\,dx.
+    \]
+    \item The Gamma and Beta functions are
+    \[
+        \Gamma(s)=\int_0^{\infty}x^{s-1}e^{-x}\,dx, \qquad
+        B(p,q)=\int_0^1 t^{p-1}(1-t)^{q-1}\,dt,
+    \]
+    with the identity
+    \[
+        B(p,q)=\frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}.
+    \]
+\end{itemize}
+
+\begin{example}[Gaussian integral and a normal fourth moment]
+Evaluate
+\[
+\int_{-\infty}^{\infty} e^{-x^2/2}\,dx
+\]
+and compute $\E[X^4]$ for $X\sim \mathcal{N}(0,1)$.
+\end{example}
+
+\begin{proof}[Solution]
+Let
+\[
+I=\int_{-\infty}^{\infty} e^{-x^2/2}\,dx.
+\]
+Then
+\[
+I^2=\iint_{\R^2} e^{-(x^2+y^2)/2}\,dx\,dy.
+\]
+In polar coordinates,
+\[
+I^2=\int_0^{2\pi}\int_0^{\infty} e^{-r^2/2}r\,dr\,d\theta
+=2\pi \int_0^{\infty} e^{-r^2/2}r\,dr.
+\]
+Set $u=r^2/2$, so $du=r\,dr$. Then
+\[
+I^2=2\pi\int_0^{\infty} e^{-u}\,du=2\pi.
+\]
+Therefore
+\[
+\boxed{I=\sqrt{2\pi}}.
+\]
+
+Now the density of $X\sim\mathcal{N}(0,1)$ is
+\[
+\phi(x)=\frac{1}{\sqrt{2\pi}}e^{-x^2/2}.
+\]
+So
+\[
+\E[X^4]=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}x^4 e^{-x^2/2}\,dx.
+\]
+Using integration by parts or the standard recursion for Gaussian moments,
+\[
+\E[X^{2n}] = (2n-1)\E[X^{2n-2}], \qquad \E[X^0]=1.
+\]
+Hence
+\[
+\E[X^4]=3\E[X^2]=3.
+\]
+So
+\[
+\boxed{\E[X^4]=3}.
+\]
+\end{proof}
+
+\begin{example}[A nonlinear substitution with two branches]
+Let $f:\R\to\R$ be integrable and suppose
+\[
+\int_{\R} f(x)\,dx = 2026.
+\]
+Find
+\[
+\int_{\R} f\!\left(x-\frac{1}{x}\right)dx.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Set
+\[
+g(x)=x-\frac{1}{x}, \qquad x\neq 0.
+\]
+We split the real line into the two intervals $(-\infty,0)$ and $(0,\infty)$. On each interval,
+\[
+g'(x)=1+\frac{1}{x^2}>0,
+\]
+so $g$ is strictly increasing. Moreover, each branch maps onto all of $\R$. Therefore every $y\in\R$ has exactly two preimages: one positive and one negative.
+
+Let these inverse branches be $x_+(y)>0$ and $x_-(y)<0$, so
+\[
+x_\pm(y)=\frac{y\pm\sqrt{y^2+4}}{2}.
+\]
+They satisfy
+\[
+x_+(y)x_-(y)=-1.
+\]
+
+Now split the integral:
+\[
+\int_{\R} f\!\left(x-\frac{1}{x}\right)dx
+= \int_0^{\infty} f(g(x))\,dx + \int_{-\infty}^0 f(g(x))\,dx.
+\]
+On each branch use the substitution $y=g(x)$. Since $dy=(1+x^{-2})dx$, we get
+\[
+dx = \frac{1}{1+x^{-2}}\,dy.
+\]
+Hence
+\[
+\int_{\R} f\!\left(x-\frac{1}{x}\right)dx
+= \int_{\R} f(y)\frac{1}{1+x_+(y)^{-2}}\,dy
++ \int_{\R} f(y)\frac{1}{1+x_-(y)^{-2}}\,dy.
+\]
+Using $x_-(y)=-1/x_+(y)$, we obtain
+\[
+\frac{1}{1+x_+(y)^{-2}} + \frac{1}{1+x_-(y)^{-2}}
+= \frac{x_+(y)^2}{1+x_+(y)^2} + \frac{1}{1+x_+(y)^2} = 1.
+\]
+Therefore
+\[
+\int_{\R} f\!\left(x-\frac{1}{x}\right)dx
+= \int_{\R} f(y)\,dy = 2026.
+\]
+So the answer is
+\[
+\boxed{2026}.
+\]
+\end{proof}
+
+\paragraph{Alternative solution via hyperbolic-sine substitution.}
+Split the integral into positive and negative $x$:
+\[
+\int_{\R} f\!\left(x-\frac{1}{x}\right)dx
+= \int_0^{\infty} f\!\left(x-\frac{1}{x}\right)dx + \int_{-\infty}^0 f\!\left(x-\frac{1}{x}\right)dx.
+\]
+On $(0,\infty)$ write $x=e^t$, so $dx=e^t dt$ and
+\[
+x-\frac{1}{x}=e^t-e^{-t}=2\sinh t.
+\]
+On $(-\infty,0)$ write $x=-e^{-t}$, so $dx=e^{-t}dt$ and again
+\[
+x-\frac{1}{x}=-e^{-t}+e^t=2\sinh t.
+\]
+Therefore
+\[
+\int_{\R} f\!\left(x-\frac{1}{x}\right)dx
+= \int_{\R} f(2\sinh t)e^t\,dt + \int_{\R} f(2\sinh t)e^{-t}\,dt
+= \int_{\R} f(2\sinh t)\,2\cosh t\,dt.
+\]
+Now substitute $u=2\sinh t$, so $du=2\cosh t\,dt$. This gives
+\[
+\int_{\R} f\!\left(x-\frac{1}{x}\right)dx = \int_{\R} f(u)\,du = 2026.
+\]
+This is the same identity as above, but the hyperbolic substitution packages both branches into one clean formula.
+
+\subsection{Series, Power Series, and Fourier Methods}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A necessary condition for convergence is
+    \[
+        a_n\to 0.
+    \]
+    This is not sufficient: for example, $\sum 1/n$ diverges.
+    \item Benchmark series to compare against:
+    \[
+        \sum_{n=0}^{\infty} r^n \text{ converges if and only if } |r|<1,
+        \qquad
+        \sum_{n=1}^{\infty}\frac{1}{n^p} \text{ converges if and only if } p>1.
+    \]
+    \item Comparison test for nonnegative terms: if $0\le a_n\le b_n$ for all large $n$ and $\sum b_n$ converges, then $\sum a_n$ converges. If $0\le b_n\le a_n$ for all large $n$ and $\sum b_n$ diverges, then $\sum a_n$ diverges.
+    \item Limit comparison test: if $a_n,b_n>0$ and
+    \[
+        \lim_{n\to\infty}\frac{a_n}{b_n}=c
+    \]
+    for some $c\in(0,\infty)$, then $\sum a_n$ and $\sum b_n$ have the same behavior.
+    \item Integral test: if $a_n=f(n)$ where $f$ is positive, continuous, and decreasing on $[1,\infty)$, then
+    \[
+        \sum_{n=1}^{\infty} a_n
+        \quad \text{and} \quad
+        \int_1^{\infty} f(x)\,dx
+    \]
+    either both converge or both diverge.
+    \item Ratio test:
+    \[
+        L=\limsup_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|.
+    \]
+    If $L<1$, then $\sum a_n$ converges absolutely. If $L>1$ or $L=\infty$, then $\sum a_n$ diverges. If $L=1$, the test is inconclusive.
+    \item Root test:
+    \[
+        L=\limsup_{n\to\infty}|a_n|^{1/n}.
+    \]
+    If $L<1$, then $\sum a_n$ converges absolutely. If $L>1$, then $\sum a_n$ diverges. If $L=1$, the test is inconclusive.
+    \item Alternating-series test (Leibniz): if $b_n\downarrow 0$, then
+    \[
+        \sum_{n=1}^{\infty}(-1)^{n-1}b_n
+    \]
+    converges.
+    \item Absolute convergence means $\sum |a_n|<\infty$, and it always implies convergence of $\sum a_n$. A series may converge without being absolutely convergent; then it is called conditionally convergent.
+    \item Dirichlet's test: if the partial sums $A_N=\sum_{n=1}^N a_n$ are uniformly bounded and $b_n$ is monotone with $b_n\to 0$, then $\sum a_n b_n$ converges.
+    \item Abel's test: if $\sum a_n$ converges and $b_n$ is monotone and bounded, then $\sum a_n b_n$ converges.
+    \item A power series
+    \[
+        \sum_{n=0}^{\infty} c_n (x-a)^n
+    \]
+    converges for $|x-a|<R$, where
+    \[
+        R = \frac{1}{\limsup_{n\to\infty} |c_n|^{1/n}}.
+    \]
+    \item The geometric-series identities are used constantly:
+    \[
+        \sum_{n=0}^{\infty} x^n = \frac{1}{1-x}, \qquad |x|<1,
+    \]
+    and differentiating gives
+    \[
+        \sum_{n=1}^{\infty} n x^{n-1}=\frac{1}{(1-x)^2}.
+    \]
+    \item A Fourier series on $[-\pi,\pi]$ is
+    \[
+        f(x) \sim \frac{a_0}{2} + \sum_{n\ge 1}(a_n\cos nx + b_n\sin nx),
+    \]
+    with Parseval's identity
+    \[
+        \frac{1}{\pi}\int_{-\pi}^{\pi}|f(x)|^2dx = \frac{a_0^2}{2}+\sum_{n\ge 1}(a_n^2+b_n^2).
+    \]
+\end{itemize}
+
+\begin{example}[Radius of convergence and sum]
+Find the radius of convergence of
+\[
+\sum_{n=1}^{\infty} n\left(\frac{x}{3}\right)^n,
+\]
+and identify the sum for $|x|<3$.
+\end{example}
+
+\begin{proof}[Solution]
+The coefficients are $c_n=n/3^n$. Since
+\[
+\limsup_{n\to\infty} \left|\frac{n}{3^n}\right|^{1/n}=\frac{1}{3},
+\]
+the radius of convergence is
+\[
+R=3.
+\]
+Now set $y=x/3$. For $|y|<1$,
+\[
+\sum_{n=1}^{\infty} n y^n = y\sum_{n=1}^{\infty} n y^{n-1} = \frac{y}{(1-y)^2}.
+\]
+Substitute back $y=x/3$ to obtain
+\[
+\sum_{n=1}^{\infty} n\left(\frac{x}{3}\right)^n = \frac{x/3}{(1-x/3)^2} = \frac{3x}{(3-x)^2}, \qquad |x|<3.
+\]
+\end{proof}
+
+\begin{example}[A recursively defined positive series]
+Determine whether the series
+\[
+\sum_{n=1}^{\infty} a_n
+\]
+converges when
+\[
+a_1=1, \qquad a_{n}=\sin(a_{n-1}) \quad \text{for } n\ge 2.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Since $a_1=1>0$ and $\sin x\in (0,x)$ for every $x\in(0,\pi)$, we get
+\[
+0<a_{n+1}=\sin(a_n)<a_n
+\]
+for all $n$. Thus $(a_n)$ is positive and decreasing, so it converges to some limit $L\ge 0$.
+
+Passing to the limit in
+\[
+a_{n+1}=\sin(a_n)
+\]
+gives
+\[
+L=\sin L.
+\]
+The only nonnegative solution is $L=0$, so $a_n\to 0$.
+
+Now use the Taylor expansion near $0$:
+\[
+\sin x = x-\frac{x^3}{6}+O(x^5).
+\]
+Hence
+\[
+a_{n+1}=a_n-\frac{a_n^3}{6}+O(a_n^5).
+\]
+Also,
+\[
+\frac{a_{n+1}}{a_n}=\frac{\sin(a_n)}{a_n}\to 1.
+\]
+Therefore
+\[
+\frac{1}{a_{n+1}^2}-\frac{1}{a_n^2}
+=\frac{(a_n-a_{n+1})(a_n+a_{n+1})}{a_n^2 a_{n+1}^2}
+\to \frac13.
+\]
+So, after summing this asymptotic telescoping relation, we obtain
+\[
+\frac{1}{a_n^2}\sim \frac{n}{3}.
+\]
+Equivalently,
+\[
+a_n\sim \sqrt{\frac{3}{n}}.
+\]
+Thus the terms behave like a constant multiple of $n^{-1/2}$, and therefore
+\[
+\sum_{n=1}^{\infty} a_n
+\]
+has the same behavior as the divergent $p$-series
+\[
+\sum_{n=1}^{\infty} \frac{1}{\sqrt{n}}.
+\]
+Hence
+\[
+\boxed{\sum_{n=1}^{\infty} a_n \text{ diverges}.}
+\]
+\end{proof}
+
+\section{Combinatorics}
+Combinatorics questions reward clean counting arguments, parity reasoning, and the ability to encode a counting problem algebraically.
+
+\subsection{Counting Rules, Inclusion--Exclusion, and Pigeonhole}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item Product rule: if a task has $a$ choices followed by $b$ independent choices, there are $ab$ outcomes.
+    \item Sum rule: if two disjoint cases have $a$ and $b$ outcomes, there are $a+b$ outcomes.
+    \item Pigeonhole principle: if more than $n$ objects are placed into $n$ boxes, some box contains at least two objects.
+    \item Inclusion--exclusion for sets $A_1,\dots,A_n$:
+    \[
+        \left|\bigcup_{i=1}^n A_i\right|
+        = \sum |A_i| - \sum |A_i\cap A_j| + \sum |A_i\cap A_j\cap A_k| - \cdots.
+    \]
+    \item Stars and bars: the number of nonnegative integer solutions of
+    \[
+        x_1+\cdots+x_k=n
+    \]
+    is
+    \[
+        \binom{n+k-1}{k-1}.
+    \]
+\end{itemize}
+
+\begin{example}[Stars and bars with upper bounds]
+How many nonnegative integer solutions are there to
+\[
+x_1+x_2+x_3+x_4=10
+\]
+subject to $x_i\le 4$ for every $i$?
+\end{example}
+
+\begin{proof}[Solution]
+Without the upper bounds, the count is
+\[
+\binom{10+4-1}{4-1}=\binom{13}{3}=286.
+\]
+Now subtract solutions where some $x_i\ge 5$. For a fixed index, write $x_i=5+y_i$ with $y_i\ge 0$. Then the remaining sum is $5$, giving
+\[
+\binom{5+4-1}{3}=\binom{8}{3}=56
+\]
+solutions for each choice of $i$. There are $4$ such choices.
+
+If two variables are at least $5$, say $x_i=5+y_i$ and $x_j=5+y_j$, then the remaining sum is $0$, so there is exactly one solution. There are $\binom{4}{2}=6$ such pairs. No three variables can each be at least $5$ because the total would exceed $10$.
+
+Therefore, by inclusion--exclusion,
+\[
+286 - 4\cdot 56 + 6\cdot 1 = 286 - 224 + 6 = 68.
+\]
+So the answer is
+\[
+\boxed{68}.
+\]
+\end{proof}
+
+\begin{example}[Counting surjections by inclusion--exclusion]
+How many surjective functions are there from a $5$-element set onto a $3$-element set?
+\end{example}
+
+\begin{proof}[Solution]
+Let the codomain be $\{1,2,3\}$. There are
+\[
+3^5
+\]
+functions in total.
+
+Now subtract the functions that miss at least one codomain value. If a function misses a particular value, then all $5$ elements map into the remaining $2$ values, so there are
+\[
+2^5
+\]
+such functions. Since there are $3$ choices for the missing value, this contributes $3\cdot 2^5$.
+
+But functions that use only one value were subtracted twice, so we add them back. There are $3$ constant functions.
+
+Therefore, by inclusion--exclusion, the number of surjections is
+\[
+3^5-3\cdot 2^5+3=243-96+3=150.
+\]
+Hence
+\[
+\boxed{150}.
+\]
+\end{proof}
+
+\subsection{Permutations, Combinations, and Hypergeometric Counting}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item Ordered selections without repetition:
+    \[
+        A_n^k=\frac{n!}{(n-k)!}.
+    \]
+    \item Unordered selections without repetition:
+    \[
+        \binom{n}{k}=\frac{n!}{k!(n-k)!}.
+    \]
+    \item Permutations with repeated letters are counted by multinomial coefficients:
+    \[
+        \frac{n!}{n_1!\cdots n_r!}.
+    \]
+    \item Newton's binomial theorem:
+    \[
+        (x+y)^n=\sum_{k=0}^n \binom{n}{k}x^k y^{n-k}.
+    \]
+    \item In the hypergeometric model, if a population has $N$ items, $K$ of them are marked, and we draw $n$ items without replacement, then
+    \[
+        \mathbb{P}(X=r)=\frac{\binom{K}{r}\binom{N-K}{n-r}}{\binom{N}{n}}.
+    \]
+\end{itemize}
+
+\begin{example}[Exactly two aces]
+What is the probability that a $5$-card poker hand contains exactly two aces?
+\end{example}
+
+\begin{proof}[Solution]
+There are $\binom{52}{5}$ equally likely hands. To get exactly two aces, choose $2$ of the $4$ aces and $3$ of the $48$ non-aces:
+\[
+\mathbb{P}(\text{exactly two aces}) = \frac{\binom{4}{2}\binom{48}{3}}{\binom{52}{5}}.
+\]
+That is the final answer. Numerically it is approximately $0.03993$.
+\end{proof}
+
+\begin{example}[Expected number of fixed points]
+If $\pi$ is a uniformly random permutation of $\{1,2,\dots,n\}$, what is the expected number of indices $i$ such that $\pi(i)=i$?
+\end{example}
+
+\begin{proof}[Solution]
+Let
+\[
+X=\#\{i: \pi(i)=i\}
+\]
+be the number of fixed points. For each $i$, define the indicator
+\[
+I_i=
+\begin{cases}
+1, & \text{if } \pi(i)=i,\\
+0, & \text{otherwise}.
+\end{cases}
+\]
+Then
+\[
+X=I_1+\cdots+I_n.
+\]
+For a uniformly random permutation, every value is equally likely to appear in position $i$, so
+\[
+\mathbb{P}(\pi(i)=i)=\frac1n.
+\]
+Hence
+\[
+\E[I_i]=\frac1n.
+\]
+By linearity of expectation,
+\[
+\E[X]=\sum_{i=1}^n \E[I_i]=n\cdot \frac1n=1.
+\]
+Therefore the expected number of fixed points is
+\[
+\boxed{1}.
+\]
+\end{proof}
+
+\subsection{Graphs, Trees, Planarity, and Tournaments}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item Handshake lemma:
+    \[
+        \sum_{v\in V} \deg(v)=2|E|.
+    \]
+    In particular, the number of odd-degree vertices is even.
+    \item A tree on $n$ vertices has exactly $n-1$ edges. A connected graph with $n-1$ edges is a tree.
+    \item A graph has an Eulerian circuit if and only if every vertex has even degree and the non-isolated part is connected.
+    \item Euler's formula for connected planar graphs is
+    \[
+        V-E+F=2.
+    \]
+    \item Every tournament has a Hamiltonian path.
+\end{itemize}
+
+\begin{example}[Parity-constrained graphs on $100$ vertices]
+How many simple graphs on $100$ labeled vertices have an even number of edges and all degrees odd?
+\end{example}
+
+\begin{proof}[Solution]
+Let $m=\binom{100}{2}=4950$ be the number of possible edges, and identify a graph with its edge-indicator vector $x\in \mathbb{F}_2^m$.
+
+Define the incidence map over $\mathbb{F}_2$,
+\[
+M:\mathbb{F}_2^m \to \mathbb{F}_2^{100},
+\]
+where $Mx$ records the parity of the degrees. For the complete graph $K_{100}$, the incidence matrix has rank $99$ over $\mathbb{F}_2$, because the graph is connected and the image is exactly the set of parity vectors with even total sum.
+
+The requirement ``all degrees odd'' means
+\[
+Mx=(1,1,\dots,1).
+\]
+This right-hand side is feasible because the sum of its coordinates is $100\equiv 0 \pmod 2$. Therefore the set of solutions is an affine space of dimension
+\[
+4950-99=4851.
+\]
+So there are $2^{4851}$ graphs with all degrees odd.
+
+Now impose the additional condition that the total number of edges is even. This is one more linear equation over $\mathbb{F}_2$:
+\[
+\sum_{e} x_e = 0.
+\]
+This equation is independent of the degree-parity equations: if it were a linear combination of them, there would exist bits $y_1,\dots,y_{100}$ such that $y_i+y_j=1$ for every pair $i\neq j$, which is impossible for $100\ge 3$.
+
+Therefore the extra parity condition cuts the affine space in half. The final count is
+\[
+\boxed{2^{4850}}.
+\]
+\end{proof}
+
+\begin{example}[More than $n^2$ edges on $2n$ vertices force a diamond]
+Show that every graph on $2n$ vertices with $n^2+1$ edges contains a diamond, that is, a copy of $K_4$ with one edge removed.
+\end{example}
+
+\begin{proof}[Solution]
+We prove the stronger statement that every diamond-free graph on $N$ vertices has at most
+\[
+\left\lfloor \frac{N^2}{4}\right\rfloor
+\]
+edges. Taking $N=2n$ will then give the desired conclusion.
+
+Proceed by induction on $N$. The claim is trivial for $N\le 3$.
+
+Now let $G$ be a diamond-free graph on $N\ge 4$ vertices.
+
+If $G$ is triangle-free, then Mantel's theorem applies directly and gives
+\[
+e(G)\le \left\lfloor \frac{N^2}{4}\right\rfloor.
+\]
+
+\paragraph{Mantel's theorem used here.}
+Mantel's theorem states that every triangle-free graph on $N$ vertices has at most
+\[
+\left\lfloor \frac{N^2}{4}\right\rfloor
+\]
+edges, with equality for the complete bipartite graph $K_{\lfloor N/2\rfloor,\lceil N/2\rceil}$.
+One short proof is this: if $uv$ is an edge in a triangle-free graph, then $u$ and $v$ have no common neighbor, so
+\[
+\deg(u)+\deg(v)\le N.
+\]
+Summing over all edges gives
+\[
+\sum_{v}\deg(v)^2 = \sum_{uv\in E} (\deg(u)+\deg(v)) \le N e(G).
+\]
+Now apply Cauchy to the degree sequence:
+\[
+(2e(G))^2 = \left(\sum_v \deg(v)\right)^2 \le N\sum_v \deg(v)^2 \le N^2 e(G).
+\]
+Cancelling $e(G)$ yields $e(G)\le N^2/4$, hence $e(G)\le \lfloor N^2/4\rfloor$.
+
+So the only remaining case is that $G$ contains a triangle $T$. Write $T=\{a,b,c\}$. Since $G$ is diamond-free, no vertex outside $T$ can be adjacent to two vertices of $T$: if some outside vertex $v$ were adjacent to, say, $a$ and $b$, then the four vertices $a,b,c,v$ would contain two triangles sharing the edge $ab$, which is exactly a diamond.
+
+Therefore every vertex outside $T$ sends at most one edge into $T$. As there are $N-3$ outside vertices, the number of edges joining $T$ to $V(G)\setminus T$ is at most $N-3$. Adding the $3$ edges of the triangle itself, we find that the total number of edges incident with $T$ is at most
+\[
+(N-3)+3=N.
+\]
+Hence
+\[
+e(G)\le e(G-T)+N.
+\]
+
+Now $G-T$ has $N-3$ vertices and is still diamond-free, so by the induction hypothesis,
+\[
+e(G-T)\le \left\lfloor \frac{(N-3)^2}{4}\right\rfloor.
+\]
+Thus
+\[
+e(G)\le \left\lfloor \frac{(N-3)^2}{4}\right\rfloor + N.
+\]
+It remains to compare this with $\lfloor N^2/4\rfloor$. If $N=2m$, then
+\[
+\left\lfloor \frac{(N-3)^2}{4}\right\rfloor + N
+= \left\lfloor \frac{(2m-3)^2}{4}\right\rfloor + 2m
+= m^2-m+2
+\le m^2
+= \left\lfloor \frac{N^2}{4}\right\rfloor
+\]
+for $m\ge 2$. If $N=2m+1$, then
+\[
+\left\lfloor \frac{(N-3)^2}{4}\right\rfloor + N
+= \frac{(2m-2)^2}{4} + (2m+1)
+= m^2+2
+\le m^2+m
+= \left\lfloor \frac{N^2}{4}\right\rfloor
+\]
+for $m\ge 2$. So in all cases,
+\[
+e(G)\le \left\lfloor \frac{N^2}{4}\right\rfloor.
+\]
+
+Now specialize to $N=2n$. A diamond-free graph on $2n$ vertices has at most
+\[
+\left\lfloor \frac{(2n)^2}{4}\right\rfloor = n^2
+\]
+edges. Therefore any graph on $2n$ vertices with $n^2+1$ edges cannot be diamond-free. Hence it must contain a diamond.
+
+So the answer is
+\[
+\boxed{\text{every graph on }2n\text{ vertices with }n^2+1\text{ edges contains a diamond}.}
+\]
+\end{proof}
+
+\begin{example}[Hamiltonian path in a tournament]
+In a tournament on $n$ vertices, prove that there exists a directed path that visits every vertex exactly once.
+\end{example}
+
+\begin{proof}[Solution]
+Use induction on $n$. The claim is obvious for $n=1$.
+
+Assume it holds for tournaments on $n-1$ vertices, and consider a tournament on vertices $v_1,\dots,v_n$. Remove one vertex, say $v_n$. By the induction hypothesis, the remaining tournament has a Hamiltonian path
+\[
+u_1 \to u_2 \to \cdots \to u_{n-1}.
+\]
+Now insert $v_n$ into this path. If $v_n\to u_1$, place $v_n$ at the beginning. If $u_{n-1}\to v_n$, place $v_n$ at the end. Otherwise there exists an index $k$ such that
+\[
+u_k \to v_n \to u_{k+1}.
+\]
+Indeed, scan the path from left to right until the direction of the edge involving $v_n$ changes. Inserting $v_n$ between $u_k$ and $u_{k+1}$ produces a Hamiltonian path through all $n$ vertices.
+
+Thus every tournament has a Hamiltonian path.
+\end{proof}
+
+\begin{example}[Roads and cities as a finite incidence structure]
+Suppose there are $n$ roads and finitely many cities such that
+\begin{itemize}
+    \item any two distinct cities lie on a road;
+    \item any two distinct roads meet in exactly one city.
+\end{itemize}
+How many cities can there be?
+\end{example}
+
+\begin{proof}[Solution]
+Let the number of cities be $m$.
+
+First note that any two cities actually lie on a \emph{unique} road. Indeed, if two different roads both passed through the same two cities, then those two roads would meet in at least two cities, contradicting the assumption that any two roads meet in exactly one city.
+
+So we have a finite incidence structure in which any two cities determine a unique road. A classical theorem of de Bruijn and Erd\H{o}s says that in any finite linear space, the number of lines is at least the number of points. Applying it here gives
+\[
+n \ge m.
+\]
+
+\paragraph{Sketch of the de Bruijn--Erd\H{o}s theorem used here.}
+Write $P$ for the set of points and $L$ for the set of lines in a finite linear space, and let
+\[
+v=|P|, \qquad b=|L|.
+\]
+For a point $p$, let $d(p)$ be the number of lines through $p$, and for a line $\ell$, let $s(\ell)$ be the number of points on $\ell$.
+
+The key inequality is that if $p\notin \ell$, then
+\[
+s(\ell) \le d(p),
+\]
+because each point of $\ell$ together with $p$ determines a distinct line through $p$.
+
+Now assume $b\le v$. A standard Hall-marriage argument, applied to the family of complements $P\setminus \ell$, gives distinct points $p_\ell\notin \ell$ for each line $\ell\in L$. Therefore
+\[
+s(\ell) \le d(p_\ell) \qquad \text{for every } \ell\in L.
+\]
+
+\paragraph{Hall's theorem used here.}
+Hall's marriage theorem says that a finite family of sets $S_1,\dots,S_m$ has a system of distinct representatives if and only if for every index set $I\subseteq \{1,\dots,m\}$,
+\[
+\left|\bigcup_{i\in I} S_i\right| \ge |I|.
+\]
+Here we apply it to the sets $S_\ell=P\setminus \ell$. Why does Hall's condition hold? In a nontrivial linear space, every line misses at least one point, so the case $|I|=1$ is clear. If $2\le |I|<b$, then the corresponding distinct lines have common intersection of size at most $1$, hence
+\[
+\left|\bigcup_{\ell\in I}(P\setminus \ell)\right|
+= \left|P\setminus \bigcap_{\ell\in I}\ell\right|
+\ge v-1
+\ge b-1
+\ge |I|.
+\]
+If $|I|=b$, then the union is all of $P$, so it has size $v\ge b$. Thus Hall's theorem produces distinct points $p_\ell\notin \ell$ as claimed.
+
+Summing over all lines yields
+\[
+\sum_{\ell\in L} s(\ell)
+\le \sum_{\ell\in L} d(p_\ell)
+\le \sum_{p\in P} d(p).
+\]
+But both outer sums count the same thing, namely the total number of incidences point--line, so
+\[
+\sum_{\ell\in L} s(\ell)=\sum_{p\in P} d(p).
+\]
+Hence every inequality above is in fact an equality, which forces $b=v$ whenever $b\le v$. Therefore in all cases
+\[
+b\ge v.
+\]
+That is the de Bruijn--Erd\H{o}s theorem in the form used here.
+
+Now use duality: interchange the roles of cities and roads. The second assumption says that any two roads meet in exactly one city, so in the dual picture any two ``points'' determine a unique ``line''. Applying the same theorem to the dual incidence structure gives
+\[
+m \ge n.
+\]
+
+Combining the two inequalities yields
+\[
+\boxed{m=n}.
+\]
+
+So the number of cities must be exactly the number of roads.
+\end{proof}
+
+\begin{example}[Expected Number of Cliques]
+\textbf{Problem:} There are $n$ students seeing each other for the first time. An amusement park offers a discount if a group of exactly $k$ friends comes. Any two random students can become friends with probability $p$. On average, how many such valid groups of exactly $k$ friends can be formed?
+
+\textbf{Solution:} Let the $n$ students be the vertices of a random graph $G(n, p)$, where each edge exists independently with probability $p$. A valid group of exactly $k$ friends corresponds to a $k$-clique (a complete subgraph $K_k$) in the graph. 
+
+Let $S$ be a specific subset of $k$ students. We define an indicator random variable $I_S$ such that $I_S = 1$ if $S$ forms a $k$-clique, and $0$ otherwise. A subset of size $k$ contains exactly $\binom{k}{2}$ possible pairs. For all these pairs to be friends, every corresponding edge must be present. Thus,
+\[
+    P(I_S = 1) = p^{\binom{k}{2}}, \quad \text{and hence} \quad E[I_S] = p^{\binom{k}{2}}.
+\]
+The total number of $k$-cliques $X$ is the sum of $I_S$ over all possible subsets $S$ of size $k$. By linearity of expectation,
+\[
+    E[X] = E\left[ \sum_{S \subset V, |S|=k} I_S \right] = \sum_{|S|=k} E[I_S] = \binom{n}{k} p^{\binom{k}{2}}.
+\]
+\end{example}
+
+\begin{example}[Guaranteed Dominating Set via Maximal Independent Sets]
+\textbf{Problem:} There are $100$ people in a company. It is known that among any $10$ people, there are three pairwise acquaintances. What is the smallest $n$ that guarantees there are $n$ people such that any of the remaining ones is acquainted with someone in these $n$?
+
+\textbf{Solution:} We model the people as the vertices $V$ of a graph $G$, where edges represent acquaintances. The condition states that any subset of $10$ vertices contains a triangle (a $K_3$). 
+
+We are looking for the smallest $n$ that guarantees the existence of a dominating set of size at most $n$. (A set $D \subseteq V$ is dominating if every vertex in $V \setminus D$ has at least one neighbor in $D$). 
+
+We first claim that the independence number satisfies $\alpha(G) \le 8$. Indeed, suppose there were $9$ pairwise nonadjacent vertices $v_1,\dots,v_9$. Take any tenth vertex $w$. Then the induced subgraph on
+\[
+    \{v_1,\dots,v_9,w\}
+\]
+contains no triangle: a triangle cannot lie entirely inside $\{v_1,\dots,v_9\}$ because that set is independent, and any triangle using $w$ would require an edge between two of the vertices $v_i$, which also does not exist. This contradicts the hypothesis that every $10$-vertex subset contains a triangle. Hence
+\[
+    \alpha(G) \le 8.
+\]
+
+Now, consider any \emph{maximal} independent set $I$ in $G$. By maximality, we cannot add any other vertex from $V \setminus I$ to $I$ without creating an edge. This implies that every vertex in $V \setminus I$ must be adjacent to at least one vertex in $I$. Consequently, every maximal independent set is also a dominating set.
+
+Since every independent set has size at most $8$, a maximal independent set $I$ has size $|I| \le 8$. So $G$ always has a dominating set of size at most $8$.
+
+This bound is sharp. Consider a graph consisting of one clique on $93$ vertices together with $7$ isolated vertices. Any set of $10$ vertices must contain at least $3$ vertices from the $93$-clique, and those $3$ vertices form a triangle. So the hypothesis is satisfied. On the other hand, every dominating set must contain all $7$ isolated vertices, and it must also contain at least one vertex from the clique in order to dominate the clique vertices. Therefore every dominating set has size at least
+\[
+    7+1=8.
+\]
+Hence the smallest value of $n$ that is guaranteed is
+\[
+    \boxed{8}.
+\]
+\end{example}
+
+\subsection{Generating Functions and Linear Recurrences}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item The ordinary generating function of a sequence $(a_n)$ is
+    \[
+        G(x)=\sum_{n=0}^{\infty} a_n x^n.
+    \]
+    \item Shifts in the sequence translate into simple identities. For example,
+    \[
+        \sum_{n=0}^{\infty} a_{n+1}x^n = \frac{G(x)-a_0}{x},
+        \qquad
+        \sum_{n=0}^{\infty} a_{n+2}x^n = \frac{G(x)-a_0-a_1x}{x^2}.
+    \]
+    \item A linear recurrence of order $d$ with constant coefficients has the form
+    \[
+        a_{n+d}=c_1a_{n+d-1}+\cdots+c_da_n.
+    \]
+    The associated characteristic equation is
+    \[
+        r^d-c_1r^{d-1}-\cdots-c_d=0.
+    \]
+    \item If the characteristic roots $r_1,\dots,r_m$ are distinct, then the homogeneous solution has the form
+    \[
+        a_n=\alpha_1 r_1^n + \cdots + \alpha_m r_m^n.
+    \]
+    If a root $r$ has multiplicity $k$, then its contribution becomes
+    \[
+        (\beta_0+\beta_1 n+\cdots+\beta_{k-1}n^{k-1})r^n.
+    \]
+    \item For nonhomogeneous recurrences, look for a particular solution matching the forcing term, then add the homogeneous solution.
+    \item For constant-coefficient recurrences, the generating function is rational; the denominator encodes the recurrence relation.
+\end{itemize}
+
+\begin{example}[Characteristic-root method for a linear recurrence]
+Solve the recurrence
+\[
+a_{n+2}=5a_{n+1}-6a_n, \qquad a_0=2, \qquad a_1=5.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+The characteristic equation is
+\[
+r^2-5r+6=0,
+\]
+which factors as
+\[
+(r-2)(r-3)=0.
+\]
+Hence the general solution is
+\[
+a_n=\alpha 2^n + \beta 3^n.
+\]
+Use the initial conditions:
+\[
+a_0=\alpha+\beta=2,
+\qquad
+a_1=2\alpha+3\beta=5.
+\]
+Subtracting twice the first equation from the second gives $\beta=1$, so $\alpha=1$. Therefore
+\[
+\boxed{a_n=2^n+3^n}.
+\]
+This is the standard template for linear recurrences with distinct characteristic roots.
+\end{proof}
+
+\begin{example}[Fibonacci generating function]
+Let $F_0=0$, $F_1=1$, and $F_{n+2}=F_{n+1}+F_n$. Find the generating function
+\[
+G(x)=\sum_{n=0}^{\infty} F_n x^n.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Multiply the recurrence by $x^{n+2}$ and sum over $n\ge 0$:
+\[
+\sum_{n\ge 0} F_{n+2}x^{n+2} = \sum_{n\ge 0} F_{n+1}x^{n+2} + \sum_{n\ge 0} F_n x^{n+2}.
+\]
+The left side is $G(x)-x$. The first right-side term is $xG(x)$, and the second is $x^2 G(x)$. Therefore
+\[
+G(x)-x = xG(x)+x^2G(x).
+\]
+Rearranging gives
+\[
+G(x)(1-x-x^2)=x,
+\]
+so
+\[
+\boxed{G(x)=\frac{x}{1-x-x^2}}.
+\]
+\end{proof}
+
+\section{Probability Theory and Statistics}
+This is the most frequently tested area in quant interviews. You are expected to move comfortably between combinatorics, conditional probability, expectation, convergence, and recursion.
+
+\subsection{Probability Spaces, Conditioning, and Bernoulli Schemes}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A probability space is $(\Omega,\mathcal{F},\mathbb{P})$, where $\Omega$ is the sample space, $\mathcal{F}$ is a sigma-algebra, and $\mathbb{P}$ is a probability measure.
+    \item Conditional probability:
+    \[
+        \mathbb{P}(A\mid B)=\frac{\mathbb{P}(A\cap B)}{\mathbb{P}(B)}.
+    \]
+    \item Total probability and Bayes' rule:
+    \[
+        \mathbb{P}(B)=\sum_i \mathbb{P}(B\mid A_i)\mathbb{P}(A_i),
+        \qquad
+        \mathbb{P}(A_k\mid B)=\frac{\mathbb{P}(B\mid A_k)\mathbb{P}(A_k)}{\sum_i \mathbb{P}(B\mid A_i)\mathbb{P}(A_i)}.
+    \]
+    \item In a Bernoulli scheme, if $X\sim\mathrm{Bin}(n,p)$ then
+    \[
+        \mathbb{P}(X=k)=\binom{n}{k}p^k(1-p)^{n-k}, \qquad \E[X]=np, \qquad \Var(X)=np(1-p).
+    \]
+    \item If $n\to\infty$ and $p\to 0$ with $np\to \lambda$, then the binomial law converges to the Poisson law:
+    \[
+        \mathbb{P}(X=k)\to e^{-\lambda}\frac{\lambda^k}{k!}.
+    \]
+\end{itemize}
+
+\begin{example}[Bayes' rule in a rare-event setting]
+A test for a disease has sensitivity $95\%$ and specificity $90\%$. The disease prevalence is $1\%$. If a randomly chosen person tests positive, what is the probability that the person actually has the disease?
+\end{example}
+
+\begin{proof}[Solution]
+Let $D$ be the event ``has the disease'' and $+$ be the event ``tests positive''. Then
+\[
+\mathbb{P}(D)=0.01,
+\qquad
+\mathbb{P}(+\mid D)=0.95,
+\qquad
+\mathbb{P}(+\mid D^c)=0.10.
+\]
+By Bayes' rule,
+\[
+\mathbb{P}(D\mid +)=\frac{0.95\cdot 0.01}{0.95\cdot 0.01 + 0.10\cdot 0.99}
+=\frac{0.0095}{0.1085} \approx 0.0876.
+\]
+So the posterior probability is about
+\[
+\boxed{8.76\%}.
+\]
+This is a standard reminder that in low-prevalence settings, false positives can dominate.
+\end{proof}
+
+\subsection{Random Variables, Moments, and Common Distributions}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A random variable $X$ is a measurable function from $\Omega$ to $\R$. Its cumulative distribution function is
+    \[
+        F_X(x)=\mathbb{P}(X\le x).
+    \]
+    If a density exists, then $F_X'(x)=f_X(x)$ almost everywhere.
+    \item The \emph{distribution} of $X$ is the full probabilistic description of $X$. It tells you which values are typical, how much uncertainty there is around the mean, whether the support is bounded or unbounded, and how quickly tail probabilities decay.
+    \item In interview language, saying ``$X$ has distribution $\mathcal{D}$'' should answer two questions at once: what real-world mechanism $X$ models, and which structural property of the law matters most (counting, waiting time, symmetry, bounded support, tail behavior, or conjugacy).
+    \item Expectation, variance, and covariance are
+    \[
+        \E[X], \qquad \Var(X)=\E[X^2]-\E[X]^2, \qquad \Cov(X,Y)=\E[XY]-\E[X]\E[Y].
+    \]
+    \item Moments summarize a distribution, but the distribution contains more information than finitely many moments. In practice, quant questions often hinge on support, symmetry, memorylessness, or the tail rather than just the mean and variance.
+    \item If $Y=AX+b$ for a random vector $X$, then
+    \[
+        \E[Y]=A\E[X]+b, \qquad \Cov(Y)=A\,\Cov(X)\,A^T.
+    \]
+    \item The covariance matrix is always symmetric positive semidefinite. Geometrically, it records the spread of the cloud of points in each direction.
+    \item A random vector $X\in \R^d$ is multivariate normal, written $X\sim \mathcal{N}_d(\mu,\Sigma)$, if every linear combination $u^TX$ is univariate normal. The vector $\mu$ is the center of the cloud and $\Sigma$ controls its shape and orientation.
+    \item If $\Sigma$ is invertible, the multivariate normal density is
+    \[
+        f_X(x)=\frac{1}{(2\pi)^{d/2}\det(\Sigma)^{1/2}}\exp\!\left(-\frac12(x-\mu)^T\Sigma^{-1}(x-\mu)\right).
+    \]
+    Equal-density contours are ellipsoids, so correlation literally tilts and stretches the level sets.
+    \item Gaussian vectors are stable under affine maps: if $X\sim \mathcal{N}_d(\mu,\Sigma)$ and $Y=BX+b$, then $Y\sim \mathcal{N}_m(B\mu+b,B\Sigma B^T)$. Marginals and conditionals are again Gaussian, and for jointly Gaussian coordinates, zero covariance is equivalent to independence.
+    \item Useful distributions to know cold:
+    \begin{itemize}
+        \item Binomial$(n,p)$: counts the number of successes in a fixed number of independent Bernoulli trials. This is the natural law for repeated yes/no experiments with fixed horizon. Mean $np$, variance $np(1-p)$.
+        \item Hypergeometric$(N,K,n)$: counts marked objects in sampling \emph{without} replacement. It is the finite-population version of the binomial, and the dependence comes from depletion of the population. Mean $nK/N$, variance
+        \[
+            n\frac{K}{N}\left(1-\frac{K}{N}\right)\frac{N-n}{N-1}.
+        \]
+        \item Poisson$(\lambda)$: counts the number of rare, approximately independent arrivals in a time window or spatial region. It is the natural counting law for a constant-rate arrival process, and its mean equals its variance:
+        \[
+            \mathbb{P}(X=k)=e^{-\lambda}\frac{\lambda^k}{k!}, \qquad \E[X]=\Var(X)=\lambda.
+        \]
+        \item Geometric$(p)$: waiting time until the first success in repeated Bernoulli trials. It is the discrete memoryless law:
+        \[
+            \mathbb{P}(X=k)=(1-p)^{k-1}p, \qquad \E[X]=\frac{1}{p}, \qquad \Var(X)=\frac{1-p}{p^2}.
+        \]
+        \item Exponential$(\lambda)$: continuous waiting time for the next event in a Poisson process. It is the continuous memoryless law, with density $\lambda e^{-\lambda x}$ on $x\ge 0$, mean $1/\lambda$, and variance $1/\lambda^2$.
+        \item Uniform$(a,b)$: every point in the interval is equally likely. This is the basic bounded-support model when there is no preferred location inside the interval. Mean $(a+b)/2$, variance $(b-a)^2/12$.
+        \item Normal$(\mu,\sigma^2)$: the canonical law for aggregated noise and the CLT limit of many small independent shocks. It is symmetric, light-tailed, and fully determined by mean and variance. Its density is
+        \[
+            \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right), \qquad \E[X]=\mu, \qquad \Var(X)=\sigma^2.
+        \]
+        \item Gamma$(\alpha,\beta)$ in the rate parameterization: a flexible positive-valued law for waiting times and intensities. When $\alpha$ is an integer, it is the sum of $\alpha$ i.i.d. exponential variables. It is useful when the object being modeled must stay positive and skewed. Mean $\alpha/\beta$, variance $\alpha/\beta^2$.
+        \item Beta$(a,b)$: a distribution on $[0,1]$ used for random probabilities and proportions. Its shape can be U-shaped, symmetric, or strongly concentrated depending on $a$ and $b$, which makes it useful in Bayesian updating for success probabilities. Mean $a/(a+b)$, variance $ab/[(a+b)^2(a+b+1)]$.
+        \item Multivariate normal $\mathcal{N}_d(\mu,\Sigma)$: the vector-valued Gaussian law. It is determined by its mean vector $\mu$ and covariance matrix $\Sigma$, and its level sets are ellipsoids. This law appears constantly in factor models, linear signal models, and Gaussian portfolio calculations.
+    \end{itemize}
+\end{itemize}
+
+\textbf{Contour sketch for a bivariate normal.} The sign of the covariance changes the tilt of the ellipses while the eigenvalues of $\Sigma$ control their axis lengths.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.78]
+    \begin{scope}[xshift=-4.5cm]
+        \draw[->] (-2.5,0) -- (2.5,0) node[right] {$x_1$};
+        \draw[->] (0,-2.5) -- (0,2.5) node[above] {$x_2$};
+        \fill (0,0) circle (1.2pt);
+        \draw[rotate around={28:(0,0)}] (0,0) ellipse (1.9 and 0.9);
+        \draw[rotate around={28:(0,0)}] (0,0) ellipse (1.25 and 0.58);
+        \draw[rotate around={28:(0,0)}] (0,0) ellipse (0.65 and 0.3);
+        \node[below] at (0,-2.8) {positive covariance};
+    \end{scope}
+    \begin{scope}[xshift=4.5cm]
+        \draw[->] (-2.5,0) -- (2.5,0) node[right] {$x_1$};
+        \draw[->] (0,-2.5) -- (0,2.5) node[above] {$x_2$};
+        \fill (0,0) circle (1.2pt);
+        \draw[rotate around={-28:(0,0)}] (0,0) ellipse (1.9 and 0.9);
+        \draw[rotate around={-28:(0,0)}] (0,0) ellipse (1.25 and 0.58);
+        \draw[rotate around={-28:(0,0)}] (0,0) ellipse (0.65 and 0.3);
+        \node[below] at (0,-2.8) {negative covariance};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{example}[Choosing the right distribution]
+Orders arrive according to a Poisson process with rate $3$ per minute. What is the probability of exactly $5$ orders in the next $2$ minutes, and what is the probability that the next order arrives after $30$ seconds?
+\end{example}
+
+\begin{proof}[Solution]
+If arrivals form a Poisson process with rate $3$ per minute, then the number of arrivals in a $2$-minute window has Poisson distribution with parameter
+\[
+\lambda = 3\times 2 = 6.
+\]
+Therefore
+\[
+\mathbb{P}(N=5)=e^{-6}\frac{6^5}{5!}.
+\]
+
+The waiting time $T$ until the next arrival is exponential with rate $3$ per minute. Since $30$ seconds is $0.5$ minutes,
+\[
+\mathbb{P}(T>0.5)=e^{-3\cdot 0.5}=e^{-1.5}.
+\]
+This example is useful because it highlights the meaning of two closely related laws: Poisson for counts in a window and exponential for waiting times between arrivals.
+\end{proof}
+
+\begin{example}[Broken stick triangle probability]
+Break a stick of length $1$ at two independent uniformly random points. What is the probability that the three pieces can form a triangle?
+\end{example}
+
+\begin{proof}[Solution]
+Let the breakpoints be $0<U<V<1$. The three lengths are
+\[
+U, \qquad V-U, \qquad 1-V.
+\]
+They form a triangle if and only if no piece has length at least $1/2$. Thus we need
+\[
+U<\frac12, \qquad V-U<\frac12, \qquad 1-V<\frac12.
+\]
+Equivalently,
+\[
+U<\frac12, \qquad V>\frac12, \qquad V<U+\frac12.
+\]
+The sample space is the triangle $0<U<V<1$, which has area $1/2$. The favorable region is a smaller central triangle with area $1/8$. Therefore
+\[
+\mathbb{P}(\text{triangle}) = \frac{1/8}{1/2}=\frac14.
+\]
+So the answer is
+\[
+\boxed{\frac14}.
+\]
+\end{proof}
+
+\begin{example}[Expected draw time for an inclusive marriage]
+An inclusive marriage is a king together with a queen, with suits arbitrary. A standard deck is thoroughly shuffled, and cards are drawn one by one without replacement. Find the expected number of cards that must be drawn until an inclusive marriage has appeared. Express the answer as an irreducible fraction.
+\end{example}
+
+\begin{proof}[Solution]
+Let $T$ be the number of cards drawn until we have seen at least one king and at least one queen.
+
+Only the $8$ special cards matter: the $4$ kings and the $4$ queens. Ignore the other $44$ cards for a moment and look only at the special cards in the order they appear. This order is a uniformly random permutation of
+\[
+K,K,K,K,Q,Q,Q,Q.
+\]
+Let $J$ be the index of the special card at which the first opposite rank appears. Then $J$ can be $2,3,4$, or $5$.
+
+Its distribution is easy to compute:
+\[
+\mathbb{P}(J=2)=\frac47,
+\]
+because after the first special card, $4$ of the remaining $7$ special cards have the opposite rank. Also,
+\[
+\mathbb{P}(J=3)=\frac37\cdot\frac46=\frac27,
+\]
+\[
+\mathbb{P}(J=4)=\frac37\cdot\frac26\cdot\frac45=\frac4{35},
+\]
+and
+\[
+\mathbb{P}(J=5)=\frac37\cdot\frac26\cdot\frac15=\frac1{35}.
+\]
+Therefore
+\[
+\E[J]=2\cdot\frac47+3\cdot\frac27+4\cdot\frac4{35}+5\cdot\frac1{35}=\frac{13}{5}.
+\]
+
+Now let $S_j$ be the position in the full deck of the $j$th special card. The $44$ non-special cards are split into $9$ gaps around the $8$ special cards, and by symmetry each gap has expected size $44/9$. Hence before the $j$th special card there are, on average, $j\cdot 44/9$ ordinary cards, so
+\[
+\E[S_j]=j+\frac{44j}{9}=\frac{53j}{9}.
+\]
+
+The positions of the $8$ special cards are independent of which of those positions are occupied by kings and which by queens, so $J$ is independent of the sequence $(S_j)$. Since $T=S_J$, we obtain
+\[
+\E[T]=\E[S_J]=\frac{53}{9}\E[J]=\frac{53}{9}\cdot\frac{13}{5}=\frac{689}{45}.
+\]
+Thus the expected number of cards needed is
+\[
+\boxed{\frac{689}{45}}.
+\]
+\end{proof}
+
+\begin{example}[Linear combination of a bivariate normal]
+Let
+\[
+X=\begin{pmatrix}X_1\\X_2\end{pmatrix}
+\sim \mathcal{N}_2\!\left(
+\begin{pmatrix}1\\-2\end{pmatrix},
+\begin{pmatrix}4&1\\1&9\end{pmatrix}
+\right).
+\]
+Find the distribution of $Y=2X_1-X_2$ and estimate $\mathbb{P}(Y>0)$.
+\end{example}
+
+\begin{proof}[Solution]
+Write
+\[
+a=\begin{pmatrix}2\\-1\end{pmatrix}.
+\]
+Then $Y=a^TX$, and every linear combination of a multivariate normal vector is again normal. Therefore
+\[
+Y\sim \mathcal{N}(a^T\mu, a^T\Sigma a).
+\]
+Compute the mean:
+\[
+a^T\mu = 2\cdot 1 -(-2)=4.
+\]
+Compute the variance:
+\[
+a^T\Sigma a
+=
+\begin{pmatrix}2&-1\end{pmatrix}
+\begin{pmatrix}4&1\\1&9\end{pmatrix}
+\begin{pmatrix}2\\-1\end{pmatrix}
+=21.
+\]
+Hence
+\[
+Y\sim \mathcal{N}(4,21).
+\]
+
+Standardizing gives
+\[
+\mathbb{P}(Y>0)=\mathbb{P}\left(Z>\frac{0-4}{\sqrt{21}}\right)=\Phi\left(\frac{4}{\sqrt{21}}\right)\approx 0.809,
+\]
+where $Z\sim \mathcal{N}(0,1)$.
+
+So the final answer is
+\[
+\boxed{Y\sim \mathcal{N}(4,21), \qquad \mathbb{P}(Y>0)\approx 0.809.}
+\]
+\end{proof}
+
+\subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item Markov's inequality for nonnegative $X$:
+    \[
+        \mathbb{P}(X\ge a)\le \frac{\E[X]}{a}.
+    \]
+    \item Chebyshev's inequality:
+    \[
+        \mathbb{P}(|X-\mu|\ge k\sigma)\le \frac{1}{k^2}.
+    \]
+    \item Jensen's inequality: if $\varphi$ is convex, then
+    \[
+        \varphi(\E[X])\le \E[\varphi(X)].
+    \]
+    \item Borel--Cantelli: if $\sum_n \mathbb{P}(A_n)<\infty$, then only finitely many $A_n$ occur almost surely.
+    \item Common convergence notions:
+    \begin{itemize}
+        \item almost sure: $X_n\to X$ a.s.;
+        \item in probability: $\mathbb{P}(|X_n-X|>\varepsilon)\to 0$;
+        \item in $L^p$: $\E[|X_n-X|^p]\to 0$;
+        \item in distribution: $F_{X_n}(x)\to F_X(x)$ at continuity points of $F_X$.
+    \end{itemize}
+    \item The weak law says sample means converge in probability; the strong law says they converge almost surely; the central limit theorem describes the \emph{fluctuation scale} around the law-of-large-numbers limit. For i.i.d. $X_i$ with mean $\mu$ and variance $\sigma^2<\infty$,
+    \[
+        \sqrt{n}\,\frac{\bar X_n-\mu}{\sigma} \Rightarrow \mathcal{N}(0,1).
+    \]
+    Equivalently, for large $n$,
+    \[
+        \bar X_n \approx \mathcal{N}\!\left(\mu,\frac{\sigma^2}{n}\right),
+        \qquad
+        S_n=X_1+\cdots+X_n \approx \mathcal{N}(n\mu,n\sigma^2).
+    \]
+    For lattice variables such as binomial counts, a continuity correction often improves the approximation.
+    \item The characteristic function of $X$ is
+    \[
+        \varphi_X(t)=\E[e^{itX}].
+    \]
+    For independent $X,Y$, $\varphi_{X+Y}(t)=\varphi_X(t)\varphi_Y(t)$.
+\end{itemize}
+
+\textbf{Standard normal reference curve.} CLT approximations are usually read off after standardizing to the bell curve below.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.72\linewidth,
+    height=5.2cm,
+    domain=-4:4,
+    samples=140,
+    axis lines=left,
+    xlabel={$z$},
+    ylabel={density},
+    ymin=0,
+    ymax=0.43,
+    xtick={-2,0,2},
+    ytick=\empty,
+    clip=false
+]
+\addplot[thick] {exp(-x^2/2)/sqrt(2*pi)};
+\addplot[dashed] coordinates {(-2,0) (-2,0.055)};
+\addplot[dashed] coordinates {(2,0) (2,0.055)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{example}[Chebyshev bound for a sample mean]
+Let $X_1,\dots,X_{400}$ be i.i.d. with mean $0$ and variance $1$. Give an upper bound on
+\[
+\mathbb{P}\left(\left|\frac{1}{400}\sum_{i=1}^{400}X_i\right|>0.1\right)
+\]
+using Chebyshev's inequality.
+\end{example}
+
+\begin{proof}[Solution]
+Let $\bar X_{400}=\frac{1}{400}\sum_{i=1}^{400}X_i$. Then
+\[
+\E[\bar X_{400}]=0, \qquad \Var(\bar X_{400})=\frac{1}{400^2}\cdot 400 = \frac{1}{400}.
+\]
+By Chebyshev,
+\[
+\mathbb{P}(|\bar X_{400}|>0.1) \le \frac{\Var(\bar X_{400})}{0.1^2} = \frac{1/400}{0.01} = \frac14.
+\]
+Hence
+\[
+\boxed{\mathbb{P}(|\bar X_{400}|>0.1)\le \frac14}.
+\]
+This is conservative but completely distribution-free.
+\end{proof}
+
+\begin{example}[Central limit approximation to a binomial count]
+A fair coin is tossed $400$ times. Estimate
+\[
+\mathbb{P}(180\le X\le 220),
+\]
+where $X$ is the number of heads.
+\end{example}
+
+\begin{proof}[Solution]
+Here
+\[
+X\sim \mathrm{Bin}(400,1/2),
+\qquad
+\mu=np=200,
+\qquad
+\sigma=\sqrt{np(1-p)}=10.
+\]
+By the central limit theorem, $X$ is well approximated by a normal variable with the same mean and variance. Using a continuity correction,
+\[
+\mathbb{P}(180\le X\le 220)
+\approx
+\mathbb{P}(179.5\le Y\le 220.5),
+\]
+where $Y\sim \mathcal{N}(200,100)$.
+
+Standardize:
+\[
+\mathbb{P}(179.5\le Y\le 220.5)
+=
+\mathbb{P}\left(\frac{179.5-200}{10}\le Z\le \frac{220.5-200}{10}\right)
+=
+\mathbb{P}(-2.05\le Z\le 2.05),
+\]
+where $Z\sim \mathcal{N}(0,1)$.
+Therefore
+\[
+\mathbb{P}(180\le X\le 220)
+\approx 2\Phi(2.05)-1
+\approx 0.9596.
+\]
+So the CLT estimate is
+\[
+\boxed{\mathbb{P}(180\le X\le 220)\approx 0.960.}
+\]
+\end{proof}
+
+\begin{example}[A random increment process with shrinking step size]
+Assume $x_3>0$ is fixed. For each $t\ge 3$, the process adds the current increment $x_t$ to $V$, and then independently updates the next increment by
+\[
+x_{t+1}=
+\begin{cases}
+x_t/2, & \text{with probability } 2/t,\\
+x_t, & \text{with probability } 1-2/t.
+\end{cases}
+\]
+What is the probability that $V_t\to\infty$ as $t\to\infty$?
+\end{example}
+
+\begin{proof}[Solution]
+Let $I_t$ be the indicator that a halving occurs at time $t$, and let
+\[
+N_n=\sum_{t=3}^n I_t
+\]
+be the total number of halvings up to time $n$. Then
+\[
+x_n = x_3\,2^{-N_{n-1}}.
+\]
+Since the halving decisions are independent and $\mathbb{P}(I_t=1)=2/t$,
+\[
+\E[N_n]=\sum_{t=3}^n \frac{2}{t}=2\log n + O(1).
+\]
+By the strong law for sums of independent Bernoulli variables with varying parameters,
+\[
+N_n = 2\log n + o(\log n) \qquad \text{almost surely}.
+\]
+Therefore
+\[
+x_n = x_3\exp\bigl(- (\log 2)N_{n-1}\bigr)
+= n^{-2\log 2 + o(1)} \qquad \text{almost surely}.
+\]
+Now
+\[
+2\log 2 \approx 1.386 > 1,
+\]
+so almost surely the series $\sum_n x_n$ behaves like a $p$-series with exponent strictly larger than $1$. Hence
+\[
+\sum_{n=3}^{\infty} x_n < \infty \qquad \text{almost surely}.
+\]
+But $V_t$ is obtained by summing these increments, so $V_t$ converges to a finite random limit almost surely. Consequently,
+\[
+\boxed{\mathbb{P}(V_t\to\infty)=0}.
+\]
+
+This is a useful warning example: even though the expected number of halvings by time $n$ is only logarithmic, that is still enough to make the typical increment decay faster than $1/n$, so the cumulative growth stays finite almost surely.
+\end{proof}
+
+\subsection{Markov Chains and First-Step Analysis}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item A Markov chain has transition matrix $P=(p_{ij})$, where
+    \[
+        p_{ij}=\mathbb{P}(X_{n+1}=j\mid X_n=i).
+    \]
+    Each row of $P$ sums to $1$. The key modeling step is to choose the state so that, once the current state is known, the future no longer depends on the earlier history. In interview problems, the hard part is usually not matrix algebra but selecting the right state description.
+    \item A distribution $\pi$ is stationary if $\pi P=\pi$. This means that if the chain starts with distribution $\pi$, then after one step it still has distribution $\pi$. For ergodic finite chains, this is the long-run equilibrium law.
+    \item In a finite irreducible and aperiodic chain, the stationary distribution is unique and the chain converges to it regardless of the starting state. Irreducible means every state can eventually reach every other state, and aperiodic means the chain is not trapped in a rigid cycle length.
+    \item Hitting probabilities are handled by the same one-step idea. If
+    \[
+        q_i=\mathbb{P}_i(\tau_A<\tau_B),
+    \]
+    then the boundary conditions are
+    \[
+        q_i=1 \text{ for } i\in A,
+        \qquad
+        q_i=0 \text{ for } i\in B,
+    \]
+    and for all other states,
+    \[
+        q_i=\sum_j p_{ij}q_j.
+    \]
+    There is no extra $1$ here because we are computing a probability, not a time. We simply average the future success probability over the next state.
+    \item Expected hitting times are often solved by \emph{first-step analysis}: condition on the next move and write a recursion.
+    \item If $\tau_A$ is the first hitting time of a set $A$, then the expected hitting times satisfy
+    \[
+        h_i=0 \text{ for } i\in A,
+        \qquad
+        h_i = 1+\sum_j p_{ij}h_j \text{ for } i\notin A.
+    \]
+    The extra $1$ is the step you take immediately before landing in the next state.
+    \item Absorbing-state problems reduce to linear systems. Once you assign one variable to each transient state, the recursion from first-step analysis produces one linear equation per unknown.
+    \item For an absorbing Markov chain with block form
+    \[
+        P=\begin{pmatrix}Q&R\\0&I\end{pmatrix},
+    \]
+    the matrix $Q$ describes transitions among transient states, $R$ describes jumps from transient states to absorbing states, and the fundamental matrix is $N=(I-Q)^{-1}$. The entry $N_{ij}$ is the expected number of visits to transient state $j$ when starting from transient state $i$, before absorption occurs. Summing across a row gives the expected absorption time, so $N\mathbf{1}$ gives expected absorption times from transient states.
+\end{itemize}
+
+\textbf{Transition-graph picture.} The matrix and the directed graph contain the same information: draw one node per state and an arrow $i\to j$ labeled by $p_{ij}$ whenever $p_{ij}>0$. For the random walk example below, the chain can be visualized as follows.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex, node distance=2.2cm, every node/.style={draw, circle, minimum size=9mm}]
+    \node (0) {$0$};
+    \node (1) [right=of 0] {$1$};
+    \node (2) [right=of 1] {$2$};
+    \node (3) [right=of 2] {$3$};
+
+    \draw[->] (1) to[bend left=18] node[above] {$1/2$} (2);
+    \draw[->] (2) to[bend left=18] node[below] {$1/2$} (1);
+    \draw[->] (1) -- node[above] {$1/2$} (0);
+    \draw[->] (2) -- node[above] {$1/2$} (3);
+    \draw[->] (0) edge[loop above] node {$1$} (0);
+    \draw[->] (3) edge[loop above] node {$1$} (3);
+\end{tikzpicture}
+\end{center}
+
+The absorbing states $0$ and $3$ have self-loops of probability $1$. States $1$ and $2$ are transient because, once the walk enters $0$ or $3$, it never returns.
+
+\textbf{Practical workflow.}
+\begin{enumerate}
+    \item Choose states that retain exactly the information that still matters for the future.
+    \item Write one equation per nonterminal state by conditioning on the next step.
+    \item Put boundary values on terminal or absorbing states.
+    \item Solve the resulting linear system.
+    \item Read off the quantity corresponding to the actual starting state.
+\end{enumerate}
+
+In interview practice there are three recurring templates:
+\begin{itemize}
+    \item If you are asked for a probability of eventually hitting one target before another, define $q_i$ and use $q_i=\sum_j p_{ij}q_j$.
+    \item If you are asked for an expected waiting time, define $h_i$ and use $h_i=1+\sum_j p_{ij}h_j$.
+    \item If the process only depends on a small memory of the past, compress the past into a few states. The two-sixes example below is exactly of this type.
+\end{itemize}
+
+\begin{example}[Expected rolls until two consecutive sixes]
+You roll a fair six-sided die repeatedly. What is the expected number of rolls until two consecutive sixes appear?
+\end{example}
+
+\begin{proof}[Solution]
+Use two states, chosen so that the future depends only on whether we are currently carrying a trailing $6$:
+\begin{itemize}
+    \item $E_0$: expected additional rolls when we do \emph{not} currently have a trailing $6$;
+    \item $E_1$: expected additional rolls when the previous roll was a $6$, so one more $6$ finishes the game.
+\end{itemize}
+At the start of the experiment no roll has happened yet, so we are in state $E_0$, not $E_1$. That is why the answer to the problem will be $E_0$.
+
+This is the standard state-compression trick: the whole past sequence of rolls is irrelevant except for one bit of information, namely whether the most recent roll was a $6$.
+
+From state $E_0$, one roll occurs, and then with probability $5/6$ we remain in $E_0$, while with probability $1/6$ we move to $E_1$:
+\[
+E_0 = 1 + \frac{5}{6}E_0 + \frac{1}{6}E_1.
+\]
+From state $E_1$, one roll occurs. With probability $1/6$ we finish, and with probability $5/6$ we return to $E_0$:
+\[
+E_1 = 1 + \frac{5}{6}E_0.
+\]
+The first equation simplifies to
+\[
+E_0 = 6 + E_1.
+\]
+Substitute into the second:
+\[
+E_1 = 1 + \frac{5}{6}(6+E_1)=6+\frac{5}{6}E_1.
+\]
+Thus
+\[
+\frac{1}{6}E_1=6 \quad \Longrightarrow \quad E_1=36,
+\]
+and therefore
+\[
+E_0=6+36=42.
+\]
+Because the chain starts in state $E_0$, the expected number of rolls asked for in the problem is
+\[
+\boxed{42}.
+\]
+The structure is worth remembering: one equation per nonterminal state, one immediate step cost, and then an average over the next states.
+\end{proof}
+
+\begin{example}[Absorption on a short random walk]
+A particle moves on the states $0,1,2,3$. States $0$ and $3$ are absorbing. From states $1$ and $2$, the particle moves left or right with probability $1/2$ each. If the chain starts at state $1$, find the probability of being absorbed at $3$ and the expected time to absorption.
+\end{example}
+
+\begin{proof}[Solution]
+Let $p_i$ be the probability, starting from state $i$, of hitting $3$ before $0$. Then
+\[
+p_0=0,
+\qquad
+p_3=1,
+\]
+and by first-step analysis,
+\[
+p_1=\frac{p_0+p_2}{2}=\frac{p_2}{2},
+\qquad
+p_2=\frac{p_1+p_3}{2}=\frac{p_1+1}{2}.
+\]
+Substituting the first equation into the second gives
+\[
+p_2=\frac{p_2/2+1}{2},
+\]
+so $4p_2=p_2+2$, hence $p_2=\frac23$ and therefore
+\[
+p_1=\frac13.
+\]
+Thus the probability of absorption at $3$ when starting from $1$ is
+\[
+\boxed{\frac13}.
+\]
+
+This is the hitting-probability template in its purest form: no extra $1$ appears because we are not counting time, only eventual success.
+
+Now let $e_i$ be the expected time to absorption starting from state $i$. Then
+\[
+e_0=e_3=0,
+\]
+and
+\[
+e_1=1+\frac{e_0+e_2}{2}=1+\frac{e_2}{2},
+\qquad
+e_2=1+\frac{e_1+e_3}{2}=1+\frac{e_1}{2}.
+\]
+Substitute the second equation into the first:
+\[
+e_1=1+\frac{1+e_1/2}{2}=\frac32+\frac{e_1}{4}.
+\]
+Hence
+\[
+\frac{3e_1}{4}=\frac32,
+\qquad
+e_1=2.
+\]
+So the expected time to absorption is
+\[
+\boxed{2}.
+\]
+Here the extra $1$ appears because one step is spent immediately, regardless of which direction the walk takes next.
+\end{proof}
+
+\section*{How to Use This Guide Efficiently}
+\begin{itemize}
+    \item Memorize formulas only after you understand where they come from.
+    \item When a problem looks hard, first classify it: parity, conditioning, asymptotics, optimization, or linear structure.
+    \item In an interview, write down the state variables explicitly. A correct state definition is usually half of the solution.
+    \item For revision, cover the solutions and try to reproduce them from the definitions and formulas alone.
+\end{itemize}
+
+\end{document}
