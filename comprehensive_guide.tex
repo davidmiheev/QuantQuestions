@@ -300,6 +300,51 @@ r=b-Ax^*=
 and one checks that $r$ is orthogonal to both columns of $A$, as it should be.
 \end{proof}
 
+\begin{example}[Prescribing an eigenvector and excluding a vector from the image]
+Let $v,w\in\R^n$ be linearly independent. Does there always exist an $n\times n$ matrix $A$ such that $v$ is an eigenvector of $A$ with eigenvalue $5$, while $w\notin \operatorname{im}(A)$?
+\end{example}
+
+\begin{proof}[Solution]
+Yes, always. Since $v,w$ are linearly independent, extend $\{v,w\}$ to a basis $\{v,w,e_3,\dots,e_n\}$ of $\R^n$. A linear map is determined by its values on a basis, so define $A$ by
+\[
+Av=5v, \qquad Aw=0, \qquad Ae_3=\cdots=Ae_n=0.
+\]
+By construction $v$ is an eigenvector of $A$ with eigenvalue $5$. Moreover
+\[
+\operatorname{im}(A)=\Span\{5v,0,\dots,0\}=\Span\{v\},
+\]
+and $w\notin\Span\{v\}$ precisely because $v,w$ are linearly independent. Hence
+\[
+\boxed{w\notin \operatorname{im}(A)}
+\]
+for this choice of $A$. Concretely: writing any $x\in\R^n$ in basis coordinates $x=\alpha v+\beta w+\sum_i\gamma_ie_i$, one has $Ax=5\alpha v$.
+\end{proof}
+
+\begin{example}[Equal rank from an invertibility hypothesis]
+Let $A,B$ be $n\times n$ matrices with $A^2=A$, $B^2=B$, and suppose $I-(A+B)$ is invertible. Prove that $\rank A=\rank B$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $C=I-A-B$, invertible by hypothesis. Since $A$ is idempotent, every $v\in\operatorname{im}(A)$ satisfies $Av=v$ (write $v=Au$; then $Av=A^2u=Au=v$), and likewise $Bv=v$ for $v\in\operatorname{im}(B)$.
+
+Take $v\in\operatorname{im}(A)$. Then
+\[
+Cv=v-Av-Bv=v-v-Bv=-Bv\in\operatorname{im}(B),
+\]
+so $C$ maps $\operatorname{im}(A)$ into $\operatorname{im}(B)$. As $C$ is invertible it is injective, so its restriction to $\operatorname{im}(A)$ is an injective map into $\operatorname{im}(B)$, giving
+\[
+\rank A=\dim\operatorname{im}(A)\le \dim\operatorname{im}(B)=\rank B.
+\]
+Symmetrically, for $v\in\operatorname{im}(B)$,
+\[
+Cv=v-Av-Bv=v-Av-v=-Av\in\operatorname{im}(A),
+\]
+so the same argument gives $\rank B\le\rank A$. Combining,
+\[
+\boxed{\rank A=\rank B}.
+\]
+\end{proof}
+
 \subsection{Eigenvalues, Jordan Form, and Singular Value Decomposition}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -619,6 +664,21 @@ Therefore
 \]
 \end{proof}
 
+\begin{example}[Chaining two equivalent infinitesimals]
+Suppose $\lim_{x\to 0} f(x)/\sin x=2$. Find $\lim_{x\to 0}\ln(1+3x)/f(x)$.
+\end{example}
+
+\begin{proof}[Solution]
+Write the target limit as a product of three limits that each exist:
+\[
+\frac{\ln(1+3x)}{f(x)}=\frac{\ln(1+3x)}{x}\cdot\frac{x}{\sin x}\cdot\frac{\sin x}{f(x)}.
+\]
+As $x\to 0$: $\ln(1+3x)/x\to 3$, $x/\sin x\to 1$, and $\sin x/f(x)\to 1/2$ (the reciprocal of the given limit, valid since $f(x)/\sin x\to2\neq0$ forces $f(x)\neq0$ near $0$). Hence
+\[
+\boxed{\lim_{x\to 0}\frac{\ln(1+3x)}{f(x)}=3\cdot 1\cdot\frac12=\frac32}.
+\]
+\end{proof}
+
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
 \textbf{Useful identities.}
 \begin{itemize}
@@ -926,6 +986,42 @@ The minimum value is
 f\left(\frac15,\frac25\right)=\frac{1}{25}+\frac{4}{25}=\frac15.
 \]
 Because the objective is strictly convex and the constraint is affine, this minimizer is unique.
+\end{proof}
+
+\begin{example}[An extremal problem with infimum zero]
+Let $M$ be the set of continuous, non-increasing functions $f:[0,1]\to\R$ with $f(1)=0$ and $f\not\equiv0$. Find
+\[
+\inf_{f\in M}\ \sup_{x\in[0,1]}\frac{x\,f(x)}{\int_0^1 f(t)\,dt}.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Since $f$ is non-increasing with $f(1)=0$, automatically $f\ge0$ on $[0,1]$. Under $f\mapsto cf$ ($c>0$) both the numerator's supremum and the denominator scale by $c$, so the ratio is scale-invariant; we may search among a convenient family.
+
+For an integer $n\ge2$, define
+\[
+f_n(x)=\min\!\left(n,\ \frac1x\right)-1 \quad (x>0), \qquad f_n(0):=n-1,
+\]
+i.e.\ $f_n(x)=n-1$ on $[0,1/n]$ and $f_n(x)=\frac1x-1$ on $[1/n,1]$. This is continuous and non-increasing (the two pieces agree and are each non-increasing), with $f_n(1)=0$, so $f_n\in M$.
+
+\emph{Numerator.} On $[0,1/n]$, $xf_n(x)=x(n-1)$ increases to $\frac{n-1}{n}$ at $x=1/n$. On $[1/n,1]$, $xf_n(x)=x\left(\frac1x-1\right)=1-x$ decreases from the same value $\frac{n-1}{n}$. Hence
+\[
+\sup_{x}xf_n(x)=\frac{n-1}{n}<1.
+\]
+
+\emph{Denominator.}
+\[
+\int_0^1 f_n=\int_0^{1/n}(n-1)\,dt+\int_{1/n}^1\left(\frac1t-1\right)dt=\frac{n-1}{n}+\Big[\ln t-t\Big]_{1/n}^{1}=\frac{n-1}{n}+\left(\ln n+\frac1n-1\right)=\ln n.
+\]
+
+\emph{Ratio.}
+\[
+\frac{\sup_x xf_n(x)}{\int_0^1f_n}=\frac{(n-1)/n}{\ln n}\ \xrightarrow[n\to\infty]{}\ 0,
+\]
+since the numerator stays bounded below $1$ while the denominator grows without bound. The ratio is always strictly positive for $f\in M$, but by taking $n$ large it can be made smaller than any $\varepsilon>0$, so the infimum is not attained and equals
+\[
+\boxed{0}.
+\]
 \end{proof}
 
 \subsection{Vector Fields and Vector Calculus}
@@ -1801,6 +1897,26 @@ Hence the smallest value of $n$ that is guaranteed is
 \]
 \end{example}
 
+\begin{example}[Minimum edges forced by a local domination condition]
+A graph $G$ has $40$ vertices, and among any $5$ of them there is always one adjacent to the other $4$. What is the minimum possible number of edges of $G$?
+\end{example}
+
+\begin{proof}[Solution]
+Pass to the complement $H=\overline{G}$; since $|E(G)|+|E(H)|=\binom{40}{2}=780$, minimizing $|E(G)|$ is the same as maximizing $|E(H)|$. A vertex $v$ is $G$-adjacent to the other four vertices of a $5$-set $S$ exactly when $v$ has no $H$-neighbor inside $S$, i.e.\ $v$ is isolated in the induced subgraph $H[S]$. So the hypothesis on $G$ says: every $5$-element $S\subseteq V(H)$ contains a vertex isolated in $H[S]$. We must maximize $|E(H)|$ subject to this.
+
+\emph{No component of $H$ has $5$ or more vertices.} If a component $C$ had $|C|\ge5$, a spanning tree of $C$ has a connected sub-tree on some $5$ vertices $S$ (e.g.\ the first $5$ vertices visited by a breadth-first search). The tree edges among $S$ are genuine edges of $H$, so every vertex of $S$ has an $H$-neighbor inside $S$: no isolated vertex, contradicting the hypothesis.
+
+\emph{$H$ cannot have two distinct components of sizes $\ge2$ and $\ge3$.} If $C_1,C_2$ are distinct components with $|C_1|\ge2$, $|C_2|\ge3$, take an edge $\{a,b\}\subseteq C_1$ and three vertices $\{c,d,e\}\subseteq C_2$ that induce a subgraph with no isolated point (any connected graph on $\ge3$ vertices contains such a triple, e.g.\ a vertex together with two of its tree-neighbors). Then $S=\{a,b,c,d,e\}$ has no isolated vertex in $H[S]$, a contradiction.
+
+So the components of $H$ fall into one of two patterns: (A) a single component of size $s\in\{2,3,4\}$ plus $40-s$ isolated vertices, contributing at most $\binom42=6$ edges; or (B) every component has size at most $2$ (a disjoint union of edges and isolated vertices), contributing at most $\lfloor 40/2\rfloor=20$ edges. Since $20>6$, the maximum is achieved by a perfect matching on all $40$ vertices, $|E(H)|=20$.
+
+Thus
+\[
+|E(G)|=780-20=\boxed{760},
+\]
+attained by $G=\overline{H}=K_{40}$ minus a perfect matching (each vertex has exactly one non-neighbor, its ``partner''). Indeed, in any $5$ chosen vertices, since $5$ is odd the partners cannot all pair up inside the set, so some vertex's partner lies outside it — that vertex is adjacent to the other four.
+\end{proof}
+
 \subsection{Generating Functions and Linear Recurrences}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1943,6 +2059,34 @@ So the posterior probability is about
 \boxed{8.76\%}.
 \]
 This is a standard reminder that in low-prevalence settings, false positives can dominate.
+\end{proof}
+
+\begin{example}[Meeting probability and a non-obvious dependence]
+Alex and Maria agree to meet between 8:00 and 9:00. Each arrives at a uniformly random, independent moment in that hour, waits $15$ minutes, and leaves. Let $A$ be the event that they do not meet, and $B$ the event that at least one of them arrives after $8{:}45$. Are $A$ and $B$ independent?
+\end{example}
+
+\begin{proof}[Solution]
+Let $X,Y\sim\mathrm{Unif}(0,60)$ (minutes past 8:00) be independent arrival times. They meet iff their $15$-minute waiting windows overlap, i.e.\ $|X-Y|\le15$, so
+\[
+A=\{|X-Y|>15\}, \qquad B=\{X>45\}\cup\{Y>45\}.
+\]
+Rescale to the unit square, $u=X/60,\,v=Y/60$: $A=\{|u-v|>1/4\}$, $B=\{u>3/4\}\cup\{v>3/4\}$.
+
+The region $A$ is two congruent corner triangles, each of area $\tfrac12(\tfrac34)^2=\tfrac{9}{32}$, so $\mathbb{P}(A)=\tfrac{9}{16}$ and $\mathbb{P}(B)=1-(\tfrac34)^2=\tfrac{7}{16}$.
+
+Consider $T=\{v>u+1/4\}$ (the other triangle, $\{u>v+1/4\}$, is its mirror image). Inside $T$, $u$ never exceeds $3/4$, so $B\cap T=\{v>3/4\}\cap T$. Splitting at $u=1/2$ (where $u+1/4$ crosses $3/4$),
+\[
+\mathrm{area}(T\cap B)=\int_0^{1/2}\frac14\,du+\int_{1/2}^{3/4}\left(\frac34-u\right)du=\frac18+\frac{1}{32}=\frac{5}{32}.
+\]
+By the symmetry $u\leftrightarrow v$ (which fixes $B$), the mirror triangle contributes the same area, so
+\[
+\mathbb{P}(A\cap B)=2\cdot\frac{5}{32}=\frac{5}{16}=\frac{80}{256}.
+\]
+Comparing with $\mathbb{P}(A)\mathbb{P}(B)=\tfrac{9}{16}\cdot\tfrac{7}{16}=\tfrac{63}{256}$,
+\[
+\boxed{A\text{ and }B\text{ are \emph{not} independent}}
+\]
+(not meeting is positively correlated with a late arrival, which matches intuition: a late arrival shrinks the overlap of the two waiting windows).
 \end{proof}
 
 \subsection{Random Variables, Moments, and Common Distributions}
@@ -2168,6 +2312,32 @@ where $Z\sim \mathcal{N}(0,1)$.
 So the final answer is
 \[
 \boxed{Y\sim \mathcal{N}(4,21), \qquad \mathbb{P}(Y>0)\approx 0.809.}
+\]
+\end{proof}
+
+\begin{example}[Mean and variance of an urn under a replace-if-black rule]
+A basket holds $m$ black balls and $n$ red balls. At each step a uniformly random ball is drawn; if black it is replaced by a red ball, if red it is put back unchanged. Find $\E[R_k]$ and $\Var(R_k)$, the mean and variance of the number of red balls after $k$ steps, as closed-form expressions (no sums or ellipses).
+\end{example}
+
+\begin{proof}[Solution]
+Label the $N=m+n$ physical balls; balls never leave the basket, and only the $m$ originally black ones can change color. At each step the drawn label is uniform on $\{1,\dots,N\}$ and independent of the history (returning a red ball does not change the distribution of future draws). So a black ball $i$ has turned red by time $k$ exactly when its label was hit at least once among $k$ i.i.d.\ uniform draws.
+
+Let $X_i$ ($i=1,\dots,m$) indicate that black ball $i$ has been drawn by time $k$, and set $a=\left(\frac{N-1}{N}\right)^{k}$, so $\mathbb{P}(X_i=1)=1-a$. Since $R_k=n+\sum_{i=1}^m X_i$,
+\[
+\E[R_k]=\boxed{\,n+m\left(1-\left(\frac{N-1}{N}\right)^{k}\right)\,}, \qquad N=m+n.
+\]
+
+For the variance, let $b=\left(\frac{N-2}{N}\right)^{k}$ be the probability that two fixed labels are \emph{both} never drawn. By inclusion--exclusion, $\mathbb{P}(X_i=1,X_j=1)=1-2a+b$ for $i\ne j$, so
+\[
+\mathrm{Cov}(X_i,X_j)=(1-2a+b)-(1-a)^2=b-a^2,
+\]
+while $\Var(X_i)=a(1-a)$. Summing the $m$ variances and $m(m-1)$ covariance pairs,
+\[
+\Var(R_k)=ma(1-a)+m(m-1)(b-a^2)=ma+m(m-1)b-m^2a^2,
+\]
+that is,
+\[
+\boxed{\,\Var(R_k)=m\left(\frac{N-1}{N}\right)^{k}+m(m-1)\left(\frac{N-2}{N}\right)^{k}-m^2\left(\frac{N-1}{N}\right)^{2k}\,}, \qquad N=m+n.
 \]
 \end{proof}
 
@@ -2536,6 +2706,25 @@ So the expected time to absorption is
 \boxed{2}.
 \]
 Here the extra $1$ appears because one step is spent immediately, regardless of which direction the walk takes next.
+\end{proof}
+
+\section{Algorithm Design}
+Quant interviews frequently include short algorithmic problems that reward recognizing a classical pattern — a monotonic stack, a sliding window, a divide-and-conquer trick — over brute force.
+
+\begin{example}[Nearest right element at least double, in $O(n\log n)$]
+Given a real array $A[1..n]$, design an algorithm that, for every index $i$, finds the smallest index $j>i$ with $A[j]\ge 2A[i]$ (or reports that none exists), using $O(n\log n)$ time and $O(n)$ extra space.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{A domination principle.} Scan the array from right to left, maintaining a stack of surviving candidates. Say index $j_2$ is \emph{dominated} by a nearer index $j_1<j_2$ if $A[j_1]\ge A[j_2]$. A dominated candidate is useless: for any future (further left) query $i$, whenever $A[j_2]\ge 2A[i]$ we also have $A[j_1]\ge A[j_2]\ge2A[i]$, and $j_1$ is strictly closer, so $j_2$ can never be the nearest qualifying index once $j_1$ exists. Notably, this domination argument does not depend on the multiplier $2$; it only uses $A[j_1]\ge A[j_2]$.
+
+\textbf{Maintaining the stack.} Process $i=n,n-1,\dots,1$. Before pushing $i$, pop every index currently on top of the stack with value $\le A[i]$ (those are now dominated by $i$), then push $i$. Each index is pushed and popped at most once, so stack maintenance costs $O(n)$ total.
+
+\textbf{Why the stack is sorted.} Whenever an element is pushed, everything weaker has just been popped, so values strictly increase from the bottom of the stack toward the top — equivalently, reading from the top (nearest to the current scan position) down to the bottom (farthest), values are non-decreasing. So at every moment the live stack is a sequence sorted by value, in which position along the stack corresponds monotonically to distance from the current pointer.
+
+\textbf{Answering a query.} For index $i$ we want the surviving candidate closest to the top with value $\ge2A[i]$. Because the stack is sorted by value from top (smallest) to bottom (largest), the qualifying candidates form a contiguous block at the bottom, and the nearest one is found by \emph{binary search} on the stack (kept as an array) for the threshold $2A[i]$: $O(\log n)$ per query.
+
+\textbf{Complexity.} Maintenance is $O(n)$ amortized; each of the $n$ queries costs $O(\log n)$ via binary search on the array-backed stack; total time is $O(n\log n)$, and the stack never holds more than $n$ indices, so space is $O(n)$ — matching the required bounds exactly. (A plain monotonic stack alone, without the binary search, solves the classical ``next strictly greater element'' problem in $O(n)$; the extra $\log n$ factor here is exactly the cost of the per-query threshold search that the ``at least double'' condition forces.)
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
