@@ -492,6 +492,34 @@ Both cases force $B=0$, contradicting $B\neq0$. So \emph{no} basis makes $\varph
 — this nilpotent $\varphi$ is a counterexample.
 \end{proof}
 
+\begin{example}[An operator built by patching rows, and how many eigenvalues it can have]
+For $n\times n$ matrices $A,B$, define $A\star B$ by $(A\star B)_{ij}=(AB)_{ij}$ if $i$ is odd, and $(A\star B)_{ij}=b_{ij}$ if $i$ is even. This makes $\Phi_A:B\mapsto A\star B$ a linear operator on the $n^2$-dimensional space $\mathrm{Mat}_n(\R)$. (a) Can $\Phi_A$ have eigenvalue $2$ for some $A$? (b) What is the largest possible number of distinct eigenvalues of $\Phi_A$, for fixed $n$?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Reformulating $\Phi_A$.} Row $i$ of $A\star B$ is $(\text{row}_i A)B$ if $i$ is odd, and just row $i$ of $B$ if $i$ is even. Let $M$ be the matrix obtained from $A$ by replacing each even-indexed row with the corresponding standard basis row $e_i^T$. Then row $i$ of $MB$ equals $(\text{row}_iM)B$; for odd $i$ this is $(\text{row}_iA)B$ (since row $i$ of $M$ still equals row $i$ of $A$ there), and for even $i$ it is $e_i^TB=\text{row}_i B$. So
+\[
+A\star B = MB \qquad \text{for all } B,
+\]
+i.e.\ $\Phi_A$ is exactly \emph{left multiplication by $M$}. Left multiplication by a fixed matrix $M$ acts identically and independently on each of the $n$ columns of $B$ (column $j$ of $MB$ is $M$ times column $j$ of $B$), so the eigenvalues of $\Phi_A$ (as an operator on the $n^2$-dimensional space of matrices) are exactly the eigenvalues of $M$, each occurring with $n$ times the multiplicity it has in $M$. In particular the \emph{distinct} eigenvalues of $\Phi_A$ are exactly the distinct eigenvalues of $M$.
+
+\textbf{(a)} Since odd rows of $M$ are free (they equal $A$'s rows, and $A$ is arbitrary), choose $A$'s odd rows so that $M$ is diagonal with a $2$ somewhere on the diagonal — e.g.\ row $1$ of $A$ equal to $(2,0,\dots,0)$, and every other odd row of $A$ equal to the matching standard basis row. Then $M=\mathrm{diag}(2,1,1,\dots,1)$ (the even rows are forced to identity rows regardless), which has eigenvalue $2$. So
+\[
+\boxed{\text{yes, eigenvalue } 2 \text{ is achievable}}.
+\]
+
+\textbf{(b)} For each even index $i$, row $i$ of $M$ is $e_i^T$, which says exactly that $e_i^T M = e_i^T$ — i.e.\ $e_i^T$ is a \emph{left} eigenvector of $M$ with eigenvalue $1$. The vectors $e_i^T$ for the $\lfloor n/2\rfloor$ even indices are linearly independent, so eigenvalue $1$ has geometric (hence algebraic) multiplicity at least $\lfloor n/2\rfloor$ in $M$.
+
+If $\lfloor n/2\rfloor\le1$ (i.e.\ $n\le3$), this is not a real restriction (a single guaranteed copy of eigenvalue $1$ is compatible with all $n$ eigenvalues being distinct), and choosing $M$ diagonal with $n$ distinct entries — forced to $1$ only where required — achieves $n$ distinct eigenvalues.
+
+If $\lfloor n/2\rfloor\ge2$ (i.e.\ $n\ge4$), the $n$ eigenvalues (with multiplicity) include at least $\lfloor n/2\rfloor$ copies of $1$, leaving at most $n-\lfloor n/2\rfloor=\lceil n/2\rceil$ ``slots'' that could be distinct from $1$ and from each other — so at most $\lceil n/2\rceil+1$ distinct eigenvalues in total. This is achieved: take $M$ upper triangular with the (forced) even diagonal entries equal to $1$ and the free odd diagonal entries set to $\lceil n/2\rceil$ pairwise distinct values, none equal to $1$ (e.g.\ $2,3,4,\dots$), and all free odd-row off-diagonal entries $0$ — a valid choice since odd rows are unconstrained. The eigenvalues of this triangular $M$ are exactly its diagonal entries: $1$ (with multiplicity $\lfloor n/2\rfloor$) together with $\lceil n/2\rceil$ distinct values $\neq1$, giving exactly $\lceil n/2\rceil+1$ distinct eigenvalues.
+
+So the maximum number of distinct eigenvalues of $\Phi_A$ is
+\[
+\boxed{n \text{ for } n\le3, \qquad \left\lceil\frac n2\right\rceil+1 \text{ for } n\ge4}.
+\]
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -692,6 +720,24 @@ P=\frac16\begin{pmatrix}5&-2&-1\\-2&2&-2\\-1&-2&5\end{pmatrix}, \qquad \boxed{\t
 (One checks directly that this $P$ is symmetric and satisfies $P^2=P$, confirming it is indeed a valid orthogonal projection.)
 \end{proof}
 
+\begin{example}[Orthogonal skew-symmetric matrices and dimension parity]
+Does there exist a real $2019\times2019$ orthogonal matrix that is also skew-symmetric? What about $2018\times2018$?
+\end{example}
+
+\begin{proof}[Solution]
+Let $Q$ be orthogonal ($Q^TQ=I$) and skew-symmetric ($Q^T=-Q$). Combining, $-Q\cdot Q=I$, i.e.\ $Q^2=-I$.
+
+\textbf{Odd size.} Any real matrix of odd size has at least one real eigenvalue (its characteristic polynomial has odd degree, hence a real root by the Intermediate Value Theorem). If $Q^2=-I$, every eigenvalue $\lambda$ (real or complex) satisfies $\lambda^2=-1$, i.e.\ $\lambda=\pm i$ — never real. So no such $Q$ can have odd size:
+\[
+\boxed{\text{no orthogonal skew-symmetric } 2019\times2019 \text{ matrix exists}}.
+\]
+
+\textbf{Even size.} For $2018=2\times1009$, take the block-diagonal matrix with $1009$ copies of $\begin{pmatrix}0&-1\\1&0\end{pmatrix}$ along the diagonal. Each $2\times2$ block is orthogonal (it is a rotation by $90^\circ$) and skew-symmetric, so the whole block-diagonal matrix is too:
+\[
+\boxed{\text{yes, such a } 2018\times2018 \text{ matrix exists}}.
+\]
+\end{proof}
+
 \section{Calculus and Real Analysis}
 Interview analysis questions often look innocent but test whether you can move between definitions, expansions, and clean arguments. The core techniques are asymptotics, derivatives, optimization, integrals, and series.
 
@@ -763,6 +809,28 @@ Write the target limit as a product of three limits that each exist:
 As $x\to 0$: $\ln(1+3x)/x\to 3$, $x/\sin x\to 1$, and $\sin x/f(x)\to 1/2$ (the reciprocal of the given limit, valid since $f(x)/\sin x\to2\neq0$ forces $f(x)\neq0$ near $0$). Hence
 \[
 \boxed{\lim_{x\to 0}\frac{\ln(1+3x)}{f(x)}=3\cdot 1\cdot\frac12=\frac32}.
+\]
+\end{proof}
+
+\begin{example}[Convergence forced by a strict averaging bound]
+A sequence $(a_n)$ has all $a_n\in(0,1)$ and satisfies $a_{n+1}<\tfrac12(a_n+a_{n-1})$ for all $n\ge1$. Must $a_n$ converge? Find the set of all possible limits over all such sequences.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Convergence.} Let $M_n=\max(a_n,a_{n-1})$. Since $a_{n+1}<\tfrac12(a_n+a_{n-1})\le M_n$, we get $M_{n+1}=\max(a_{n+1},a_n)\le\max(M_n,a_n)=M_n$: the sequence $(M_n)$ is non-increasing, and bounded below by $0$, so it converges to some $L=\inf_n M_n\ge0$ (with $M_n\ge L$ for every $n$).
+
+Since $a_n\le M_n$ for all $n$, $\limsup a_n\le L$. Suppose toward a contradiction that $\liminf a_n=L'<L$; set $\delta=L-L'>0$ and $\varepsilon=\delta/4$. Choose $N$ with $M_n<L+\varepsilon$ for all $n\ge N$ (possible since $M_n\to L$), and pick $n_k\ge N$ (infinitely many, since $L'$ is a liminf) with $a_{n_k}<L'+\varepsilon=L-3\delta/4$. Then
+\[
+a_{n_k+1}<\frac{a_{n_k}+a_{n_k-1}}{2}<\frac{(L-3\delta/4)+(L+\varepsilon)}{2}=\frac{2L-\delta/2}{2}=L-\frac\delta4,
+\]
+using $a_{n_k-1}\le M_{n_k}<L+\varepsilon$. So $M_{n_k+1}=\max(a_{n_k+1},a_{n_k})<\max(L-\delta/4,\,L-3\delta/4)=L-\delta/4<L$, contradicting $M_n\ge L$ for all $n$. Hence $\liminf a_n=L=\limsup a_n$, so
+\[
+\boxed{a_n \text{ always converges}}.
+\]
+
+\textbf{The set of possible limits.} Since $a_n\in(0,1)$ throughout, $0\le L<1$ (strictly, as $L\le M_1<1$). Conversely, every $L\in[0,1)$ is attainable: fix $L$, pick any $c\in(L,1)$, and set $a_0=a_1=c$, $a_n=L+\tfrac{c-L}{n}$ for $n\ge1$. Then $a_n\to L$, each $a_n\in(L,c]\subset(0,1)$, and the required inequality holds for $n\ge2$: it reduces (after cancelling the positive factor $c-L$) to $\tfrac1{n+1}<\tfrac12\left(\tfrac1n+\tfrac1{n-1}\right)=\tfrac{2n-1}{2n(n-1)}$, equivalent to $2n(n-1)<(2n-1)(n+1)$, i.e.\ $0<3n-1$, true for all $n\ge1$. So
+\[
+\boxed{\text{the set of possible limits is exactly } [0,1)}.
 \]
 \end{proof}
 
@@ -1447,6 +1515,26 @@ So
 \[
 \boxed{\lim_{x\to 0}\int_0^x\frac{\cos(t^3)}{t+x}\,dt=\ln 2}.
 \]
+\end{proof}
+
+\begin{example}[Counting roots of a moving-window integral equation]
+How many roots does $F(x)=\displaystyle\int_x^{x+1/2}\cos\!\left(\frac{t^2}{3}\right)dt=0$ have on $[0,3]$?
+\end{example}
+
+\begin{proof}[Solution]
+By the Fundamental Theorem of Calculus, $F'(x)=\cos\!\left(\frac{(x+1/2)^2}{3}\right)-\cos\!\left(\frac{x^2}{3}\right)$. Using $\cos A-\cos B=-2\sin\!\left(\frac{A+B}2\right)\sin\!\left(\frac{A-B}2\right)$ with $A=(x+1/2)^2/3$, $B=x^2/3$ (so $A-B=(x+1/4)/3$ and $A+B=(2x^2+x+1/4)/3$):
+\[
+F'(x)=-2\sin\!\left(\frac{2x^2+x+1/4}{6}\right)\sin\!\left(\frac{x+1/4}{6}\right).
+\]
+For $x\in[0,3]$, the second factor's argument $\tfrac{x+1/4}{6}$ ranges over $\left[\tfrac1{24},\tfrac{13}{24}\right]\subset(0,\pi)$, so $\sin\!\left(\tfrac{x+1/4}6\right)>0$ throughout — it never changes sign. So the sign of $F'(x)$ is governed entirely by $-\sin(\theta(x))$ where $\theta(x)=\tfrac{2x^2+x+1/4}{6}$.
+
+Since $\theta'(x)=\tfrac{4x+1}6>0$, $\theta$ increases monotonically from $\theta(0)=\tfrac1{24}\approx0.042$ to $\theta(3)=\tfrac{21.25}6\approx3.54$. As $\theta$ sweeps through $(0,\pi)$ (with $\pi\approx3.14<3.54$), $\sin\theta$ is positive until $\theta=\pi$ and negative afterward — a single sign change, at the (unique) $x^*\in(0,3)$ solving $\theta(x^*)=\pi$ (numerically $x^*\approx2.81$). Precisely, $F'(x)=-2(\text{pos})\sin\theta(x)$ is \emph{negative} for $x<x^*$ and \emph{positive} for $x>x^*$: $F$ strictly decreases on $[0,x^*]$ and strictly increases on $[x^*,3]$, i.e.\ $F$ is unimodal with a single minimum at $x^*$.
+
+Direct evaluation (numerically) gives $F(0)\approx0.500>0$ and $F(3)\approx-0.441<0$. On the decreasing piece $[0,x^*]$, $F$ drops continuously from a positive value to its (negative) minimum, crossing $0$ \emph{exactly once} by the Intermediate Value Theorem and strict monotonicity. On the increasing piece $[x^*,3]$, $F$ rises from that same negative minimum only up to $F(3)\approx-0.441$, which is still negative — so it never reaches $0$ on this piece. Hence there is exactly
+\[
+\boxed{1}
+\]
+root on $[0,3]$.
 \end{proof}
 
 \subsection{Series, Power Series, and Fourier Methods}
@@ -2169,6 +2257,22 @@ An independent set of size $10$ in $H$ is, by definition, a set of $10$ vertices
 (the bound is tight: $10$ disjoint triangles in $H$, i.e.\ $G=$ the complement of $10$ disjoint $K_3$'s, realizes independence number exactly $10$).
 \end{proof}
 
+\begin{example}[A high minimum degree forces a large clique]
+In a country of $100$ cities, some pairs are connected by a direct flight. Every city has more than $90$ direct flights. Prove that some $11$ cities are pairwise connected by direct flights.
+\end{example}
+
+\begin{proof}[Solution]
+Let $H$ be the complement graph (pairs \emph{without} a direct flight). Each city has $99$ other cities to potentially connect to; since its flight-degree exceeds $90$ (so is at least $91$), its $H$-degree is at most $99-91=8$.
+
+A graph with maximum degree $\le8$ on $100$ vertices has an independent set of size at least $\lceil100/9\rceil=12$: greedily pick any remaining vertex, add it to the independent set, and remove it together with its at most $8$ neighbors (at most $9$ vertices per round); after $12$ rounds at most $108$ vertex-removals have been used, more than enough to exhaust all $100$ vertices, and the $12$ chosen vertices are pairwise non-adjacent in $H$ by construction.
+
+An independent set in $H$ of size $12\ge11$ is a set of (at least) $11$ cities with no missing flight between any pair, i.e.
+\[
+\boxed{11 \text{ pairwise connected cities exist}}
+\]
+(indeed the argument gives $12$, comfortably more than the $11$ requested).
+\end{proof}
+
 \subsection{Generating Functions and Linear Recurrences}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2373,6 +2477,31 @@ that is,
 \boxed{\dfrac{16n-5}{12(3n-1)}}.
 \]
 (For $n=1$ this gives $11/24$, which a direct enumeration over the $3$-person case confirms exactly.)
+\end{proof}
+
+\begin{example}[A conditional geometric-probability question]
+Two particle detectors sit at independent, uniform random positions $x,y\in[0,1]$; each detects particles within distance $\tfrac13$ of itself. Given that the two detectors' fields of view cover all of $[0,1]$, find $\mathbb P\!\left(y>\tfrac56\right)$.
+\end{example}
+
+\begin{proof}[Solution]
+Coverage of $[0,1]$ by $[x-\tfrac13,x+\tfrac13]\cup[y-\tfrac13,y+\tfrac13]$ requires, writing $\mathrm{lo}=\min(x,y)$, $\mathrm{hi}=\max(x,y)$: $\mathrm{lo}\le\tfrac13$ (to reach the left end), $\mathrm{hi}\ge\tfrac23$ (to reach the right end), and $\mathrm{hi}-\mathrm{lo}\le\tfrac23$ (so the two radius-$\tfrac13$ intervals meet in the middle, leaving no gap). Call this event $A$.
+
+If $\mathrm{lo}\le\tfrac13$ then automatically $\mathrm{lo}<\tfrac23\le\mathrm{hi}$ can only hold with $\mathrm{hi}$ being the \emph{other} coordinate — so $A$ splits into two disjoint cases: (i) $x\le\tfrac13$, $y\ge\tfrac23$, $y-x\le\tfrac23$; (ii) $y\le\tfrac13$, $x\ge\tfrac23$, $x-y\le\tfrac23$ (these can't overlap, since one forces $x<y$ and the other $y<x$).
+
+\textbf{Area of case (i).} Within the rectangle $x\in[0,\tfrac13]$, $y\in[\tfrac23,1]$ (area $\tfrac19$), exclude $y>x+\tfrac23$: this excluded sliver has area $\int_0^{1/3}\left(\tfrac13-x\right)dx=\left[\tfrac x3-\tfrac{x^2}2\right]_0^{1/3}=\tfrac1{18}$. So case (i) contributes $\tfrac19-\tfrac1{18}=\tfrac1{18}$, and by symmetry case (ii) contributes the same, giving
+\[
+\mathbb P(A)=\frac1{18}+\frac1{18}=\frac19.
+\]
+
+\textbf{Area of $A\cap\{y>5/6\}$.} In case (ii), $y\le\tfrac13<\tfrac56$, so $y>\tfrac56$ is impossible there — no contribution. In case (i), intersect $y\in(\tfrac23,x+\tfrac23]$ (from the case-(i) constraints) with $y>\tfrac56$: nonempty only when $x+\tfrac23>\tfrac56$, i.e.\ $x>\tfrac16$, giving an interval of length $x+\tfrac23-\tfrac56=x-\tfrac16$ for $x\in(\tfrac16,\tfrac13]$. So
+\[
+\int_{1/6}^{1/3}\left(x-\frac16\right)dx=\left[\frac{x^2}2-\frac x6\right]_{1/6}^{1/3}=0-\left(-\frac1{72}\right)=\frac1{72}.
+\]
+
+So $\mathbb P\!\left(A\cap\{y>\tfrac56\}\right)=\tfrac1{72}$, and
+\[
+\mathbb P\!\left(y>\frac56 \,\middle|\, A\right)=\frac{1/72}{1/9}=\boxed{\frac18}.
+\]
 \end{proof}
 
 \subsection{Random Variables, Moments, and Common Distributions}
@@ -2656,6 +2785,27 @@ Then $\mathbb{P}(X=n)=\mathbb{P}(X>n-1)-\mathbb{P}(X>n)$, and each of the three 
 \boxed{\mathbb{P}(X=n)=\frac14\left(\frac34\right)^{n-1}+\frac1{10}\left(\frac9{10}\right)^{n-1}-\frac{7}{20}\left(\frac{13}{20}\right)^{n-1}}, \qquad n=1,2,3,\dots
 \]
 (At $n=1$ this correctly gives $0$, since one day can never supply both a groups- and a rings-problem. At $n=2$ it gives $\tfrac1{20}$, matching the direct check $\mathbb P(X=2)=2p_gp_r=2\cdot\tfrac14\cdot\tfrac1{10}=\tfrac1{20}$: the only way to finish exactly on day $2$ is one day of each type, in either order.)
+\end{proof}
+
+\begin{example}[Length of the cycle joining two fixed elements of a random permutation]
+For a uniformly random permutation of $\{1,\dots,n\}$, let $X$ be the length of the cycle containing both $1$ and $2$ (and $X=0$ if $1$ and $2$ lie in different cycles). Find the distribution of $X$ and $\E[X]$.
+\end{example}
+
+\begin{proof}[Solution]
+For $k=2,\dots,n$, count permutations where $1,2$ lie together in a cycle of length exactly $k$: choose the other $k-2$ cycle members from the remaining $n-2$ elements ($\binom{n-2}{k-2}$ ways), arrange all $k$ chosen elements into a single cycle ($(k-1)!$ distinct cyclic arrangements), and permute the other $n-k$ elements freely ($(n-k)!$ ways). Dividing by $n!$,
+\[
+\mathbb P(X=k)=\frac{\binom{n-2}{k-2}(k-1)!(n-k)!}{n!}=\frac{(n-2)!\,(k-1)!}{(k-2)!\,n!}=\frac{k-1}{n(n-1)}, \qquad k=2,\dots,n.
+\]
+Summing, $\sum_{k=2}^n\frac{k-1}{n(n-1)}=\frac{1}{n(n-1)}\sum_{j=1}^{n-1}j=\frac{1}{n(n-1)}\cdot\frac{n(n-1)}2=\frac12$, so
+\[
+\boxed{\mathbb P(X=0)=\frac12, \qquad \mathbb P(X=k)=\frac{k-1}{n(n-1)} \ (k=2,\dots,n)}
+\]
+(a well-known fact: two fixed elements of a random permutation lie in the same cycle with probability exactly $\tfrac12$, regardless of $n$).
+
+For the mean, $\E[X]=\sum_{k=2}^n k\cdot\frac{k-1}{n(n-1)}=\frac{1}{n(n-1)}\sum_{k=2}^n k(k-1)$. Using the hockey-stick identity $\sum_{k=2}^n\binom k2=\binom{n+1}3$, so $\sum_{k=2}^nk(k-1)=2\binom{n+1}3=\frac{n(n-1)(n+1)}3$, giving
+\[
+\boxed{\E[X]=\frac{n+1}{3}}.
+\]
 \end{proof}
 
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
@@ -3086,6 +3236,22 @@ If $p\neq0$, $f(x)=px^2+qx+r$ is a parabola with vertex at $x_0=-q/(2p)$, monoto
 \item $p<0$ (downward parabola): the roles swap — $f(A_{\text{left}})$ in its original order is increasing, and $f(A_{\text{right}})$ read in reverse is increasing.
 \end{itemize}
 Either way, this produces two increasing sequences of total length $n$ in $O(n)$ time. Merge them with the standard two-pointer merge step from merge sort — compare the fronts of each sequence, output the smaller, advance that pointer — in $O(n)$ time and $O(n)$ auxiliary space for the output. The result $B$ is $A$'s image under $f$, fully sorted, using $O(n)$ time (one binary search plus two linear passes) and $O(n)$ space, as required.
+\end{proof}
+
+\begin{example}[Largest multiple of $3$ from an array of digits, in $O(n)$ time and $O(1)$ space]
+Given an array $A[1..n]$ of digits $0$–$9$, design an algorithm that finds the largest natural number divisible by $3$ that can be formed from (a subset of) the digits of $A$, using $O(n)$ time and $O(1)$ extra space.
+\end{example}
+
+\begin{proof}[Solution]
+A number is divisible by $3$ iff its digit sum is; and for a fixed multiset of digits, the largest number they form is obtained by arranging them in decreasing order. So the problem reduces to: keep a multiset of digits with digit-sum divisible by $3$, discarding as few (and as small) digits as possible, then output largest-to-smallest.
+
+\textbf{Counting pass.} Scan $A$ once, maintaining a count array $\mathrm{cnt}[0..9]$ (fixed size $10$, so $O(1)$ space) and the running digit sum; this is $O(n)$ time. Let $r=(\text{digit sum})\bmod 3$.
+
+\textbf{Fixing the residue.} If $r=0$, keep every digit. If $r=1$, either discard one digit $\equiv1\pmod3$ (i.e.\ a $1,4,$ or $7$) — choosing the \emph{smallest} such digit value present, to sacrifice as little as possible — or, if no digit $\equiv1\pmod3$ is present at all, discard two digits $\equiv2\pmod3$ (i.e.\ from $2,5,8$; since $2+2\equiv1$), again preferring the smallest available. The case $r=2$ is symmetric: discard one digit $\equiv2\pmod3$, or if none exists, two digits $\equiv1\pmod3$. Each of these adjustments only touches the $10$-entry count array, so it costs $O(1)$ time regardless of $n$.
+
+\textbf{Output.} If every digit was discarded (or only zeros remain), the answer is $0$. Otherwise emit $\mathrm{cnt}[9]$ nines, then $\mathrm{cnt}[8]$ eights, \dots, down to $\mathrm{cnt}[0]$ zeros — a single $O(n)$ pass that reproduces the largest arrangement of the surviving digits.
+
+Total cost: one $O(n)$ counting pass, $O(1)$ work to decide what to discard, and one $O(n)$ output pass — $O(n)$ time, $O(1)$ extra space (the count array has fixed size $10$, independent of $n$).
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
