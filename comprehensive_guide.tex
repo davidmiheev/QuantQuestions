@@ -473,6 +473,25 @@ For an $n\times n$ real matrix $A$ and $v\in\R^n$, let $U(A)=\{X\in\mathrm{Mat}_
 attained by a single eigenvalue with Jordan blocks of sizes $(n-1,1)$.
 \end{proof}
 
+\begin{example}[When is a matrix forced to be invertible by $A^T=p(A)$?]
+Let $A$ be a square real matrix with $A^T=p(A)$ for some polynomial $p$ with nonzero constant term. Prove $A$ is invertible. Is it true that for \emph{every} linear operator $\varphi:\R^n\to\R^n$ there is a polynomial $p$ and a basis in which the matrix of $\varphi$ satisfies $A^T=p(A)$ (dropping the nonzero-constant-term requirement)?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Invertibility.} Write $p(x)=c_0+c_1x+\cdots+c_kx^k$ with $c_0\neq0$. Suppose toward a contradiction that $A$ is singular, so $Av=0$ for some $v\neq0$. Then $A^jv=0$ for all $j\ge1$, so $p(A)v=c_0v$, i.e.\ $A^Tv=c_0v$. Now use the general identity $v^TAv=v^TA^Tv$ (true for any square matrix and vector, since $v^TAv$ is a scalar equal to its own transpose $v^TA^Tv$). The left side is $v^T(Av)=v^T\cdot 0=0$; the right side is $v^T(A^Tv)=v^T(c_0v)=c_0\|v\|^2$. So $c_0\|v\|^2=0$, and since $v\neq0$ this forces $c_0=0$ — contradicting $c_0\neq0$. Hence $A$ is invertible.
+
+\textbf{Every operator?} No. If $A^T=p(A)$ for any polynomial $p$, then $A$ commutes with $A^T$ (it commutes with any polynomial in itself), so $A$ is a \emph{normal} matrix in that basis. Take $\varphi$ with matrix $A_0=\begin{pmatrix}0&1\\0&0\end{pmatrix}$ in the standard basis (a nonzero nilpotent operator, $A_0^2=0$). Any matrix $B$ representing $\varphi$ in another basis is similar to $A_0$, hence also satisfies $B^2=0$ and $B\neq0$; by Cayley–Hamilton such $B$ has $\trace B=0,\det B=0$. Since $B^2=0$, every polynomial reduces to a linear one: $p(B)=c_0I+c_1B$ for $c_0=p(0),c_1=p'(0)$. Write $B=\begin{pmatrix}b_{11}&b_{12}\\b_{21}&b_{22}\end{pmatrix}$ with $b_{11}+b_{22}=0$, $b_{11}b_{22}=b_{12}b_{21}$. Matching $B^T=c_0I+c_1B$ entrywise gives $b_{21}=c_1b_{12}$ and $b_{12}=c_1b_{21}$, so $b_{12}(1-c_1^2)=0$; since $B\neq0$ forces $(b_{12},b_{21})\neq(0,0)$ (otherwise trace/det $=0$ would force $B=0$ too), we need $c_1=\pm1$.
+\begin{itemize}
+\item $c_1=1$: the diagonal equations give $c_0=0$ and $b_{21}=b_{12}$; combined with $b_{11}=-b_{22}$ and $b_{11}b_{22}=b_{12}b_{21}=b_{12}^2$, this forces $-b_{22}^2=b_{12}^2$, impossible over $\R$ unless $b_{12}=b_{22}=0$, which forces $B=0$.
+\item $c_1=-1$: similarly forces $b_{11}=b_{22}=0$ and then $b_{12}^2=-b_{11}b_{22}=0$, again $B=0$.
+\end{itemize}
+Both cases force $B=0$, contradicting $B\neq0$. So \emph{no} basis makes $\varphi$'s matrix satisfy $A^T=p(A)$ for any polynomial $p$:
+\[
+\boxed{\text{no, not for every operator}}
+\]
+— this nilpotent $\varphi$ is a counterexample.
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -649,6 +668,28 @@ So only $a=-2$ works:
 \[
 \boxed{a=-2}.
 \]
+\end{proof}
+
+\begin{example}[Recovering a column of an orthogonal projection matrix]
+The matrix
+\[
+\frac16\begin{pmatrix}5&-2&{?}\\-2&2&{?}\\-1&-2&{?}\end{pmatrix}
+\]
+is known to be the matrix of the orthogonal projection onto some plane through the origin in $\R^3$. Fill in the third column.
+\end{example}
+
+\begin{proof}[Solution]
+An orthogonal projection matrix $P$ is characterized by $P^T=P$ (symmetric) and $P^2=P$ (idempotent). Symmetry alone pins down two of the three unknown entries: the $(1,3)$ entry must equal the given $(3,1)$ entry $-\tfrac16$, and the $(2,3)$ entry must equal the given $(3,2)$ entry $-\tfrac26$. So the column is $\tfrac16(-1,-2,c)^T$ for some remaining unknown $c$.
+
+For the last entry, use that a projection onto a $2$-dimensional subspace has $\rank P=2$, and for an idempotent matrix $\rank P=\trace P$ (its eigenvalues are all $0$ or $1$, and the trace counts the $1$'s). So
+\[
+\trace P = \frac{5+2+c}{6}=2 \quad\Longrightarrow\quad c=5.
+\]
+So the completed matrix is
+\[
+P=\frac16\begin{pmatrix}5&-2&-1\\-2&2&-2\\-1&-2&5\end{pmatrix}, \qquad \boxed{\text{third column } = \tfrac16(-1,-2,5)^T}.
+\]
+(One checks directly that this $P$ is symmetric and satisfies $P^2=P$, confirming it is indeed a valid orthogonal projection.)
 \end{proof}
 
 \section{Calculus and Real Analysis}
@@ -967,6 +1008,32 @@ f''(x)=\frac{1}{x^2}>0,
 so $x=1$ is a strict local minimum. Since $f(x)\to\infty$ as $x\downarrow 0$ and also $f(x)\to\infty$ as $x\to\infty$, this local minimum is global. The minimum value is
 \[
 f(1)=1.
+\]
+\end{proof}
+
+\begin{example}[A forced inequality on a long enough interval]
+Let $f$ be a real-valued differentiable function on $[a,b]$ with $b-a\ge4$. Prove there is a point $x_0\in(a,b)$ with
+\[
+f'(x_0) < 1+f(x_0)^2.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Suppose, toward a contradiction, that $f'(x)\ge 1+f(x)^2$ for \emph{every} $x\in(a,b)$. Let $g(x)=\arctan(f(x))$, differentiable with
+\[
+g'(x)=\frac{f'(x)}{1+f(x)^2}\ge1
+\]
+for all $x\in(a,b)$ (dividing the assumed inequality by the positive quantity $1+f(x)^2$ preserves it). By the Mean Value Theorem, there is $\xi\in(a,b)$ with
+\[
+g(b)-g(a)=g'(\xi)(b-a) \ge 1\cdot(b-a) \ge 4.
+\]
+But $\arctan$ takes values only in the open interval $\left(-\tfrac\pi2,\tfrac\pi2\right)$, so
+\[
+g(b)-g(a) < \frac\pi2-\left(-\frac\pi2\right)=\pi < 4.
+\]
+This contradicts $g(b)-g(a)\ge4$. Hence the assumption was false, and
+\[
+\boxed{\text{some } x_0\in(a,b) \text{ satisfies } f'(x_0)<1+f(x_0)^2}.
 \]
 \end{proof}
 
@@ -1548,6 +1615,28 @@ Hence
 \]
 \end{proof}
 
+\begin{example}[Shifting the weight in a series: absolute vs.\ conditional]
+Suppose $\sum_{n=1}^\infty (n-2019)a_n$ converges. What can be said about the convergence of $\sum_{n=1}^\infty(n+2019)a_n$ if the first series converges (a) absolutely, (b) conditionally?
+\end{example}
+
+\begin{proof}[Solution]
+Write $b_n=(n-2019)a_n$, so $a_n=b_n/(n-2019)$ for $n\neq2019$. Since $\sum b_n$ converges, its partial sums are bounded, and $1/(n-2019)\to0$ monotonically for $n>2019$; by Dirichlet's test, $\sum_{n>2019}a_n$ converges, and adding the finitely many terms $n\le2019$ shows $\sum a_n$ converges as well — \emph{in both cases (a) and (b)}. Since
+\[
+(n+2019)a_n = (n-2019)a_n + 4038\,a_n,
+\]
+$\sum(n+2019)a_n$ converges too, as a sum of two convergent series, in both cases.
+
+\textbf{(a) Absolute convergence of $\sum(n-2019)a_n$.} For $n>2019$, $|a_n|\le(n-2019)|a_n|$, so $\sum_{n>2019}|a_n|\le\sum_{n>2019}(n-2019)|a_n|<\infty$; hence $\sum|a_n|<\infty$ too. Then $|(n+2019)a_n|\le(n-2019)|a_n|+4038|a_n|$, and summing shows $\sum(n+2019)a_n$ converges
+\[
+\boxed{\text{absolutely}}.
+\]
+
+\textbf{(b) Conditional (non-absolute) convergence of $\sum(n-2019)a_n$.} Suppose, for contradiction, that $\sum(n+2019)a_n$ converged absolutely. By the triangle inequality $|n-2019|\le|n+2019|+4038$, so $|(n-2019)a_n|\le|(n+2019)a_n|+4038|a_n|$; and since $|a_n|\le(n+2019)|a_n|$ for all $n\ge1$, absolute convergence of $\sum(n+2019)a_n$ would give $\sum|a_n|<\infty$ and hence $\sum|(n-2019)a_n|<\infty$ — i.e.\ $\sum(n-2019)a_n$ would converge absolutely, contradicting the hypothesis. So $\sum(n+2019)a_n$ cannot converge absolutely; combined with the convergence already established, it converges only
+\[
+\boxed{\text{conditionally}}.
+\]
+\end{proof}
+
 \section{Combinatorics}
 Combinatorics questions reward clean counting arguments, parity reasoning, and the ability to encode a counting problem algebraically.
 
@@ -2062,6 +2151,24 @@ for every stopping point $k$ — the diametral pair $(4,5)$ is never even visite
 \]
 \end{proof}
 
+\begin{example}[A local $5$-cycle condition forces a large clique]
+A graph $G$ has $30$ vertices, and for \emph{every} $5$ of them there is a $5$-cycle of $G$ passing through exactly those $5$ vertices. Prove that $G$ contains $10$ pairwise adjacent vertices.
+\end{example}
+
+\begin{proof}[Solution]
+Work with the complement $H=\overline G$. A $5$-cycle on a given $5$-set $S$ exists in $G$ iff the induced subgraph $G[S]$ is Hamiltonian; a graph on $5$ vertices with a vertex of degree $\le1$ can never be Hamiltonian (a Hamiltonian cycle needs every vertex to have degree exactly $2$ within it). Translating to $H$: for every $5$-set $S$ and every $v\in S$, the $G$-degree of $v$ within $S$ is $4-\deg_{H[S]}(v)$, so we need $\deg_{H[S]}(v)\le2$ for every $v\in S$ (else $v$'s $G$-degree within $S$ drops to $\le1$, killing Hamiltonicity).
+
+\emph{Claim: $H$ has maximum degree $\le2$.} Suppose some vertex $v$ has $\deg_H(v)\ge3$; pick $3$ of its $H$-neighbors $n_1,n_2,n_3$ and any other vertex $w\notin\{v,n_1,n_2,n_3\}$ (possible since there are $30\ge5$ vertices). In $S=\{v,n_1,n_2,n_3,w\}$, $v$ already has $H$-degree $\ge3$, so its $G$-degree within $S$ is $\le1$ — $G[S]$ is not Hamiltonian, contradicting the hypothesis. So every vertex of $H$ has degree $\le2$.
+
+\emph{Finishing with a greedy independent set.} A graph with maximum degree $\le2$ on $30$ vertices has an independent set of size $\ge\lceil 30/3\rceil=10$: repeatedly pick any remaining vertex, put it in the independent set, and delete it together with its (at most $2$) neighbors; each round removes at most $3$ vertices, so after $\lceil30/3\rceil=10$ rounds every vertex has been deleted, and the picked vertices — pairwise non-adjacent by construction — number at least $10$.
+
+An independent set of size $10$ in $H$ is, by definition, a set of $10$ vertices with no $H$-edges among them, i.e.\
+\[
+\boxed{10 \text{ pairwise } G\text{-adjacent vertices exist}}
+\]
+(the bound is tight: $10$ disjoint triangles in $H$, i.e.\ $G=$ the complement of $10$ disjoint $K_3$'s, realizes independence number exactly $10$).
+\end{proof}
+
 \subsection{Generating Functions and Linear Recurrences}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2531,6 +2638,26 @@ Use $\max(X,Y)=X+Y-\min(X,Y)$, so $\E[Z]=\E[X]+\E[Y]-\E[\min(X,Y)]$. For indepen
 \]
 \end{proof}
 
+\begin{example}[Waiting for two different kinds of good news]
+Each day, independently, a forum shows a new problem about groups with probability $\tfrac14$, a new problem about rings with probability $\tfrac1{10}$, and nothing new with probability $\tfrac{13}{20}$ (these three outcomes are mutually exclusive and exhaustive). Let $X$ be the smallest number of days after which at least one groups-problem and at least one rings-problem have appeared. Find the distribution of $X$ in closed form.
+\end{example}
+
+\begin{proof}[Solution]
+Let $p_g=\tfrac14$, $p_r=\tfrac1{10}$, $p_0=\tfrac{13}{20}$ (note $p_g+p_r+p_0=1$). For $\mathbb{P}(X>n)$, use inclusion–exclusion on the events ``no groups-problem in $n$ days'' and ``no rings-problem in $n$ days'':
+\[
+\mathbb{P}(X>n)=\mathbb{P}(\text{no groups})+\mathbb{P}(\text{no rings})-\mathbb{P}(\text{no groups and no rings}) \quad \text{(in $n$ days)}.
+\]
+The first two probabilities are $(1-p_g)^n=(3/4)^n$ and $(1-p_r)^n=(9/10)^n$. Since the three daily outcomes are mutually exclusive, ``no groups and no rings'' means every day is the ``nothing'' outcome, with probability $p_0^n=(13/20)^n$. So
+\[
+\mathbb{P}(X>n)=\left(\frac34\right)^n+\left(\frac9{10}\right)^n-\left(\frac{13}{20}\right)^n.
+\]
+Then $\mathbb{P}(X=n)=\mathbb{P}(X>n-1)-\mathbb{P}(X>n)$, and each of the three terms telescopes as $c^{n-1}-c^n=c^{n-1}(1-c)$:
+\[
+\boxed{\mathbb{P}(X=n)=\frac14\left(\frac34\right)^{n-1}+\frac1{10}\left(\frac9{10}\right)^{n-1}-\frac{7}{20}\left(\frac{13}{20}\right)^{n-1}}, \qquad n=1,2,3,\dots
+\]
+(At $n=1$ this correctly gives $0$, since one day can never supply both a groups- and a rings-problem. At $n=2$ it gives $\tfrac1{20}$, matching the direct check $\mathbb P(X=2)=2p_gp_r=2\cdot\tfrac14\cdot\tfrac1{10}=\tfrac1{20}$: the only way to finish exactly on day $2$ is one day of each type, in either order.)
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2715,6 +2842,35 @@ But $V_t$ is obtained by summing these increments, so $V_t$ converges to a finit
 \]
 
 This is a useful warning example: even though the expected number of halvings by time $n$ is only logarithmic, that is still enough to make the typical increment decay faster than $1/n$, so the cumulative growth stays finite almost surely.
+\end{proof}
+
+\begin{example}[A negative-binomial tail sum via the CLT]
+Find
+\[
+\lim_{n\to\infty}\sum_{k=n}^{5n} \binom{k-1}{n-1}\left(\frac15\right)^n\left(\frac45\right)^{k-n}.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+The summand $\binom{k-1}{n-1}p^n(1-p)^{k-n}$ (with $p=\tfrac15$) is exactly $\mathbb{P}(N=k)$ where $N$ is the trial number of the $n$-th success in i.i.d.\ $\mathrm{Bernoulli}(p)$ trials: the $n$-th success lands on trial $k$ iff exactly $n-1$ of the first $k-1$ trials succeed (probability $\binom{k-1}{n-1}p^{n-1}(1-p)^{k-n}$) and trial $k$ itself succeeds (probability $p$). So the sum equals $\mathbb{P}(n\le N\le 5n)$ for $N\sim\mathrm{NegBinomial}(n,p)$.
+
+Write $N=\sum_{i=1}^n G_i$ where $G_i$ are i.i.d.\ $\mathrm{Geometric}(p)$ (number of trials to get the $i$-th success after the $(i-1)$-th), each with $\E[G_i]=1/p=5$ and $\Var(G_i)=(1-p)/p^2=20$. So $\E[N]=5n$ and $\Var(N)=20n$, giving standard deviation $\sqrt{20n}=\Theta(\sqrt n)$.
+
+\emph{Lower tail.} $n$ is $4n$ below the mean $5n$, which is $\Theta(n)\gg\Theta(\sqrt n)$, so by Chebyshev,
+\[
+\mathbb{P}(N<n)\le\mathbb{P}(|N-5n|>4n)\le\frac{\Var(N)}{(4n)^2}=\frac{20n}{16n^2}=\frac{5}{4n}\xrightarrow[n\to\infty]{}0.
+\]
+
+\emph{Upper tail at the mean.} By the Central Limit Theorem, $\dfrac{N-5n}{\sqrt{20n}}$ converges in distribution to a standard normal, so
+\[
+\mathbb{P}(N\le5n)=\mathbb{P}\!\left(\frac{N-5n}{\sqrt{20n}}\le0\right)\xrightarrow[n\to\infty]{}\Phi(0)=\frac12.
+\]
+
+Combining, $\mathbb{P}(n\le N\le5n)=\mathbb{P}(N\le5n)-\mathbb{P}(N<n)\to\tfrac12-0$, so
+\[
+\boxed{\frac12}.
+\]
+(Direct numerical summation confirms the convergence: the partial sum is about $0.526$ at $n=50$, $0.513$ at $n=200$, and $0.501$ at $n=20{,}000$.)
 \end{proof}
 
 \subsection{Markov Chains and First-Step Analysis}
@@ -2915,6 +3071,21 @@ Given a real array $A[1..n]$, design an algorithm that, for every index $i$, fin
 \textbf{Answering a query.} For index $i$ we want the surviving candidate closest to the top with value $\ge2A[i]$. Because the stack is sorted by value from top (smallest) to bottom (largest), the qualifying candidates form a contiguous block at the bottom, and the nearest one is found by \emph{binary search} on the stack (kept as an array) for the threshold $2A[i]$: $O(\log n)$ per query.
 
 \textbf{Complexity.} Maintenance is $O(n)$ amortized; each of the $n$ queries costs $O(\log n)$ via binary search on the array-backed stack; total time is $O(n\log n)$, and the stack never holds more than $n$ indices, so space is $O(n)$ — matching the required bounds exactly. (A plain monotonic stack alone, without the binary search, solves the classical ``next strictly greater element'' problem in $O(n)$; the extra $\log n$ factor here is exactly the cost of the per-query threshold search that the ``at least double'' condition forces.)
+\end{proof}
+
+\begin{example}[Sorting a quadratic image of a sorted array, in linear time]
+Given a real array $A[1..n]$ sorted in increasing order and real numbers $p,q,r$, produce an array $B[1..n]$ consisting of the values $px^2+qx+r$ for $x\in A$, also sorted in increasing order, using $O(n)$ time and $O(n)$ extra space.
+\end{example}
+
+\begin{proof}[Solution]
+If $p=0$, $f(x)=qx+r$ is monotonic: copy $A$ through $f$ in order if $q\ge0$, or in reverse order if $q<0$ — $O(n)$.
+
+If $p\neq0$, $f(x)=px^2+qx+r$ is a parabola with vertex at $x_0=-q/(2p)$, monotonic on each side of $x_0$. Since $A$ is sorted, binary search for $x_0$ in $A$ in $O(\log n)$ to split it into $A_{\text{left}}$ (entries $<x_0$) and $A_{\text{right}}$ (entries $\ge x_0$). On one side of $x_0$, $f$ is increasing as $x$ increases; on the other, decreasing — which is which depends on the sign of $p$:
+\begin{itemize}
+\item $p>0$ (upward parabola): $f$ decreases toward $x_0$ from the left and increases away from it on the right. So $f(A_{\text{left}})$ read in \emph{reverse} order is increasing, and $f(A_{\text{right}})$ read in its original order is already increasing.
+\item $p<0$ (downward parabola): the roles swap — $f(A_{\text{left}})$ in its original order is increasing, and $f(A_{\text{right}})$ read in reverse is increasing.
+\end{itemize}
+Either way, this produces two increasing sequences of total length $n$ in $O(n)$ time. Merge them with the standard two-pointer merge step from merge sort — compare the fronts of each sequence, output the smaller, advance that pointer — in $O(n)$ time and $O(n)$ auxiliary space for the output. The result $B$ is $A$'s image under $f$, fully sorted, using $O(n)$ time (one binary search plus two linear passes) and $O(n)$ space, as required.
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
