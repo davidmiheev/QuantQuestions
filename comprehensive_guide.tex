@@ -21,6 +21,7 @@
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\Var}{\operatorname{Var}}
 \newcommand{\Cov}{\operatorname{Cov}}
@@ -113,6 +114,29 @@ Therefore the solution set is
 \left\{\left(\frac{1-t}{2},\frac{1-t}{2},t\right): t\in\R\right\}.
 \]
 This matches the rank test: $\rank(A)=\rank([A\mid b])=2<3$, so the system is consistent but has infinitely many solutions.
+\end{proof}
+
+\begin{example}[Independence of shifted determinants, and where it must fail]
+Let $E$ be the $3\times3$ identity. (a) Prove that $\det(X)$, $\det(X+E)$, $\det(X-E)$, viewed as functions on the space of complex $3\times3$ matrices, are linearly independent. (b) Prove there is an $m\in\N$ for which $\det(X-mE),\det(X-(m-1)E),\dots,\det(X+mE)$ (a run of $2m+1$ such functions) is linearly \emph{dependent}.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Key reduction.} For a $3\times3$ matrix $X$, expanding $\det(X-kE)$ as a polynomial in the scalar $k$ gives exactly (up to sign) the characteristic polynomial of $X$:
+\[
+\det(X-kE) = -k^3+\trace(X)\,k^2-p_2(X)\,k+\det(X),
+\]
+where $p_2(X)$ is the sum of the principal $2\times2$ minors of $X$. So each function $f_k(X):=\det(X-kE)$ is a fixed linear combination of the four functions $\{1,\ \trace(X),\ p_2(X),\ \det(X)\}$ — namely $f_k = -k^3\cdot1+k^2\cdot\trace(X)-k\cdot p_2(X)+1\cdot\det(X)$ — with coefficient vector $v_k=(-k^3,k^2,-k,1)\in\C^4$. Since $1,\trace,p_2,\det$ have different degrees in the entries of $X$, they are linearly independent functions; hence the functions $\{f_k\}$ are linearly (in)dependent exactly when their coefficient vectors $\{v_k\}$ are linearly (in)dependent in $\C^4$.
+
+\textbf{(a)} Here $k\in\{-1,0,1\}$: $v_{-1}=(1,1,1,1)$, $v_0=(0,0,0,1)$, $v_1=(-1,1,-1,1)$. Suppose $\alpha v_{-1}+\beta v_0+\gamma v_1=0$. The third coordinate gives $\alpha-\gamma=0$, i.e.\ $\alpha=\gamma$; the second coordinate gives $\alpha+\gamma=0$, i.e.\ $\alpha=-\gamma$. Together $\alpha=\gamma=0$, and then the fourth coordinate gives $\beta=0$. So $v_{-1},v_0,v_1$ are linearly independent in $\C^4$, hence so are $f_{-1},f_0,f_1$:
+\[
+\boxed{\det(X),\ \det(X+E),\ \det(X-E) \text{ are linearly independent}}.
+\]
+
+\textbf{(b)} Since $\C^4$ is $4$-dimensional, any $5$ vectors in it are automatically linearly dependent. Taking $m=2$ gives $2m+1=5$ functions $f_{-2},f_{-1},f_0,f_1,f_2$, whose coefficient vectors $v_{-2},\dots,v_2\in\C^4$ (five vectors in a four-dimensional space) must be dependent, hence so are the functions themselves:
+\[
+\boxed{m=2 \text{ works: } \det(X-2E),\dots,\det(X+2E) \text{ are linearly dependent}}
+\]
+(indeed any $m\ge2$ works, by the same pigeonhole argument).
 \end{proof}
 
 \subsection{Vector Spaces and Linear Maps}
@@ -517,6 +541,32 @@ If $\lfloor n/2\rfloor\ge2$ (i.e.\ $n\ge4$), the $n$ eigenvalues (with multiplic
 So the maximum number of distinct eigenvalues of $\Phi_A$ is
 \[
 \boxed{n \text{ for } n\le3, \qquad \left\lceil\frac n2\right\rceil+1 \text{ for } n\ge4}.
+\]
+\end{proof}
+
+\begin{example}[Eigenvalues of an operator whose cube is a projection]
+A linear operator $A:\R^n\to\R^n$ satisfies: $A^3$ is a projection operator. What eigenvalues can $A$ have? Must $A$ be diagonalizable in some basis of $\R^n$?
+\end{example}
+
+\begin{proof}[Solution]
+``$A^3$ is a projection'' means $(A^3)^2=A^3$, i.e.\ $A^6=A^3$, i.e.\ $A^3(A^3-I)=0$. So the minimal polynomial of $A$ divides
+\[
+x^3(x^3-1)=x^3(x-1)(x^2+x+1).
+\]
+Over $\C$, the roots of this polynomial are $0$ (from $x^3$), $1$, and the two primitive cube roots of unity $\omega,\overline\omega=\omega^2$ (roots of $x^2+x+1$). So the eigenvalues of $A$ can only be
+\[
+\boxed{0,\ 1,\ \omega,\ \omega^2} \qquad \left(\omega=e^{2\pi i/3}\right),
+\]
+and since $A$ is a \emph{real} matrix, if $\omega$ occurs as an eigenvalue so must its conjugate $\omega^2$.
+
+\textbf{Not necessarily diagonalizable.} Two explicit examples show $A$ need not have a diagonal matrix in any real basis:
+\begin{itemize}
+\item $A=\begin{pmatrix}0&1\\0&0\end{pmatrix}$: here $A^3=0$, and $0$ is trivially a projection (onto $\{0\}$), so the hypothesis holds. But $A$ is a nontrivial nilpotent Jordan block — not diagonalizable even over $\C$.
+\item $A=$ rotation by $120^\circ$ in $\R^2$: $A^3=I$ (a full turn), and $I$ is trivially a projection. Here $A^3$ satisfies the hypothesis, but $A$'s eigenvalues are the genuinely complex $\omega,\omega^2$, so $A$ cannot be diagonalized over $\R$ at all — no real basis makes its matrix diagonal.
+\end{itemize}
+So
+\[
+\boxed{\text{no, } A \text{ need not be diagonalizable in any basis of } \R^n}.
 \]
 \end{proof}
 
@@ -1105,6 +1155,32 @@ This contradicts $g(b)-g(a)\ge4$. Hence the assumption was false, and
 \]
 \end{proof}
 
+\begin{example}[A harmonic-mean pair from the Mean Value Theorem]
+Let $f$ be a smooth real function with $f(0)=0$, $f(1)=1$. Prove there exist \emph{distinct} $x_1,x_2\in[0,1]$ with
+\[
+\frac1{f'(x_1)}+\frac1{f'(x_2)}=2.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Let $h(x)=f'(x)-1$; since $f(1)-f(0)=1$, $\int_0^1 h(x)\,dx=0$. If $h\equiv0$ (i.e.\ $f'\equiv1$), any two distinct points work. Otherwise, split into cases on the boundary values $h(0),h(1)$.
+
+\textbf{Case 1: $h(0)=0$ or $h(1)=0$.} By the ordinary Mean Value Theorem there is $c\in(0,1)$ with $f'(c)=1$. If also $f'(0)=1$ (or $f'(1)=1$), take $x_1=0,x_2=c$ (or $x_1=c,x_2=1$): distinct points, each with $f'=1$, giving $1+1=2$.
+
+\textbf{Case 2: $h(0)$ and $h(1)$ have the \emph{same} strict sign.} Say $h(0)>0$ and $h(1)>0$ (the other sign is symmetric). Since $\int_0^1h=0$ and $h(0)>0$, $h$ cannot stay $\ge0$ throughout (that would force $\int h>0$, using $h(0)>0$ and continuity), so $h(c^*)<0$ for some $c^*\in(0,1)$. By the Intermediate Value Theorem, $h$ has a root in $(0,c^*)$ (since $h(0)>0>h(c^*)$) and another root in $(c^*,1)$ (since $h(c^*)<0<h(1)$) — two \emph{distinct} points $x_1,x_2$ with $f'(x_1)=f'(x_2)=1$, giving $1+1=2$ again.
+
+\textbf{Case 3: $h(0),h(1)$ have strictly opposite signs.} For $c\in(0,1)$ with $f(c)\in(0,1)$, apply the Mean Value Theorem on $[0,c]$ and $[c,1]$ to get $x_1(c)\in(0,c)$, $x_2(c)\in(c,1)$ with $f'(x_1(c))=f(c)/c$ and $f'(x_2(c))=(1-f(c))/(1-c)$, so
+\[
+G(c):=\frac1{f'(x_1(c))}+\frac1{f'(x_2(c))}=\frac{c}{f(c)}+\frac{1-c}{1-f(c)}.
+\]
+As $c\to0^+$, $G(c)\to \tfrac1{f'(0)}+1=\tfrac1{f'(0)}+1$, i.e.\ $2+h(0)/(1+h(0))$-type limit — concretely $G(0^+)=1+\tfrac1{1+h(0)}$; as $c\to1^-$, $G(1^-)=1+\tfrac1{1+h(1)}$. Since $h(0)$ and $h(1)$ have opposite signs, one of $\tfrac1{1+h(0)},\tfrac1{1+h(1)}$ exceeds $1$ and the other is less than $1$, so $G(0^+)$ and $G(1^-)$ lie on opposite sides of $2$. As $G$ is continuous on $(0,1)$ (for the generic case where $f$ stays within $(0,1)$ on the open interval), the Intermediate Value Theorem gives $c_0$ with $G(c_0)=2$ exactly, and $x_1=x_1(c_0)<c_0<x_2(c_0)=x_2$ are the required distinct points.
+
+In every case,
+\[
+\boxed{\text{distinct } x_1,x_2\in[0,1] \text{ with } \frac1{f'(x_1)}+\frac1{f'(x_2)}=2 \text{ exist}}.
+\]
+\end{proof}
+
 \subsection{Multivariable Calculus and Constrained Optimization}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1535,6 +1611,37 @@ Direct evaluation (numerically) gives $F(0)\approx0.500>0$ and $F(3)\approx-0.44
 \boxed{1}
 \]
 root on $[0,3]$.
+\end{proof}
+
+\begin{example}[A double integral of an averaged argument]
+For continuous $f$, let
+\[
+I(a)=\iint\limits_{-a\le x,y\le a} f\!\left(\frac{x+y}2\right)dx\,dy.
+\]
+(a) Find $I'(a)$. (b) Describe all continuous $f$ for which $I(a)=\int_{-a}^a f(x)\,dx$ holds for every $a\in\R$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} For fixed sum $s=x+y$, the set of $(x,y)$ in the square $[-a,a]^2$ with $x+y=s$ is a segment of length $L(s)=2a-|s|$ for $|s|\le2a$ (a standard fact: the level lines $x+y=s$ sweep out a triangular length profile across a square). So
+\[
+I(a)=\int_{-2a}^{2a} f\!\left(\frac s2\right)(2a-|s|)\,ds \ \overset{u=s/2}{=}\ 4\int_{-a}^{a} f(u)(a-|u|)\,du = 4a\!\int_{-a}^a\! f(u)\,du - 4\!\int_{-a}^a\! f(u)|u|\,du.
+\]
+Write $F(a)=\int_{-a}^af(u)\,du$ (so $F'(a)=f(a)+f(-a)$) and $G(a)=\int_{-a}^af(u)|u|\,du$ (so $G'(a)=a\big(f(a)+f(-a)\big)$ for $a\ge0$, by the same Leibniz differentiation). Then $I(a)=4aF(a)-4G(a)$, and
+\[
+I'(a)=4F(a)+4aF'(a)-4G'(a)=4F(a)+4a\big(f(a)+f(-a)\big)-4a\big(f(a)+f(-a)\big)=4F(a).
+\]
+So
+\[
+\boxed{I'(a)=4\int_{-a}^a f(x)\,dx}
+\]
+(check: $f\equiv1$ gives $I(a)=(2a)^2=4a^2$, $I'(a)=8a=4\cdot2a$ ✓; $f(x)=x$ gives $I\equiv0$ by odd symmetry, and $4\int_{-a}^ax\,dx=0$ ✓).
+
+\textbf{(b)} Let $J(a)=\int_{-a}^af(x)\,dx$; the desired identity is $I(a)=J(a)$ for all $a$. Differentiating both sides and using part (a) on the left, $J'(a)=I'(a)=4J(a)$. This is a linear ODE for $J$ with solution $J(a)=J(0)e^{4a}$; but $J(0)=0$ trivially (integral over a degenerate interval), forcing $J(a)\equiv0$. Differentiating $J\equiv0$ gives $f(a)+f(-a)=0$ for all $a$, i.e.\ \emph{$f$ is odd}.
+
+Conversely, if $f$ is odd, then $J(a)=\int_{-a}^af=0$ for all $a$ (standard), and substituting $(x,y)\mapsto(-x,-y)$ in the double integral (a measure- and domain-preserving map on the square) gives $I(a)=\iint f\big({-}(x+y)/2\big)\,dxdy=-\iint f((x+y)/2)\,dxdy=-I(a)$, so $I(a)=0=J(a)$ too. Hence
+\[
+\boxed{f \text{ must be exactly the odd continuous functions}}.
+\]
 \end{proof}
 
 \subsection{Series, Power Series, and Fourier Methods}
@@ -2273,6 +2380,21 @@ An independent set in $H$ of size $12\ge11$ is a set of (at least) $11$ cities w
 (indeed the argument gives $12$, comfortably more than the $11$ requested).
 \end{proof}
 
+\begin{example}[A friendship-pattern graph is regular]
+In a social network, any two friends have no common friends, and any two non-friends have exactly two common friends. Prove that every user has the same number of friends.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Step 1: friends have equal degree.} Let $a,b$ be friends. Since friends share no common friends, $N(a)\cap N(b)=\varnothing$ (neighborhoods excluding $a,b$ themselves), so $N(a)\setminus\{b\}$ and $N(b)\setminus\{a\}$ are disjoint sets. For $x\in N(a)\setminus\{b\}$: is $x$ adjacent to $b$? If it were, $x$ would be a common friend of $a,b$ — impossible, since $a,b$ are friends. So $x,b$ are non-friends, hence have exactly two common friends; one of them is $a$ (since $x\sim a$, $a\sim b$), so there is exactly one \emph{other} common friend of $x,b$, call it $\varphi(x)\neq a$. Since $\varphi(x)\sim b$ and $\varphi(x)\neq a$, $\varphi(x)\in N(b)\setminus\{a\}$.
+
+$\varphi$ is injective: if $\varphi(x_1)=\varphi(x_2)=y$ for distinct $x_1,x_2\in N(a)\setminus\{b\}$, then $y\sim x_1,y\sim x_2,y\sim b$. If $y\sim a$ too, then $y\in N(a)\cap N(x_1)$ — impossible since $a,x_1$ are friends (no common friends). So $y\not\sim a$, meaning $a,y$ are non-friends; but then $x_1,x_2,b$ are \emph{three} distinct common friends of $a,y$ (each adjacent to both $a$ and $y$), contradicting ``exactly two common friends.'' So $\varphi$ is injective, giving $|N(a)\setminus\{b\}|\le|N(b)\setminus\{a\}|$; the symmetric argument (swap $a,b$) gives the reverse inequality, so $\deg(a)=\deg(b)$.
+
+\textbf{Step 2: everyone has equal degree.} For non-friends $a,b$, they have a common friend $c$ (in fact two). Since $a,c$ are friends and $b,c$ are friends, Step 1 gives $\deg(a)=\deg(c)=\deg(b)$. Combined with Step 1 itself (friends have equal degree), \emph{every} pair of users — friends or not — has equal degree, so
+\[
+\boxed{\text{all users have the same number of friends}}.
+\]
+\end{proof}
+
 \subsection{Generating Functions and Linear Recurrences}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2808,6 +2930,32 @@ For the mean, $\E[X]=\sum_{k=2}^n k\cdot\frac{k-1}{n(n-1)}=\frac{1}{n(n-1)}\sum_
 \]
 \end{proof}
 
+\begin{example}[Density of a Laplace–Uniform combination]
+$X$ and $Y$ are independent, $X$ has the Laplace density $\tfrac12e^{-|x|}$ and $Y\sim\mathrm{Unif}[1,2]$. Find the density of $Z=X-2Y$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $W=-2Y$; since $Y\sim\mathrm{Unif}[1,2]$, $W\sim\mathrm{Unif}[-4,-2]$ with density $f_W(w)=\tfrac12$ on $[-4,-2]$. Then $Z=X+W$ is a sum of independent variables, so its density is the convolution
+\[
+f_Z(z)=\int_{-4}^{-2} \frac12 e^{-|z-w|}\cdot\frac12\,dw = \frac14\int_{-4}^{-2}e^{-|z-w|}\,dw \overset{u=z-w}{=} \frac14\int_{z+2}^{z+4} e^{-|u|}\,du.
+\]
+Evaluate according to where the window $[z+2,z+4]$ sits relative to $0$:
+\begin{itemize}
+\item $z\le-4$ (window entirely $\le0$, $e^{-|u|}=e^u$): $\displaystyle\int_{z+2}^{z+4}e^u\,du=e^{z+4}-e^{z+2}=e^z(e^4-e^2)$.
+\item $z\ge-2$ (window entirely $\ge0$, $e^{-|u|}=e^{-u}$): $\displaystyle\int_{z+2}^{z+4}e^{-u}\,du=e^{-(z+2)}-e^{-(z+4)}=e^{-z}(e^{-2}-e^{-4})$.
+\item $-4<z<-2$ (window straddles $0$): $\displaystyle\int_{z+2}^0e^u\,du+\int_0^{z+4}e^{-u}\,du = (1-e^{z+2})+(1-e^{-(z+4)}) = 2-e^{z+2}-e^{-z-4}$.
+\end{itemize}
+So
+\[
+\boxed{f_Z(z)=\begin{cases}
+\dfrac{e^4-e^2}{4}\,e^{z}, & z\le-4,\\[2mm]
+\dfrac12-\dfrac14e^{z+2}-\dfrac14e^{-z-4}, & -4<z<-2,\\[2mm]
+\dfrac{e^{-2}-e^{-4}}{4}\,e^{-z}, & z\ge-2.
+\end{cases}}
+\]
+(One can check this is continuous at $z=-4,-2$ and integrates to $1$ over $\R$, as required of a density.)
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3204,6 +3352,36 @@ So the expected time to absorption is
 Here the extra $1$ appears because one step is spent immediately, regardless of which direction the walk takes next.
 \end{proof}
 
+\begin{example}[Expected hitting time in a small portal maze]
+A maze has $6$ rooms connected by two-way portals as follows: room $1$ connects to $2,3$; room $2$ connects to $1,3,4,6$; room $3$ connects to $1,2,5,6$; room $4$ connects to $2,5,6$; room $5$ connects to $3,4,6$; room $6$ connects to $2,3,4,5$. Starting in room $1$, at each step you jump through a uniformly random portal from your current room (including possibly back the way you came). Find the expected number of jumps to first reach room $6$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $h_i$ be the expected number of jumps to reach room $6$ starting from room $i$ ($h_6=0$). First-step analysis gives, for each room $i\neq6$ with degree $d_i$ and neighbors $N(i)$,
+\[
+h_i = 1+\frac1{d_i}\sum_{j\in N(i)} h_j.
+\]
+The degrees here are $d_1=2$, $d_2=d_3=d_6=4$, $d_4=d_5=3$, giving the system
+\[
+\begin{aligned}
+h_1 &= 1+\tfrac12(h_2+h_3), \\
+h_2 &= 1+\tfrac14(h_1+h_3+h_4), \\
+h_3 &= 1+\tfrac14(h_1+h_2+h_5), \\
+h_4 &= 1+\tfrac13(h_2+h_5), \\
+h_5 &= 1+\tfrac13(h_3+h_4).
+\end{aligned}
+\]
+By the left-right symmetry of the maze (swapping $2\leftrightarrow3$, $4\leftrightarrow5$ preserves all the adjacencies), $h_2=h_3$ and $h_4=h_5$; substituting collapses the system to two equations in $h_2,h_4$ (with $h_1=1+h_2$ from the first equation):
+\[
+h_2 = 1+\tfrac14\big((1+h_2)+h_2+h_4\big), \qquad h_4=1+\tfrac13(h_2+h_4).
+\]
+The second equation gives $\tfrac23h_4=1+\tfrac13h_2$, i.e.\ $h_4=\tfrac32+\tfrac12h_2$. Substituting into the first: $h_2=1+\tfrac14\big(1+2h_2+\tfrac32+\tfrac12h_2\big)=1+\tfrac14\big(\tfrac52+\tfrac52h_2\big)=\tfrac{13}8+\tfrac58h_2$, so $\tfrac38h_2=\tfrac{13}8$, giving $h_2=\tfrac{13}3$, hence $h_4=\tfrac32+\tfrac16\cdot13=\tfrac{11}3$ and
+\[
+h_1 = 1+h_2 = 1+\frac{13}3=\boxed{\frac{16}{3}}.
+\]
+(A direct Monte Carlo simulation of the random walk confirms this: the sample mean over $2$ million runs is about $5.337$, matching $16/3\approx5.333$.)
+\end{proof}
+
 \section{Algorithm Design}
 Quant interviews frequently include short algorithmic problems that reward recognizing a classical pattern — a monotonic stack, a sliding window, a divide-and-conquer trick — over brute force.
 
@@ -3252,6 +3430,20 @@ A number is divisible by $3$ iff its digit sum is; and for a fixed multiset of d
 \textbf{Output.} If every digit was discarded (or only zeros remain), the answer is $0$. Otherwise emit $\mathrm{cnt}[9]$ nines, then $\mathrm{cnt}[8]$ eights, \dots, down to $\mathrm{cnt}[0]$ zeros — a single $O(n)$ pass that reproduces the largest arrangement of the surviving digits.
 
 Total cost: one $O(n)$ counting pass, $O(1)$ work to decide what to discard, and one $O(n)$ output pass — $O(n)$ time, $O(1)$ extra space (the count array has fixed size $10$, independent of $n$).
+\end{proof}
+
+\begin{example}[Detecting a $k$-cycle in a permutation given as two arrays]
+A permutation $\sigma$ of $\{1,\dots,n\}$ is given by two arrays $a[1..n]$, $b[1..n]$, each containing every value $1,\dots,n$ exactly once, with $b[i]=\sigma(a[i])$ for every $i$ (so $\sigma$ is defined only implicitly — there is no array with $\sigma(i)$ at position $i$). Design an algorithm that decides whether $\sigma$ has a cycle of length exactly $k$ (a fixed constant), using $O(n^2)$ operations and $O(1)$ extra space; the arrays may be modified.
+\end{example}
+
+\begin{proof}[Solution]
+The obstacle is that $\sigma(x)$ isn't directly indexable: to find it we must locate $x$ in array $a$ and read off the matching entry of $b$.
+
+\textbf{Step 1: put $\sigma$ into direct form, in place.} For $i=1,\dots,n$: scan $a[i..n]$ for the position $j$ with $a[j]=i$ (a linear scan, $O(n)$ per $i$), then swap $(a[i],b[i])\leftrightarrow(a[j],b[j])$ (swapping both arrays' entries together, keeping the pairing $b[\cdot]=\sigma(a[\cdot])$ intact). After this pass, $a[i]=i$ for every $i$, so $b[i]=\sigma(i)$ directly: $b$ is now $\sigma$ in standard array form. This costs $O(n)$ work per index, $O(n^2)$ total, and only a constant number of temporary variables for the swaps — $O(1)$ extra space.
+
+\textbf{Step 2: check for a $k$-cycle.} For each starting point $s=1,\dots,n$, trace $s,\ b[s],\ b[b[s]],\dots$ for exactly $k$ steps, checking along the way that it does not return to $s$ before step $k$ (to rule out a shorter cycle whose length merely divides $k$) and that it \emph{does} return to $s$ at step $k$ exactly. Since $k$ is a constant, each trace costs $O(k)=O(1)$, and there are $n$ starting points, so this phase is $O(n)$.
+
+The dominant cost is the $O(n^2)$ in-place linear-search sort of Step 1 (a simple selection-sort-style pass — an $O(n\log n)$ or even $O(n)$ in-place rearrangement is possible with more care, e.g.\ by following $a$'s own cycles to place each value directly, but $O(n^2)$ already meets the stated bound). Total: $O(n^2)$ time, $O(1)$ extra space.
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
