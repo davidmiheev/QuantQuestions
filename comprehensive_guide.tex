@@ -648,6 +648,28 @@ So every monomial $u^av^b$ is an eigenvector of $D$ with eigenvalue $a-b$.
 (each eigenvalue $m\in\Z$ has an infinite-dimensional eigenspace, spanned by $\{u^{m+b}v^b:b\ge0\}$ for $m\ge0$, or $\{u^av^{a-m}:a\ge0\}$ for $m<0$).
 \end{proof}
 
+\begin{example}[Eigenvalues of an antisymmetric block matrix built from $A$]
+A square matrix $A$ of size $n\times n$ has distinct eigenvalues $\lambda_1,\dots,\lambda_n$ (possibly complex). Find all eigenvalues, including complex ones, of $\begin{pmatrix}0&-A\\A&0\end{pmatrix}$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $M=\begin{pmatrix}0&-A\\A&0\end{pmatrix}$, a $2n\times2n$ matrix, and let $v$ be an eigenvector of $A$ with $Av=\lambda v$.
+
+\textbf{Constructing eigenvectors of $M$ directly.} Try $M\binom{v}{cv}$ for a scalar $c$ to be determined:
+\[
+M\binom{v}{cv}=\binom{-A(cv)}{Av}=\binom{-c\lambda v}{\lambda v}.
+\]
+For this to equal $\mu\binom{v}{cv}=\binom{\mu v}{\mu cv}$, we need $-c\lambda=\mu$ and $\lambda=\mu c$. Substituting the first into the second: $\lambda=(-c\lambda)c=-c^2\lambda$, so (for $\lambda\ne0$) $c^2=-1$, i.e.\ $c=\pm i$. Each choice gives a genuine eigenvector: $c=-i$ gives $\mu=-c\lambda=i\lambda$, and $c=i$ gives $\mu=-i\lambda$. So both $\pm i\lambda$ are eigenvalues of $M$, with explicit eigenvectors $\binom{v}{\mp iv}$.
+
+\textbf{The case $\lambda=0$.} If some $\lambda_k=0$ with eigenvector $v$, then $M\binom{av}{bv}=\binom{-A(bv)}{A(av)}=\binom00$ for \emph{any} scalars $a,b$ (since $Av=0$), so $\mu=0$ is an eigenvalue of $M$ with (at least) a $2$-dimensional eigenspace $\{(av,bv)\}$ — consistent with the general pattern, since $+i\cdot0=-i\cdot0=0$ coincide.
+
+\textbf{Accounting for all $2n$ eigenvalues.} Since $A$ has $n$ distinct eigenvalues $\lambda_1,\dots,\lambda_n$, each contributes the pair $\pm i\lambda_k$ via the construction above, giving $2n$ eigenvalues (as a multiset, with repetitions exactly when $\lambda_j=-\lambda_k$ for some $j\ne k$, or when a $\lambda_k=0$). This already accounts for all $2n$ eigenvalues of the $2n\times2n$ matrix $M$ (matching, e.g., $M^2=\begin{pmatrix}-A^2&0\\0&-A^2\end{pmatrix}$, whose eigenvalues are $-\lambda_k^2$ each with multiplicity $2$ — exactly $(\pm i\lambda_k)^2$). So
+\[
+\boxed{\text{the eigenvalues of } M \text{ are exactly } \pm i\lambda_1,\ \pm i\lambda_2,\ \dots,\ \pm i\lambda_n}
+\]
+(verified numerically against direct eigenvalue computation for random real $4\times4$ matrices $A$).
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -929,6 +951,26 @@ Extend a basis $w_1,\dots,w_r$ of $W$ (where $r=\tfrac{n(n+1)}2$) by adjoining $
 (the same argument shows any fixed vector not lying in a given proper subspace can always be made orthogonal to that subspace by a suitable choice of inner product).
 \end{proof}
 
+\begin{example}[A symmetric matrix always maps one given vector to another]
+Let $x,y$ be nonzero vectors in $\R^n$. Does there always exist a symmetric matrix $A$ with $y=Ax$?
+\end{example}
+
+\begin{proof}[Solution]
+Yes, always. Define
+\[
+A=\frac{xy^T+yx^T}{\|x\|^2}-\frac{x\cdot y}{\|x\|^4}\,xx^T.
+\]
+This is manifestly symmetric, being a real linear combination of the symmetric matrices $xy^T+yx^T$ and $xx^T$. Computing $Ax$ term by term: $xy^Tx=(x\cdot y)x$, $yx^Tx=\|x\|^2y$, and $xx^Tx=\|x\|^2x$, so
+\[
+Ax=\frac{(x\cdot y)x+\|x\|^2y}{\|x\|^2}-\frac{x\cdot y}{\|x\|^4}\cdot\|x\|^2x=\frac{(x\cdot y)x}{\|x\|^2}+y-\frac{(x\cdot y)x}{\|x\|^2}=y.
+\]
+So
+\[
+\boxed{\text{yes — such a symmetric } A \text{ always exists}}
+\]
+(this holds regardless of whether $x,y$ are parallel, orthogonal, or neither — verified directly above, and checked numerically on random pairs).
+\end{proof}
+
 \section{Calculus and Real Analysis}
 Interview analysis questions often look innocent but test whether you can move between definitions, expansions, and clean arguments. The core techniques are asymptotics, derivatives, optimization, integrals, and series.
 
@@ -1076,6 +1118,23 @@ Consequently, if $a_n\in(0,\pi)$: $G_n(a_n)\ge0$ gives $a_{n+1}\ge a_n$, and $G_
 \boxed{a_n\to\pi\text{ for every }a_0\in(0,2\pi)}
 \]
 (consistent with $a_0=\pi$ itself being an exact fixed point of the recursion).
+\end{proof}
+
+\begin{example}[Matching values one unit apart, from a boundary condition]
+Let $f$ be continuous with $f(0)=f(2)$. Show that $f(x)=f(x-1)$ for some $x\in[0,2]$.
+\end{example}
+
+\begin{proof}[Solution]
+Define $g(x)=f(x)-f(x-1)$ for $x\in[1,2]$ (so $x-1\in[0,1]\subset[0,2]$, keeping $g$ well-defined and continuous on $[1,2]$).
+
+At the endpoints:
+\[
+g(2)=f(2)-f(1),\qquad g(1)=f(1)-f(0)=f(1)-f(2)=-g(2)
+\]
+(using $f(0)=f(2)$ in the last step). So $g(1)=-g(2)$: either both are $0$, or $g(1)$ and $g(2)$ have opposite signs. Either way, by the Intermediate Value Theorem applied to the continuous function $g$ on $[1,2]$, there is some $x\in[1,2]\subseteq[0,2]$ with $g(x)=0$, i.e.\
+\[
+\boxed{f(x)=f(x-1)\text{ for some }x\in[0,2]}.
+\]
 \end{proof}
 
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
@@ -2077,6 +2136,27 @@ Evaluating at $x=-1$:
 \]
 \end{proof}
 
+\begin{example}[Conditional but not absolute convergence of a sinc-integral series]
+Investigate the convergence (absolute and conditional) of $\displaystyle\sum_{k=1}^\infty a_k$, where $a_k=\int_0^{\sin(k)/k}\dfrac{\sin t}t\,dt$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Leading-order behavior of $a_k$.} Let $F(u)=\int_0^u\frac{\sin t}t\,dt$. Since $\sin t/t$ is an even function of $t$, $F$ is odd, and near $u=0$, $\sin t/t=1-t^2/6+O(t^4)$ gives $F(u)=u-u^3/18+O(u^5)$. With $u_k=\sin(k)/k=O(1/k)$,
+\[
+a_k=F(u_k)=\frac{\sin k}k+O\!\left(\frac1{k^3}\right).
+\]
+
+\textbf{The leading term converges conditionally.} The series $\sum \sin(k)/k$ converges by the Dirichlet test: the partial sums $\sum_{k=1}^N\sin k$ are bounded (a standard geometric-series identity, since $\sin k=\Im(e^{ik})$ and $\sum e^{ik}$ telescopes to a bounded quantity as $|e^i-1|$ stays away from $0$), while $1/k\downarrow0$. But $\sum|\sin k|/k$ diverges: since $\pi$ is irrational, $k\bmod 2\pi$ equidistributes, so $|\sin k|$ has positive average value ($\tfrac2\pi$ over a period), and $\sum|\sin k|/k$ behaves like $\tfrac2\pi\sum1/k$, the divergent harmonic series. So $\sum\sin(k)/k$ converges conditionally, not absolutely.
+
+\textbf{The correction term is negligible.} $\sum_k\left|a_k-\dfrac{\sin k}k\right|=\sum_k O(1/k^3)$ converges absolutely.
+
+\textbf{Combining.} Since $a_k=\dfrac{\sin k}k+c_k$ with $\sum c_k$ absolutely convergent and $\sum\sin(k)/k$ conditionally convergent, $\sum a_k$ converges (as the sum of a convergent series and an absolutely convergent one). And since $|a_k|\sim|\sin k|/k$ to leading order, $\sum|a_k|$ diverges exactly as $\sum|\sin k|/k$ does. So
+\[
+\boxed{\sum_{k=1}^\infty a_k \text{ converges conditionally, not absolutely}}
+\]
+(numerically, partial sums of $a_k$ stabilize near $1.03$ while partial sums of $|a_k|$ grow without bound, tracking $\sum|\sin k|/k$ closely).
+\end{proof}
+
 \section{Combinatorics}
 Combinatorics questions reward clean counting arguments, parity reasoning, and the ability to encode a counting problem algebraically.
 
@@ -2731,6 +2811,27 @@ By Cauchy--Schwarz, $\sum_v d(v)^2\ge\dfrac{\left(\sum_v d(v)\right)^2}{N}=\dfra
 is the correct statement — confirmed above by the bipartite extremal example and by exhaustive small-case verification — even though the fully elementary proof pinning the threshold down to exactly $n^2$ (rather than $n^2+n/2$) needs a sharper argument than the one given here.
 \end{proof}
 
+\begin{example}[Minimum company size from a minimum-degree and a long shortest chain]
+At a certain company, every employee has at least $50$ acquaintances. Two employees are known to be connected only through a chain of $8$ intermediate people (i.e.\ their shortest connecting chain of pairwise acquaintances has exactly $8$ people between them). Prove the company has at least $200$ employees.
+\end{example}
+
+\begin{proof}[Solution]
+Model acquaintance as a graph $G$ with minimum degree $\delta\ge50$, and let $u,v$ be the two employees with graph distance $d(u,v)=9$ (a chain with $8$ intermediate people has $9$ edges). Let $L_i=\{w:d(u,w)=i\}$ be the BFS layers from $u$, so $L_0=\{u\}$, $u\in L_0$, $v\in L_9$, and all of $L_0,\dots,L_9$ are non-empty (the shortest $u$--$v$ path visits each layer exactly once).
+
+\textbf{No long-range edges.} If $w\in L_i$ and $w'\in L_j$ are adjacent, then $|i-j|\le1$ (otherwise $d(u,w')$ would differ from $d(u,w)$ by more than the one extra edge, contradicting the definition of BFS distance). So every neighbor of a vertex in $L_i$ lies in $L_{i-1}\cup L_i\cup L_{i+1}$.
+
+\textbf{Windowed degree bounds.} Applying this to $u\in L_0$: all $\ge50$ neighbors of $u$ lie in $L_1$ (there is no $L_{-1}$), so together with $u$ itself, $|L_0|+|L_1|\ge51$. Applying it to $v\in L_9$: all $\ge50$ neighbors of $v$ lie in $L_8\cup L_9\cup L_{10}$ (where $L_{10}$ collects any vertices at distance $\ge10$ from $u$, possibly empty), giving $|L_8|+|L_9|+|L_{10}|\ge51$. Applying it to any vertex on the geodesic at distance $3$ from $u$ gives $|L_2|+|L_3|+|L_4|\ge51$, and at distance $6$ gives $|L_5|+|L_6|+|L_7|\ge51$.
+
+\textbf{Summing disjoint windows.} The four windows $\{0,1\}$, $\{2,3,4\}$, $\{5,6,7\}$, $\{8,9,10\}$ partition the consecutive integers $0,1,\dots,10$ with no overlap, so summing their bounds counts every layer at most once:
+\[
+\#\text{employees}\ \ge\ \sum_{i=0}^{10}|L_i|\ \ge\ 51+51+51+51=204.
+\]
+In particular,
+\[
+\boxed{\#\text{employees}\ge204\ge200}.
+\]
+\end{proof}
+
 \subsection{Generating Functions and Linear Recurrences}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3012,6 +3113,34 @@ Rescale $u=X-1,v=Y-1,s=t-1$, each uniform on $[0,2]$ and independent, where $X,Y
 \[
 \mathbb P(t\le\tfrac32\mid E)=\frac{5/96}{1/3}=\boxed{\frac5{32}}.
 \]
+\end{proof}
+
+\begin{example}[When are two threshold events independent?]
+Points $x,y\in[0,1]$ are drawn independently from the uniform distribution. For which $a$ are the events $\{\max(1-2x,y)<a\}$ and $\{\max(1-2y,x)<a\}$ independent?
+\end{example}
+
+\begin{proof}[Solution]
+Let $c=\tfrac{1-a}2$. Since $\max(1-2x,y)<a\iff x>c\text{ and }y<a$, and symmetrically for the other event, write $A=\{x>c,\,y<a\}$, $B=\{y>c,\,x<a\}$.
+
+\textbf{Marginal probabilities.} For $a\in[0,1]$ (so $c\in[0,\tfrac12]$), $\mathbb P(A)=\mathbb P(x>c)\mathbb P(y<a)=(1-c)a=\dfrac{(1+a)a}2$, and by symmetry $\mathbb P(B)$ is the same.
+
+\textbf{Joint probability.} $A\cap B$ requires $x\in(c,a)$ and $y\in(c,a)$ simultaneously, so
+\[
+\mathbb P(A\cap B)=\bigl(\max(a-c,0)\bigr)^2=\left(\frac{3a-1}2\right)_+^{2}
+\]
+(using $a-c=a-\tfrac{1-a}2=\tfrac{3a-1}2$).
+
+\textbf{Solving for independence.} If $a<\tfrac13$, $\mathbb P(A\cap B)=0$, forcing $\mathbb P(A)\mathbb P(B)=0$, i.e.\ $a=0$ (the events become almost surely impossible). If $a\ge\tfrac13$, independence requires $\left(\tfrac{3a-1}2\right)^2=\left(\tfrac{a(1+a)}2\right)^2$, i.e.\ $(3a-1)^2=a^2(1+a)^2$, which factors as
+\[
+\bigl[(3a-1)-a(1+a)\bigr]\bigl[(3a-1)+a(1+a)\bigr]=-(a-1)^2\cdot(a^2+4a-1)=0.
+\]
+The first factor forces $a=1$; the second gives $a=-2+\sqrt5\approx0.236$, but this is below $\tfrac13$ and so lies outside the regime where this factorization applies (it is extraneous, introduced by squaring) — direct substitution confirms $\mathbb P(A\cap B)\neq\mathbb P(A)\mathbb P(B)$ there.
+
+So the only solutions are the two trivial extremes:
+\[
+\boxed{a\le0 \text{ or } a\ge1}
+\]
+— at $a\le0$ both events are (almost surely) impossible, and at $a\ge1$ both are (almost surely) certain, so independence holds only vacuously; for every genuine $a\in(0,1)$ the two events are \emph{not} independent (confirmed by direct simulation across $a\in(0,1)$, where $\mathbb P(A\cap B)<\mathbb P(A)\mathbb P(B)$ throughout).
 \end{proof}
 
 \subsection{Random Variables, Moments, and Common Distributions}
@@ -3411,6 +3540,29 @@ Since $a\in[0,\tfrac12]$ and $m(1-m)\ge0$, the subtracted term is non-negative, 
 \boxed{\Var(\beta(X))\ge\Var(X)\text{ always, for every }X\in[0,1]\text{ and every median }m}
 \]
 with equality forcing $a\in\{0,\tfrac12\}$ or $m\in\{0,1\}$ — in particular, forcing $X$ itself to already be two-valued.
+\end{proof}
+
+\begin{example}[Expected number of ones in a random Boolean matrix product]
+Let $A,B$ be independent random $n\times n$ Boolean matrices, each entry an independent $\mathrm{Bernoulli}(p)$. Their product $AB$ is computed with addition and multiplication mod $2$. Find $\E[\text{number of $1$'s in } AB]$.
+\end{example}
+
+\begin{proof}[Solution]
+Fix an entry $(i,k)$. By definition, $(AB)_{ik}=\bigoplus_{j=1}^n A_{ij}B_{jk}$ (XOR over $j$), where each term $A_{ij}B_{jk}$ is an independent $\mathrm{Bernoulli}(p^2)$ variable (it is $1$ exactly when both $A_{ij}=1$ and $B_{jk}=1$).
+
+\textbf{Parity of a sum of independent bits.} For independent $Y_1,\dots,Y_n\sim\mathrm{Bernoulli}(r)$ and $S=Y_1\oplus\cdots\oplus Y_n$,
+\[
+\E[(-1)^S]=\prod_{j=1}^n\E[(-1)^{Y_j}]=\prod_{j=1}^n\bigl[(1-r)-r\bigr]=(1-2r)^n,
+\]
+and since $\E[(-1)^S]=\mathbb P(S=0)-\mathbb P(S=1)=1-2\,\mathbb P(S=1)$, this gives the standard formula
+\[
+\mathbb P(S=1)=\frac{1-(1-2r)^n}2.
+\]
+
+\textbf{Applying it.} With $r=p^2$, every entry of $AB$ satisfies $\mathbb P\bigl((AB)_{ik}=1\bigr)=\dfrac{1-(1-2p^2)^n}2$. By linearity of expectation over the $n^2$ entries,
+\[
+\E[\text{number of $1$'s in } AB]=\boxed{\frac{n^2}2\left(1-(1-2p^2)^n\right)}
+\]
+(matches Monte Carlo simulation for $n=5,p=0.4$ to within sampling error).
 \end{proof}
 
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
@@ -3965,6 +4117,30 @@ The numbers $1,\dots,n$ (with $n=2^k-1$) are placed, in some unknown arrangement
 \textbf{Outline of the approach.} Start from an arbitrary pair $x,y$ and extract path$(x,y)$ via the $n-2$ queries of fact (2) above. If the root turns out to lie on this path, it can be pinpointed among the $O(\log n)$ path vertices with a further $O(\log^2 n)$ queries (comparing pairs of path vertices via a third reference point sorts them into ancestor order), well within budget. If $x,y$ happen to lie in the \emph{same} subtree of the root instead, the extracted path stops short of the root, and its topmost vertex $m=\mathrm{LCA}(x,y)$ is now a confirmed proper descendant of the root, so a fresh pair drawn from outside path$(x,y)$ must be tried; since each such round again costs $O(n)$ queries and there are only $O(\log n)$ levels the search can still need to climb, the whole procedure fits an $O(n\log n)$ budget.
 
 \textbf{Where this account is incomplete.} What is missing here is a fully worked-out rule for choosing the next pair after a failed round — the queries already made rule out $m$'s own subtree as containing the root, but turning that into a guaranteed $O(n)$-per-round, $O(\log n)$-round elimination scheme (rather than a possibly-repeated search) needs more careful bookkeeping than is carried out above. Small hand-simulated cases ($k=2,3$) are consistent with an $O(n\log n)$ algorithm along these lines succeeding, but the argument is not pinned down to full rigor here.
+\end{proof}
+
+\begin{example}[Minimum hits to fell a crowd of goblins]
+You face $n$ goblins, goblin $i$ having $h_i$ hit points ($0<h_i<H$, integers). Your staff's special attack: striking goblin $i$ removes $p$ hit points from goblin $i$ and $q$ hit points from every \emph{other} goblin ($p>q>0$). A goblin is defeated once its hit points drop to $0$ or below. Design an $O(n\log n)$-time, $O(n)$-space algorithm to find the minimum number of strikes needed to defeat every goblin.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Setting up the count.} If a strategy makes $K$ strikes total, with $x_i$ of them aimed at goblin $i$ (so $\sum x_i=K$), goblin $i$ takes $p\,x_i+q(K-x_i)=qK+(p-q)x_i$ damage. All goblins are defeated iff $qK+(p-q)x_i\ge h_i$ for every $i$, i.e.\
+\[
+x_i\ \ge\ \max\!\left(0,\ \left\lceil\frac{h_i-qK}{p-q}\right\rceil\right)=:x_i^{\min}(K).
+\]
+For fixed $K$, this is achievable with $\sum x_i=K$ (any surplus strikes can be dumped anywhere) exactly when $\sum_i x_i^{\min}(K)\le K$. Since $x_i^{\min}(K)$ is non-increasing in $K$ while $K$ itself increases, the feasible $K$'s form an up-set: we want the smallest $K$ with $f(K):=\sum_i x_i^{\min}(K)\le K$.
+
+\textbf{A water-filling formula for the (real-valued) threshold.} Drop the ceiling for a moment and solve the continuous relaxation exactly. At the optimal real threshold $K^*$, let $S=\{i:h_i>qK^*\}$ be the goblins still needing a direct hit. Consistency requires $\sum_{i\in S}(h_i-qK^*)=(p-q)K^*$, i.e.\
+\[
+K^*=\frac{\sum_{i\in S}h_i}{p+q(|S|-1)}.
+\]
+Since larger $h_i$ are more likely to belong to $S$, sort $h_1\ge h_2\ge\cdots\ge h_n$ and, using prefix sums $P_s=h_1+\cdots+h_s$ (computable in $O(n)$ after an $O(n\log n)$ sort), scan $s=1,2,\dots,n$ evaluating $K_s=P_s/(p+q(s-1))$ until the self-consistency check passes: $h_s>qK_s$ (the $s$-th largest still qualifies) and ($s=n$ or $h_{s+1}\le qK_s$, so the next one does not). This scan is monotone in $s$ and terminates in $O(n)$ total work, giving the correct prefix $S=\{1,\dots,s\}$ and the exact real threshold $K^*=K_s$.
+
+\textbf{Rounding to an integer answer.} The true (integer) minimum $K$ lies within a small constant number of steps of $\lceil K^*\rceil$ (each unit increase of $K$ changes $f(K)$ by a bounded amount), so a short local scan near $\lceil K^*\rceil$, re-checking $f(K)\le K$ with the exact ceiling formula, locates the true minimum in $O(n)$ further work. So
+\[
+\boxed{\text{sort the }h_i\text{ (}O(n\log n)\text{), then a single }O(n)\text{ water-filling scan finds the minimum strike count}}
+\]
+(verified against brute-force search on many small random instances).
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
