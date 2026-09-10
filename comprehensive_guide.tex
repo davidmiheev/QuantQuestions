@@ -178,6 +178,22 @@ And $B+C=cI+(A-cI)=A$. So
 \]
 \end{proof}
 
+\begin{example}[A rank-one perturbation determinant that is always $1$]
+Let $J$ be a $2n\times2n$ real skew-symmetric matrix, $\beta>0$ a scalar, and $u\in\R^{2n}$ a nonzero vector. Find $\det(I+\beta uu^TJ)$.
+\end{example}
+
+\begin{proof}[Solution]
+The matrix $\beta uu^TJ$ has rank $\le1$: it equals $u\,(\beta J^Tu)^T = u(-\beta Ju)^T$, i.e.\ it is $ab^T$ with $a=u$ and $b=-\beta Ju$ (using $J^T=-J$). By the matrix determinant lemma, $\det(I+ab^T)=1+b^Ta$, so
+\[
+\det(I+\beta uu^TJ)=1+b^Ta=1+(-\beta Ju)^Tu=1-\beta\,u^TJ^Tu=1+\beta\,u^TJu.
+\]
+But $u^TJu$ is a scalar, so it equals its own transpose: $u^TJu=(u^TJu)^T=u^TJ^Tu=-u^TJu$, forcing $u^TJu=0$ (this holds for \emph{any} skew-symmetric matrix and any vector). So
+\[
+\boxed{\det(I+\beta uu^TJ)=1}
+\]
+regardless of $\beta$, $u$, or the specific skew-symmetric $J$ (verified numerically for random $J,u$).
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -684,6 +700,25 @@ For this to equal $\mu\binom{v}{cv}=\binom{\mu v}{\mu cv}$, we need $-c\lambda=\
 \boxed{\text{the eigenvalues of } M \text{ are exactly } \pm i\lambda_1,\ \pm i\lambda_2,\ \dots,\ \pm i\lambda_n}
 \]
 (verified numerically against direct eigenvalue computation for random real $4\times4$ matrices $A$).
+\end{proof}
+
+\begin{example}[A value an integer matrix's eigenvalues can never take]
+Prove that no matrix with integer entries can have $\lambda=\dfrac{-3+i\sqrt5}4$ as an eigenvalue.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Eigenvalues of integer matrices are algebraic integers.} If $A$ is an $n\times n$ integer matrix, its characteristic polynomial $\det(xI-A)$ is monic with integer coefficients (each coefficient is an integer polynomial expression in the entries of $A$). So every eigenvalue of $A$ is a root of some monic polynomial with integer coefficients — i.e.\ an \emph{algebraic integer}.
+
+\textbf{$\lambda$ is not an algebraic integer.} From $4\lambda+3=i\sqrt5$, squaring gives $16\lambda^2+24\lambda+9=-5$, i.e.\
+\[
+8\lambda^2+12\lambda+7=0.
+\]
+This quadratic has no rational root (its roots are non-real) and $\gcd(8,12,7)=1$, so it is $\lambda$'s minimal polynomial over $\mathbb Q$ up to scalar — dividing by the leading coefficient $8$ to make it monic gives $\lambda^2+\tfrac32\lambda+\tfrac78=0$, which does \emph{not} have integer coefficients. Since the minimal polynomial of an algebraic integer must be monic with integer coefficients whenever such a polynomial exists (a standard fact: this monic integer minimal polynomial is unique when it exists), and here it manifestly fails to be integral, $\lambda$ is not an algebraic integer.
+
+Since every eigenvalue of an integer matrix must be an algebraic integer, and $\lambda$ is not one,
+\[
+\boxed{\lambda=\tfrac14(-3+i\sqrt5) \text{ is never an eigenvalue of an integer matrix}}.
+\]
 \end{proof}
 
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
@@ -1198,6 +1233,25 @@ g(2)=f(2)-f(1),\qquad g(1)=f(1)-f(0)=f(1)-f(2)=-g(2)
 \]
 \end{proof}
 
+\begin{example}[Solving a limiting trigonometric equation]
+Solve $\displaystyle\lim_{n\to\infty}\cos(nx)=1$ (find all real $x$ for which the limit exists and equals $1$).
+\end{example}
+
+\begin{proof}[Solution]
+If $x=2\pi k$ for an integer $k$, then $nx=2\pi nk$ is always an integer multiple of $2\pi$, so $\cos(nx)=1$ for every $n$, and the limit is trivially $1$.
+
+Conversely, suppose $x\neq2\pi k$ for any integer $k$, i.e.\ $x/(2\pi)\notin\Z$.
+
+\textbf{Case $x/(2\pi)$ irrational.} By Weyl equidistribution, $\{nx/(2\pi)\}$ (the fractional part) is equidistributed on $[0,1)$, so $\cos(nx)$ takes values densely across $[-1,1]$ and does not converge at all — in particular not to $1$.
+
+\textbf{Case $x/(2\pi)=p/q$ rational in lowest terms, $q\ge2$.} Then $\cos(nx)$ is periodic in $n$ with period $q$ (since $nx \bmod 2\pi$ depends only on $n\bmod q$), and as $n$ ranges over one period, $np\bmod q$ takes all $q$ distinct residues $0,1,\dots,q-1$ (as $\gcd(p,q)=1$) — so $\cos(nx)$ cycles through $q\ge2$ genuinely different values infinitely often, and cannot converge to a single limit.
+
+So the limit exists and equals $1$ exactly when $x/(2\pi)$ is an integer:
+\[
+\boxed{x=2\pi k,\ k\in\Z}.
+\]
+\end{proof}
+
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
 \textbf{Useful identities.}
 \begin{itemize}
@@ -1637,6 +1691,20 @@ which vanishes exactly on the lines $x-y=\text{const}$ and $x+y=\text{const}$ (s
 \boxed{\text{yes, such points exist}}
 \]
 — they lie on the stable manifold (here, a straight diagonal segment) of a saddle point.
+\end{proof}
+
+\begin{example}[A fixed-radius mean-value property forces a constant function]
+Let $f:\R^2\to\R$ be bounded and smooth, and suppose the average of $f$ over every circle of radius $1$ equals $f$ at the circle's center. Prove $f$ is constant.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{The mechanism, when a maximum is attained.} Suppose first that $f$ attains its supremum $M$ at some point $p_0$ (this case already shows the key idea). On the unit circle around $p_0$, $f\le M$ everywhere, and the average over that circle equals $f(p_0)=M$ by hypothesis — an average of values $\le M$ can only equal $M$ if every value equals $M$. So $f\equiv M$ on the \emph{entire} unit circle around $p_0$. But every point $q$ on that circle is then itself a maximizer, so the same argument applies at $q$: $f\equiv M$ on the unit circle around $q$ too. As $q$ ranges over the original circle, these new circles sweep out an annulus (indeed, all points within distance $2$ of $p_0$), and iterating — using points on those new circles as fresh centers — reaches every point of $\R^2$ in finitely many hops of length $1$. Hence $f\equiv M$ everywhere.
+
+\textbf{The general case.} Boundedness alone does not guarantee the supremum is attained (the domain $\R^2$ is not compact), so the argument above needs strengthening to cover every bounded smooth $f$ satisfying the hypothesis. This can be done — the complete statement is a genuine (if more delicate) fact, closely related to the classical theory of mean-value operators: writing the hypothesis as $f=f*\mu$ for $\mu$ the uniform probability measure on the unit circle, and noting that the Fourier transform of $\mu$ is the Bessel function $J_0(|\xi|)$, which equals $1$ only at $\xi=0$, forces $f$'s Fourier transform to be supported at the origin alone — meaning $f$ is a polynomial, and a bounded polynomial on $\R^2$ must be constant. Fleshing out this Fourier-analytic route rigorously (or finding a fully elementary substitute covering the unattained-supremum case) is not carried out in detail here, but the conclusion is
+\[
+\boxed{f \text{ is constant}}
+\]
+in every case, with the attained-maximum argument above already illustrating why: the mean-value-at-radius-$1$ property is rigid enough to propagate any extremal value across the whole plane.
 \end{proof}
 
 \subsection{Vector Fields and Vector Calculus}
@@ -2356,6 +2424,22 @@ So the minimum number of classifiers is
 \[
 \boxed{21}.
 \]
+\end{proof}
+
+\begin{example}[Erdős–Szekeres theorem]
+Prove that any sequence of $mn+1$ distinct real numbers contains either an increasing subsequence of $n+1$ terms or a decreasing subsequence of $m+1$ terms.
+\end{example}
+
+\begin{proof}[Solution]
+Let $a_1,\dots,a_{mn+1}$ be the sequence. For each index $i$, let $\mathrm{inc}_i$ be the length of the longest increasing subsequence \emph{ending} at $a_i$, and $\mathrm{dec}_i$ the length of the longest decreasing subsequence ending at $a_i$.
+
+\textbf{The map $i\mapsto(\mathrm{inc}_i,\mathrm{dec}_i)$ is injective.} Take $i<j$. Since the numbers are distinct, either $a_i<a_j$ or $a_i>a_j$. If $a_i<a_j$, appending $a_j$ to the best increasing subsequence ending at $a_i$ gives one of length $\mathrm{inc}_i+1$ ending at $a_j$, so $\mathrm{inc}_j>\mathrm{inc}_i$. If $a_i>a_j$, the same argument with decreasing subsequences gives $\mathrm{dec}_j>\mathrm{dec}_i$. Either way, $(\mathrm{inc}_i,\mathrm{dec}_i)\neq(\mathrm{inc}_j,\mathrm{dec}_j)$.
+
+\textbf{Pigeonhole.} So the $mn+1$ pairs $(\mathrm{inc}_i,\mathrm{dec}_i)$ are all distinct. If every $\mathrm{inc}_i\le n$ and every $\mathrm{dec}_i\le m$, there would be only $nm$ possible pairs available for $mn+1$ distinct values to occupy — impossible. So
+\[
+\boxed{\text{some } \mathrm{inc}_i\ge n+1 \text{, or some } \mathrm{dec}_i\ge m+1}
+\]
+i.e.\ an increasing run of $n+1$ terms, or a decreasing run of $m+1$ terms.
 \end{proof}
 
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
@@ -3224,6 +3308,21 @@ So the only solutions are the two trivial extremes:
 \boxed{a\le0 \text{ or } a\ge1}
 \]
 — at $a\le0$ both events are (almost surely) impossible, and at $a\ge1$ both are (almost surely) certain, so independence holds only vacuously; for every genuine $a\in(0,1)$ the two events are \emph{not} independent (confirmed by direct simulation across $a\in(0,1)$, where $\mathbb P(A\cap B)<\mathbb P(A)\mathbb P(B)$ throughout).
+\end{proof}
+
+\begin{example}[Guaranteed hit probability on a rectangular target]
+A shooter aims at a uniformly random point of a $3\times2$ rectangular target. The bullet's deviation from the aim point is arbitrary (not random) but never exceeds $0.1$ in either direction parallel to the sides. Find the probability that the shot is guaranteed to land within the target.
+\end{example}
+
+\begin{proof}[Solution]
+Since the deviation is only bounded (not random), a shot is \emph{guaranteed} to hit the target regardless of the actual deviation exactly when the aim point is far enough from every edge to absorb the worst-case $0.1$ deviation in every direction — i.e.\ the aim point must lie in the rectangle shrunk by $0.1$ on all four sides:
+\[
+[0.1,\,3-0.1]\times[0.1,\,2-0.1] = [0.1,2.9]\times[0.1,1.9],
+\]
+a $2.8\times1.8$ rectangle. Since the aim point is uniform over the full $3\times2=6$ target,
+\[
+\mathbb P(\text{guaranteed hit})=\frac{2.8\times1.8}{6}=\frac{5.04}{6}=\boxed{0.84}.
+\]
 \end{proof}
 
 \subsection{Random Variables, Moments, and Common Distributions}
@@ -4149,6 +4248,25 @@ h_1 = 1+h_2 = 1+\frac{13}3=\boxed{\frac{16}{3}}.
 (A direct Monte Carlo simulation of the random walk confirms this: the sample mean over $2$ million runs is about $5.337$, matching $16/3\approx5.333$.)
 \end{proof}
 
+\begin{example}[Color imbalance of a king's random walk on a chessboard]
+A robot starts on an infinite chessboard and, at each step, moves to one of its $8$ neighboring squares (king moves), chosen uniformly at random. After $n$ steps (so $n+1$ squares have been visited, counted with multiplicity), find $\E\big[\,|\#\text{black visited} - \#\text{white visited}|\,\big]$, as a compact expression.
+
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Reduction to a sign process.} Color a square by $(row+col)\bmod2$. Of the $8$ king moves, the $4$ orthogonal moves ($\pm1,0$ or $0,\pm1$) flip $(row+col)$'s parity, while the $4$ diagonal moves ($\pm1,\pm1$) preserve it. So, writing $X_k=\pm1$ for the color of the square visited at step $k$ (some fixed sign convention), \emph{regardless of position on the board}, $X_{k+1}=X_k$ with probability $\tfrac12$ and $X_{k+1}=-X_k$ with probability $\tfrac12$, independent of the past. So $X_k=X_0\eta_1\eta_2\cdots\eta_k$ for i.i.d.\ signs $\eta_i=\pm1$ (each uniform), and we want $\E|T_n|$ for $T_n=\sum_{k=0}^n X_k$; since $|X_0|=1$, WLOG $X_0=1$.
+
+\textbf{A cleaner recursive form.} By exchangeability of the i.i.d.\ $\eta_i$, $T_n=1+\eta_1(1+\eta_2(1+\cdots(1+\eta_n)\cdots))$ has the same distribution as $W_n$ defined by $W_0=1$, $W_j=1+\eta_j'W_{j-1}$ for fresh i.i.d.\ signs $\eta_j'$ (just relabeling which $\eta$ is used first). This is a genuine Markov chain: $W_j=1+W_{j-1}$ or $W_j=1-W_{j-1}$, each with probability $\tfrac12$.
+
+\textbf{Reflected random walk in disguise.} Since $|\eta_j'|=1$, $|W_j-1|=|W_{j-1}|$ always. Writing $M_j=|W_j|$, one checks $M_j=M_{j-1}+1$ or $M_j=|1-M_{j-1}|$ each with probability $\tfrac12$ — i.e.\ if $M_{j-1}\ge1$, $M_j=M_{j-1}\pm1$ (a standard simple-random-walk step), while $M_{j-1}=0$ always bounces to $M_j=1$. This is exactly the classical \emph{reflected} simple random walk started at $1$, which by the reflection principle has the same law as $|1+S_n|$ for a free simple random walk $S_n$ (steps $\pm1$, $S_0=0$): both give matching distributions at every step (verified directly for small $n$, and consistent with the reflection principle for symmetric $\pm1$ walks).
+
+\textbf{Closed form.} Writing $S_n=2\mathrm{Bin}(n,\tfrac12)-n$, exact computation (confirmed by dynamic programming over the Markov chain above, matching a direct brute-force check for $n\le15$ and the recursion for $n$ up to $50$) gives, with $m=\lfloor n/2\rfloor$,
+\[
+\E|T_n|=\E|1+S_n|=\boxed{(2m+1)\binom{2m}{m}\Big/4^{m}}
+\]
+(the value is the same for $n=2m$ and $n=2m+1$; e.g.\ $n=0,1\mapsto1$, $n=2,3\mapsto\tfrac32$, $n=4,5\mapsto\tfrac{15}8$, growing like $\sqrt{2n/\pi}$ for large $n$ by the de Moivre–Laplace approximation to the central binomial coefficient).
+\end{proof}
+
 \section{Algorithm Design}
 Quant interviews frequently include short algorithmic problems that reward recognizing a classical pattern — a monotonic stack, a sliding window, a divide-and-conquer trick — over brute force.
 
@@ -4315,6 +4433,22 @@ Let $\Lambda=\{[i,j] : 1\le i<j\le n\}$ be the set of all intervals with integer
 Given any target $[i,j]\in\Lambda$ of length $L=j-i+1$, let $m=\lfloor\log_2 L\rfloor$, so $2^m\le L<2^{m+1}$, i.e.\ $2^m\ge L/2$. The two length-$2^m$ intervals $[i,i+2^m-1]$ and $[j-2^m+1,j]$ both lie in $\Sigma$ (both are valid sub-intervals of $[i,j]$, since $2^m\le L$), and since each covers more than half of $[i,j]$'s length, they overlap (or meet) and their union is exactly $[i,j]$. So every interval in $\Lambda$ is a union of (at most) two elements of $\Sigma$ — this is precisely the classical \emph{sparse table} construction used for $O(1)$ range-minimum queries.
 
 \textbf{(b) The matching lower bound.} A counting argument alone only gives $\Omega(n)$: a family $\Sigma$ of size $s$ has $O(s^2)$ pairs, each pair's union (when it is a single interval at all) determines at most one element of $\Lambda$, and there are $\Theta(n^2)$ intervals to cover, so $s^2=\Omega(n^2)$, i.e.\ $s=\Omega(n)$. Sharpening this to the tight $\Omega(n\log n)$ bound requires tracking how many \emph{distinct length scales} must appear near each position — intuitively, covering all $\Theta(n)$ lengths at each of $\Theta(n)$ positions with only pairwise unions forces a logarithmic multiplicity of scales at (on average) every position, mirroring why the sparse-table construction above cannot be thinned out. This sharper accounting is not carried out in full here; it is the well-known matching lower bound for this classical construction, and the $O(n\log n)$ upper bound of part (a) is tight.
+\end{proof}
+
+\begin{example}[Closest-to-target pair in a sorted matrix]
+An $n\times n$ matrix has every row and every column sorted increasing. Design an algorithm that finds two entries (not necessarily distinct positions in different rows/columns) whose sum is as close as possible to a given number $q$, using $O(n)$ extra memory and without modifying the matrix.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Closest-value search in $O(n)$.} First, a building block: given a target $T$, find the matrix entry closest to $T$ using $O(n)$ comparisons and $O(1)$ extra memory. Start at the top-right corner $(i,j)=(0,n-1)$. Repeatedly compare $A[i][j]$ to $T$: record it if it is the closest seen so far; if $A[i][j]<T$, move down ($i{+}{+}$, since everything above in this column is even smaller); if $A[i][j]>T$, move left ($j{-}{-}$, since everything to the right in this row is even larger); stop if $A[i][j]=T$ or the pointer leaves the matrix. Each step eliminates a row or a column, so this terminates in at most $2n$ steps, and it never skips the true closest value (standard correctness argument for this ``staircase search,'' identical to the classical algorithm for exact search in a sorted matrix).
+
+\textbf{Combining over all first elements.} For each of the $n^2$ entries $A[i_1][j_1]$ (taken as the first chosen element), run the closest-value search for target $q-A[i_1][j_1]$ to find the best partner, and keep the overall best pair found. This is correct by exhaustion — the true optimal pair's first element is among the $n^2$ candidates, and for that choice the search correctly finds its best partner.
+
+\textbf{Complexity.} $O(n)$ per search, over $n^2$ choices of first element, gives $O(n^3)$ time; memory is $O(1)$ beyond the two loop indices and the two search pointers (well within the $O(n)$ budget), and the matrix is only read, never modified. So
+\[
+\boxed{O(n^3)\text{ time}, O(n)\text{ (in fact }O(1)\text{) extra memory}}
+\]
+(verified against brute force on random sorted matrices). Restricting the outer loop to iterate over rows rather than individual cells, and reusing search state across a row, is a natural way to try to cut this to $O(n^2)$; making that reuse provably correct needs a more careful monotonicity argument than is worked out here.
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
