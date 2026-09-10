@@ -22,6 +22,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\Var}{\operatorname{Var}}
 \newcommand{\Cov}{\operatorname{Cov}}
@@ -622,6 +623,31 @@ so $B_+^T=B_+$ (\emph{symmetric}) and $B_-^T=-B_-$ (\emph{antisymmetric}). Conve
 \]
 \end{proof}
 
+\begin{example}[Eigenvalues of a rotation-type differential operator]
+On the space $\R[x,y]$ of real polynomials in $x,y$, consider the operator $D=y\dfrac{\partial}{\partial x}+x\dfrac{\partial}{\partial y}$. Show every integer is an eigenvalue of $D$. Find all its eigenvalues, and determine whether $D$ is diagonalizable.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{A change of variables.} Let $u=x+y$, $v=x-y$. By the chain rule, $\partial_x=\partial_u+\partial_v$ and $\partial_y=\partial_u-\partial_v$ (since $\partial u/\partial x=\partial u/\partial y=1$ and $\partial v/\partial x=1,\partial v/\partial y=-1$). Substituting,
+\[
+D=y(\partial_u+\partial_v)+x(\partial_u-\partial_v)=(x+y)\partial_u-(x-y)\partial_v=u\,\partial_u-v\,\partial_v.
+\]
+
+\textbf{Diagonal action on monomials.} In the coordinates $(u,v)$ — a linear, hence invertible, change of variables, so $\{u^av^b:a,b\ge0\}$ is still a basis of $\R[x,y]$ — the operator acts diagonally:
+\[
+D(u^av^b)=a\,u^av^b-b\,u^av^b=(a-b)\,u^av^b.
+\]
+So every monomial $u^av^b$ is an eigenvector of $D$ with eigenvalue $a-b$.
+
+\textbf{(a) Every integer occurs.} For any $m\in\Z$, taking $a=\max(m,0)$, $b=\max(-m,0)$ gives $a-b=m$, so $u^av^b$ is an eigenvector with eigenvalue $m$.
+
+\textbf{(b) These are all the eigenvalues, and $D$ is diagonalizable.} Since $\{u^av^b\}_{a,b\ge0}$ is a basis on which $D$ acts diagonally, $D$ is diagonalizable by definition (this eigenbasis exhibits it). Moreover any eigenvector of $D$, expanded in this basis as a finite sum $\sum c_{a,b}u^av^b$, satisfies $D(\text{it})=\sum c_{a,b}(a-b)u^av^b$; for this to equal $\lambda\sum c_{a,b}u^av^b$, every term with $c_{a,b}\ne0$ must have $a-b=\lambda$, so no eigenvalue outside $\{a-b:a,b\ge0\}=\Z$ can occur. So
+\[
+\boxed{\text{the eigenvalues of } D \text{ are exactly all of } \Z\text{, and } D \text{ is diagonalizable}}
+\]
+(each eigenvalue $m\in\Z$ has an infinite-dimensional eigenspace, spanned by $\{u^{m+b}v^b:b\ge0\}$ for $m\ge0$, or $\{u^av^{a-m}:a\ge0\}$ for $m<0$).
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -889,6 +915,20 @@ Since $A$ is positive definite, each term $x_i^TAx_i\ge0$, with equality iff $x_
 \]
 \end{proof}
 
+\begin{example}[Making a fixed matrix orthogonal to a subspace]
+For $n>1$, does there exist an inner product on the space of $n\times n$ real matrices for which the all-ones matrix $J$ is orthogonal to every upper-triangular matrix?
+\end{example}
+
+\begin{proof}[Solution]
+Yes, for every $n>1$. Let $W\subset\mathrm{Mat}_n(\R)$ be the subspace of upper-triangular matrices, of dimension $\tfrac{n(n+1)}2<n^2$. Since $n>1$, $J$ has a nonzero entry below the diagonal (e.g.\ $J_{21}=1$), so $J\notin W$; in particular $J$ is linearly independent from $W$.
+
+Extend a basis $w_1,\dots,w_r$ of $W$ (where $r=\tfrac{n(n+1)}2$) by adjoining $J$ and then further vectors to a full basis of $\mathrm{Mat}_n(\R)$. Declare this basis \emph{orthonormal} by fiat: define an inner product by taking this basis to an orthonormal basis (i.e.\ decree $\langle u,v\rangle$ to be the standard dot product of the coordinate vectors of $u,v$ in this chosen basis). This is a bona fide inner product (it is bilinear, symmetric, and positive definite, since it is literally the standard inner product transported along a linear isomorphism), and by construction every $w_i$ is orthogonal to $J$ in it. Since $W=\Span(w_1,\dots,w_r)$, linearity of the inner product in each argument gives $\langle J,X\rangle=0$ for every $X\in W$. So
+\[
+\boxed{\text{yes — such an inner product exists for every } n>1}
+\]
+(the same argument shows any fixed vector not lying in a given proper subspace can always be made orthogonal to that subspace by a suitable choice of inner product).
+\end{proof}
+
 \section{Calculus and Real Analysis}
 Interview analysis questions often look innocent but test whether you can move between definitions, expansions, and clean arguments. The core techniques are asymptotics, derivatives, optimization, integrals, and series.
 
@@ -1004,6 +1044,38 @@ Since $f(1.5)=\varphi(1.5)=2.5\ne1.5$, this $f$ is odd, continuous, satisfies th
 \[
 \boxed{\text{no — such } f \text{ need not be linear}}.
 \]
+\end{proof}
+
+\begin{example}[An integral recursion converging to $\pi$]
+Fix $a_0\in(0,2\pi)$ and define a sequence by
+\[
+a_{n+1}=\int_0^{a_n}\left(1+\frac14\cos^{2n+1}t\right)dt.
+\]
+Show $(a_n)$ converges, and find its limit.
+\end{example}
+
+\begin{proof}[Solution]
+Write $a_{n+1}=a_n+\tfrac14 G_n(a_n)$ where $G_n(x)=\int_0^x\cos^{2n+1}t\,dt$.
+
+\textbf{An exact vanishing identity.} For any integer $\ell$, substituting $t=\ell\pi+s$ gives $\cos(\ell\pi+s)=(-1)^\ell\cos s$, so $\cos^{2n+1}(\ell\pi+s)=(-1)^\ell\cos^{2n+1}s$ (the exponent is odd); hence
+\[
+\int_{\ell\pi}^{(\ell+1)\pi}\cos^{2n+1}t\,dt=(-1)^\ell\int_0^\pi\cos^{2n+1}s\,ds=(-1)^\ell\left[\int_0^{\pi}\cos^{2n+1}(s)\,ds\right]=0,
+\]
+the last integral vanishing because substituting $s\mapsto\pi-s$ negates $\cos^{2n+1}$ while preserving the interval $[0,\pi]$. In particular $G_n(0)=G_n(\pi)=G_n(2\pi)=0$.
+
+\textbf{Monotone, bounded convergence.} On $[0,\pi]$, define $h_n(x)=(\pi-x)-G_n(x)$. Then $h_n(0)=\pi>0$, $h_n(\pi)=0$, and $h_n'(x)=-1-\cos^{2n+1}(x)\le0$ (as $\cos^{2n+1}x\ge-1$), so $h_n$ is non-increasing on $[0,\pi]$ with minimum value $0$ at $x=\pi$: hence $h_n(x)\ge0$, i.e.
+\[
+0\le G_n(x)\le\pi-x\qquad\text{for }x\in[0,\pi].
+\]
+An identical computation on $[\pi,2\pi]$ (with $H_n(x)=G_n(x)-(\pi-x)$, $H_n'(x)=\cos^{2n+1}(x)+1\ge0$, $H_n(\pi)=0$) gives the mirror bound $G_n(x)\ge\pi-x$ for $x\in[\pi,2\pi]$.
+
+Consequently, if $a_n\in(0,\pi)$: $G_n(a_n)\ge0$ gives $a_{n+1}\ge a_n$, and $G_n(a_n)\le\pi-a_n$ gives $a_{n+1}\le a_n+\tfrac14(\pi-a_n)<\pi$ — so $a_n$ increases, staying below $\pi$. Symmetrically, if $a_n\in(\pi,2\pi)$: $a_{n+1}\le a_n$, staying above $\pi$. And if $a_n=\pi$, $G_n(\pi)=0$ so $a_{n+1}=\pi$ exactly. So in every case $(a_n)$ is monotonic and bounded between $a_0$ and $\pi$, hence converges to some limit $L$.
+
+\textbf{Identifying $L=\pi$.} Suppose, for contradiction, $a_0<\pi$ and $L<\pi$ (the case $a_0>\pi$, $L>\pi$ is symmetric). Since $a_n\uparrow L$, eventually $a_n\ge L/2>0$, so $G_n(a_n)\ge G_n(L/2)$ for these $n$ (as $G_n$ is increasing on $[0,\pi/2]$ when $L/2\le\pi/2$, or more simply because $G_n$ is increasing up to $\pi/2$ and $a_n$ stays in a fixed sub-interval bounded away from $0$). The classical Wallis-integral asymptotic $\int_0^{\pi/2}\cos^{2n+1}t\,dt=\dfrac{(2n)!!}{(2n+1)!!}\sim\sqrt{\dfrac{\pi}{4n}}$ shows that this near-$0$ contribution to $G_n$ does \emph{not} decay fast enough to be summable in $n$ (it is $\Theta(1/\sqrt n)$, and $\sum1/\sqrt n=\infty$) whenever the domain of integration stays bounded away from $0$ — which it does here, since $a_n\ge L/2$ for all large $n$. So $\sum_n G_n(a_n)=\infty$, forcing $\sum_n(a_{n+1}-a_n)=\infty$ too, contradicting that this telescoping sum equals the finite quantity $L-a_0$. Hence $L$ cannot be strictly less than $\pi$; by the mirrored argument $L$ cannot exceed $\pi$ either. So
+\[
+\boxed{a_n\to\pi\text{ for every }a_0\in(0,2\pi)}
+\]
+(consistent with $a_0=\pi$ itself being an exact fixed point of the recursion).
 \end{proof}
 
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
@@ -1983,6 +2055,28 @@ Since $a_n\ge\tfrac1n>0$ for every $n$, the series $\sum a_n$ is term-by-term bo
 (numerically, $a_n$ decays like $\sqrt{3/n}$, so $\sum a_n$ in fact diverges even more slowly than the harmonic series suggests, but term-by-term domination by $1/n$ already suffices).
 \end{proof}
 
+\begin{example}[An alternating series built from $(k+1)^2/k!$]
+Evaluate $\displaystyle\sum_{k=0}^\infty(-1)^k\frac{(k+1)^2}{k!}$.
+\end{example}
+
+\begin{proof}[Solution]
+Work with the power series $S(x)=\sum_{k=0}^\infty(k+1)^2\dfrac{x^k}{k!}$, so that the target sum is $S(-1)$.
+
+Three standard exponential-series identities, each obtained by differentiating $\sum x^k/k!=e^x$ and re-indexing (using $k/k!=1/(k-1)!$ and $k(k-1)/k!=1/(k-2)!$):
+\[
+\sum_{k\ge0}\frac{x^k}{k!}=e^x,\qquad \sum_{k\ge0}k\frac{x^k}{k!}=xe^x,\qquad \sum_{k\ge0}k(k-1)\frac{x^k}{k!}=x^2e^x.
+\]
+Writing $(k+1)^2=k(k-1)+3k+1$ and summing the three identities with these coefficients,
+\[
+S(x)=x^2e^x+3xe^x+e^x=e^x\left(x^2+3x+1\right).
+\]
+
+Evaluating at $x=-1$:
+\[
+\sum_{k=0}^\infty(-1)^k\frac{(k+1)^2}{k!}=S(-1)=e^{-1}(1-3+1)=\boxed{-\frac1e}.
+\]
+\end{proof}
+
 \section{Combinatorics}
 Combinatorics questions reward clean counting arguments, parity reasoning, and the ability to encode a counting problem algebraically.
 
@@ -2081,6 +2175,24 @@ Every such collision consumes two (or more) inputs $n$ to produce only one outpu
 \boxed{\text{no}}
 \]
 — infinitely many positive integers (in fact a positive proportion of them) are not of the form $n+\tau(n)$.
+\end{proof}
+
+\begin{example}[Minimum classifier pool for a pairwise-disjoint ensemble schedule]
+Over his time at a data-science school, Mikhail solved $20$ classification problems, using for each an ensemble of $5$ distinct classifiers, with no pair of classifiers ever used together in more than one problem. What is the smallest possible number of classifiers Mikhail could know?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{A counting lower bound.} Model each problem as a $5$-element subset (block) of the set of $v$ classifiers Mikhail knows. Each block contains $\binom52=10$ pairs of classifiers, and since no pair recurs across the $20$ blocks, these $20\cdot10=200$ pairs are all distinct. So $\binom v2\ge200$, i.e.\ $v(v-1)\ge400$. Since $20\cdot19=380<400$ and $21\cdot20=420\ge400$,
+\[
+v\ge21.
+\]
+
+\textbf{Achieving $v=21$.} The projective plane of order $4$ — which exists because $4=2^2$ is a prime power — has exactly $21$ points and $21$ lines, each line containing exactly $5$ points, with every pair of points lying on \emph{exactly one} common line (this is precisely a Steiner system $S(2,5,21)$). Discarding any one of its $21$ lines leaves $20$ blocks of size $5$ on $21$ points in which, since each pair of points already had a unique line in the full design, no pair of points reappears across the remaining $20$ blocks. Taking these $20$ blocks as Mikhail's $20$ ensembles realizes the bound exactly.
+
+So the minimum number of classifiers is
+\[
+\boxed{21}.
+\]
 \end{proof}
 
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
@@ -2876,6 +2988,32 @@ since this counts permutations preserving the four blocks setwise, divided by al
 \]
 \end{proof}
 
+\begin{example}[Two GPUs, a crash, and a conditional probability]
+Two neural networks train independently on separate GPUs; each training time is uniform on $[1,3]$ hours. At an independent time $t$, also uniform on $[1,3]$, the server crashes, and it turns out exactly one of the two networks had finished training by then. Find $\mathbb P(t\le\tfrac32\mid\text{exactly one finished})$.
+\end{example}
+
+\begin{proof}[Solution]
+Rescale $u=X-1,v=Y-1,s=t-1$, each uniform on $[0,2]$ and independent, where $X,Y$ are the two training times. ``Exactly one finished by $t$'' is the event $E=\{$exactly one of $u,v$ is $\le s\}$, and we want $\mathbb P(s\le\tfrac12\mid E)$.
+
+\textbf{Conditioning on $s$.} For fixed $s\in[0,2]$, $\mathbb P(u\le s)=s/2$, so by symmetry between $u,v$,
+\[
+\mathbb P(E\mid s)=2\cdot\frac s2\cdot\frac{2-s}2=\frac{s(2-s)}2.
+\]
+
+\textbf{Numerator and denominator.} Since $s$ has density $\tfrac12$ on $[0,2]$,
+\[
+\mathbb P(s\le\tfrac12,\,E)=\int_0^{1/2}\frac{s(2-s)}2\cdot\frac12\,ds=\frac14\left[s^2-\frac{s^3}3\right]_0^{1/2}=\frac14\left(\frac14-\frac1{24}\right)=\frac5{96},
+\]
+\[
+\mathbb P(E)=\int_0^{2}\frac{s(2-s)}2\cdot\frac12\,ds=\frac14\left[s^2-\frac{s^3}3\right]_0^{2}=\frac14\cdot\frac43=\frac13.
+\]
+
+\textbf{Answer.}
+\[
+\mathbb P(t\le\tfrac32\mid E)=\frac{5/96}{1/3}=\boxed{\frac5{32}}.
+\]
+\end{proof}
+
 \subsection{Random Variables, Moments, and Common Distributions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3244,6 +3382,35 @@ so $c=1/n$. Then
 \E\!\left[\frac{X_1+\cdots+X_m}{S}\right] = \sum_{i=1}^m \E\!\left[\frac{X_i}{S}\right] = m\cdot\frac1n = \boxed{\frac mn}
 \]
 (notably independent of $a$ and $\sigma^2$).
+\end{proof}
+
+\begin{example}[Binarizing a random variable never decreases variance]
+Let $X$ be a random variable valued in $[0,1]$ with median $m$, meaning $\mathbb P(X\le m)=\mathbb P(X\ge m)$. Define its \emph{binarization} $\beta(X)=\mathbf 1\{X\ge m\}$. Is $\Var(\beta(X))\ge\Var(X)$ always? What if $X$ is continuous?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{A general interval lemma.} For any random variable $Y$ valued in $[p,q]$, $(Y-p)(q-Y)\ge0$ pointwise, so $\E[(Y-p)(q-Y)]\ge0$; expanding and rearranging gives
+\[
+\Var(Y)\le(\E Y-p)(q-\E Y).
+\]
+
+\textbf{The continuous case.} If $X$ has no atoms, $\mathbb P(X=m)=0$, so the median condition forces $\mathbb P(X<m)=\mathbb P(X>m)=\tfrac12$ exactly — i.e.\ $\beta(X)\sim\mathrm{Bernoulli}(\tfrac12)$ and $\Var(\beta(X))=\tfrac14$. Applying the lemma with $[p,q]=[0,1]$ gives $\Var(X)\le\tfrac14=\Var(\beta(X))$ directly. So for continuous $X$, the inequality always holds.
+
+\textbf{The general case.} Let $a=\mathbb P(X<m)=\mathbb P(X>m)$ (equal by the median condition; any atom at $m$ has mass $1-2a$). Then $\mathbb P(X\ge m)=1-a$, so $\beta(X)\sim\mathrm{Bernoulli}(1-a)$ and $\Var(\beta(X))=a(1-a)$.
+
+Split $X$ by the three events $X<m$, $X=m$, $X>m$, with conditional means $\mu_0=m-s$ ($s\in[0,m]$) on the first and $\mu_1=m+t$ ($t\in[0,1-m]$) on the third. The interval lemma, applied on $[0,m]$ and $[m,1]$ respectively, gives $\Var(X\mid X<m)\le\mu_0(m-\mu_0)=s(m-s)$ and $\Var(X\mid X>m)\le t(1-m-t)$. Combining these with the law of total variance and simplifying (the $s^2,t^2$ terms cancel) yields
+\[
+\Var(X)\ \le\ a\bigl[ms+t(1-m)\bigr]-a^2(t-s)^2.
+\]
+This bound, as a function of $(s,t)$ on the rectangle $s\in[0,m]$, $t\in[0,1-m]$, is maximized at the corner $s=m,t=1-m$ — pushing mass to the extreme endpoints of each conditional range can only increase variance. That corner is exactly the three-point distribution $X\in\{0,m,1\}$ with $\mathbb P(X=0)=\mathbb P(X=1)=a$, $\mathbb P(X=m)=1-2a$, for which a direct computation gives the exact identity
+\[
+\Var(X)=a(1-a)-2a(1-2a)\,m(1-m).
+\]
+Since $a\in[0,\tfrac12]$ and $m(1-m)\ge0$, the subtracted term is non-negative, so $\Var(X)\le a(1-a)$ at this extremal configuration — and hence, by the maximization above, for every $X$ sharing the same $(a,m)$. So
+\[
+\boxed{\Var(\beta(X))\ge\Var(X)\text{ always, for every }X\in[0,1]\text{ and every median }m}
+\]
+with equality forcing $a\in\{0,\tfrac12\}$ or $m\in\{0,1\}$ — in particular, forcing $X$ itself to already be two-valued.
 \end{proof}
 
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
@@ -3786,6 +3953,18 @@ Design a data structure for real numbers supporting \emph{insert}, \emph{delete}
 \[
 \boxed{\text{delete-min and delete-max can be made } O(1), \text{ but insert cannot also be made } O(1)}.
 \]
+\end{proof}
+
+\begin{example}[Finding the root of a hidden complete binary tree]
+The numbers $1,\dots,n$ (with $n=2^k-1$) are placed, in some unknown arrangement, at the nodes of a complete binary tree of height $k$. Say $t$ \emph{lies between} $i$ and $j$ if deleting $t$ from the tree leaves $i$ and $j$ in different components. Design an algorithm that identifies the number at the root, using $O(n\log n)$ queries of the form ``does $t$ lie between $i$ and $j$?''.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Reformulation.} ``$t$ lies between $i$ and $j$'' is exactly the tree-theoretic statement that $t$ is an internal vertex of the unique path from $i$ to $j$. Fixing any element $x$, the root is simply the far endpoint of $x$'s ancestor chain — the element of that chain with no ancestor of its own. Two structural facts drive the algorithm: (1) the tree has height $k=\Theta(\log n)$, so the path between \emph{any} two of the $n$ elements has $O(\log n)$ vertices; (2) for two elements $x,y$, querying every other element $z$ for ``$z$ between $x,y$?'' costs $n-2$ queries and returns exactly the (short, $O(\log n)$-sized) path from $x$ to $y$ — in particular it tells us whether the root lies on that path at all, since the root lies on path$(x,y)$ precisely when $x,y$ sit in different subtrees of the root.
+
+\textbf{Outline of the approach.} Start from an arbitrary pair $x,y$ and extract path$(x,y)$ via the $n-2$ queries of fact (2) above. If the root turns out to lie on this path, it can be pinpointed among the $O(\log n)$ path vertices with a further $O(\log^2 n)$ queries (comparing pairs of path vertices via a third reference point sorts them into ancestor order), well within budget. If $x,y$ happen to lie in the \emph{same} subtree of the root instead, the extracted path stops short of the root, and its topmost vertex $m=\mathrm{LCA}(x,y)$ is now a confirmed proper descendant of the root, so a fresh pair drawn from outside path$(x,y)$ must be tried; since each such round again costs $O(n)$ queries and there are only $O(\log n)$ levels the search can still need to climb, the whole procedure fits an $O(n\log n)$ budget.
+
+\textbf{Where this account is incomplete.} What is missing here is a fully worked-out rule for choosing the next pair after a failed round — the queries already made rule out $m$'s own subtree as containing the root, but turning that into a guaranteed $O(n)$-per-round, $O(\log n)$-round elimination scheme (rather than a possibly-repeated search) needs more careful bookkeeping than is carried out above. Small hand-simulated cases ($k=2,3$) are consistent with an $O(n\log n)$ algorithm along these lines succeeding, but the argument is not pinned down to full rigor here.
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
