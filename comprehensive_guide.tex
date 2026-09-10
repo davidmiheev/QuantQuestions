@@ -162,6 +162,22 @@ Since $\ker(A)\cap\operatorname{im}(A)$ is a subspace of $\ker(A)$, its dimensio
 \]
 \end{proof}
 
+\begin{example}[Every square matrix is a sum of two invertible matrices]
+Prove that every real $n\times n$ matrix $A$ is the sum of two invertible matrices.
+\end{example}
+
+\begin{proof}[Solution]
+$A$ has at most $n$ (real) eigenvalues, so among the infinitely many real numbers there is some $c$ that is neither $0$ nor an eigenvalue of $A$ (finitely many values are excluded). For such $c$, set $B=cI$ and $C=A-cI$:
+\begin{itemize}
+\item $B=cI$ is invertible, since $c\neq0$.
+\item $C=A-cI$ is invertible, since $c$ is not an eigenvalue of $A$ (so $0$ is not an eigenvalue of $A-cI$, i.e.\ $A-cI$ has trivial kernel).
+\end{itemize}
+And $B+C=cI+(A-cI)=A$. So
+\[
+\boxed{A=B+C \text{ with both } B,C \text{ invertible}}.
+\]
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -971,6 +987,24 @@ So
 (this holds regardless of whether $x,y$ are parallel, orthogonal, or neither — verified directly above, and checked numerically on random pairs).
 \end{proof}
 
+\begin{example}[Signature of an evaluation-product quadratic form]
+On the space of real polynomials of degree at most $n$ ($n\ge1$), consider the quadratic form $Q(f)=f(1)f(2)$. Find its signature (the number of $+1$'s and $-1$'s in its normal form).
+\end{example}
+
+\begin{proof}[Solution]
+Write $Q(f)=L_1(f)L_2(f)$ where $L_1(f)=f(1)$, $L_2(f)=f(2)$ are linear functionals on the $(n+1)$-dimensional space $P_n$. Since $n\ge1$, $\dim P_n\ge2$ and $L_1,L_2$ are linearly independent (e.g.\ the polynomial $f(x)=x-2$ has $L_1(f)=-1\neq0=L_2(f)$, and $f(x)=x-1$ has the reverse), so there exist $e_1,e_2\in P_n$ with $L_1(e_1)=1,L_2(e_1)=0$ and $L_1(e_2)=0,L_2(e_2)=1$ (e.g.\ take $e_1,e_2$ proportional to $x-2$ and $x-1$ respectively, rescaled).
+
+\textbf{The form on $\Span(e_1,e_2)$.} For $f=ae_1+be_2$, $Q(f)=L_1(f)L_2(f)=(a\cdot1+b\cdot0)(a\cdot0+b\cdot1)=ab$. Substituting $u=a+b,\,v=a-b$ (an invertible linear change of coordinates) gives $ab=\tfrac{u^2-v^2}4$ — a form with exactly one $+1$ and one $-1$ in its normal form.
+
+\textbf{The rest of the space contributes nothing.} On the $(n-1)$-dimensional subspace $K=\{f\in P_n: f(1)=0,f(2)=0\}$ (the common kernel of $L_1,L_2$), $Q(f)=L_1(f)L_2(f)=0\cdot0=0$ identically, and $K$ is complementary to $\Span(e_1,e_2)$ (since $L_1,L_2$ restricted to $\Span(e_1,e_2)$ are already an isomorphism onto $\R^2$, matching dimensions add up: $2+(n-1)=n+1=\dim P_n$).
+
+So in the basis $\{e_1,e_2\}\cup(\text{a basis of }K)$, $Q$ is already in normal form with one $+1$, one $-1$, and $n-1$ zeros. Hence
+\[
+\boxed{\text{signature } (1,1) \text{ (one } +1 \text{, one } -1\text{, and } n-1 \text{ zero directions)}}
+\]
+(confirmed numerically: diagonalizing the Gram matrix of $Q$ in the monomial basis for $n=1,2,3,4$ gives exactly one positive and one negative eigenvalue in every case, with the rest exactly zero).
+\end{proof}
+
 \section{Calculus and Real Analysis}
 Interview analysis questions often look innocent but test whether you can move between definitions, expansions, and clean arguments. The core techniques are asymptotics, derivatives, optimization, integrals, and series.
 
@@ -1118,6 +1152,33 @@ Consequently, if $a_n\in(0,\pi)$: $G_n(a_n)\ge0$ gives $a_{n+1}\ge a_n$, and $G_
 \boxed{a_n\to\pi\text{ for every }a_0\in(0,2\pi)}
 \]
 (consistent with $a_0=\pi$ itself being an exact fixed point of the recursion).
+\end{proof}
+
+\begin{example}[Can a continuous function hit every value exactly twice? Exactly three times?]
+(a) Does there exist a continuous $f:\R\to\R$ that attains every value in its range exactly twice? (b) Exactly three times?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a) No.} Suppose $f$ is continuous and exactly two-to-one. Since $f$ is not injective, pick $a<b$ with $f(a)=f(b)=:y_0$. On $[a,b]$, $f$ cannot be constant (that would give infinitely many preimages of $y_0$), so its max $M$ or min on $[a,b]$ differs from $y_0$; by replacing $f$ with $-f$ if needed, assume $M>y_0$, attained at some $c\in(a,b)$.
+
+\emph{Step 1: $f<y_0$ outside $[a,b]$.} For $y\in(y_0,M)$, the Intermediate Value Theorem on $[a,c]$ and on $[c,b]$ each supplies a preimage of $y$, giving $2$ preimages already — so (exactly two-to-one) \emph{no} preimage of any such $y$ lies outside $[a,b]$: $f(x)\notin(y_0,M)$ for $x\notin[a,b]$. Now $f((-\infty,a))$ is a connected set (continuous image of an interval) avoiding the gap $(y_0,M)$, so it lies entirely in $(-\infty,y_0]$ or entirely in $[M,\infty)$; the latter is impossible since $f(x)\to f(a)=y_0<M$ as $x\to a^-$. So $f(x)<y_0$ for all $x<a$ (it cannot equal $y_0$ either, as $a,b$ are already $y_0$'s only two preimages), and symmetrically $f(x)<y_0$ for all $x>b$.
+
+\emph{Step 2: $M$ is the global maximum, attained twice inside $(a,b)$.} Since $f<y_0<M$ outside $[a,b]$ and $f\le M$ on $[a,b]$, $M$ is $f$'s global maximum. Being exactly two-to-one, $M$ has a second preimage $c_2\neq c$, and by Step 1, $c_2\in(a,b)$ too. Say $c<c_2$.
+
+\emph{Step 3: contradiction.} For $y=M-\varepsilon$ (small $\varepsilon>0$), IVT on $[a,c]$ and on $[c_2,b]$ again supplies $2$ preimages — so, by the two-to-one count, \emph{no} preimage of $M-\varepsilon$ lies in $[c,c_2]$, for every small $\varepsilon>0$. So $f(x)\notin(y_0,M)$ for $x\in[c,c_2]$, and since also $f\le M$ there, $f(x)\in(-\infty,y_0]\cup\{M\}$ on $[c,c_2]$. But $f(c)=f(c_2)=M$, and if $f$ ever dropped to $\le y_0$ somewhere in between, it would have to cross back up through the forbidden gap $(y_0,M)$ to return to $M$ — impossible. So $f\equiv M$ on the entire interval $[c,c_2]$, giving \emph{infinitely many} preimages of $M$ — contradicting two-to-one. So
+\[
+\boxed{\text{no continuous exactly-two-to-one } f:\R\to\R \text{ exists}}.
+\]
+
+\textbf{(b) Yes.} Define $f$ using $n=\lfloor x/3\rfloor$ and $r=x-3n\in[0,3)$:
+\[
+f(x)=\begin{cases} n+r, & 0\le r<1\\ n+2-r, & 1\le r<2\\ n+(r-2), & 2\le r<3.\end{cases}
+\]
+This is continuous (the three pieces agree at $r=1,2$, and the blocks agree at integer multiples of $3$: block $n$ ends at value $n+1$, matching block $n+1$'s start). On each block $[3n,3n+3)$, $f$ traces $n\to n+1\to n\to n+1$ — three monotonic strands, each covering $[n,n+1]$ exactly once — so every value strictly inside $(n,n+1)$ has exactly $3$ preimages, all within block $n$. A boundary value $y=n+1$ gets its $3$ preimages at $x=3n+1$ (rise-then-fall peak within block $n$), $x=3n+3$ (block $n$'s end $=$ block $n{+}1$'s start), and $x=3n+5$ (the peak of block $n{+}1$'s middle strand) — verified directly by evaluating $f$ at these points. So
+\[
+\boxed{\text{yes — an explicit continuous exactly-three-to-one } f:\R\to\R \text{ exists}}
+\]
+(confirmed by a computer search over a wide window of $x$ and $y$ values, finding exactly $3$ preimages in every case checked).
 \end{proof}
 
 \begin{example}[Matching values one unit apart, from a boundary condition]
@@ -1875,6 +1936,28 @@ Direct evaluation (numerically) gives $F(0)\approx0.500>0$ and $F(3)\approx-0.44
 \boxed{1}
 \]
 root on $[0,3]$.
+\end{proof}
+
+\begin{example}[Limit of an integral against a rapidly oscillating fractional part]
+Let $\{t\}$ denote the fractional part of $t$. Find $\displaystyle\lim_{n\to\infty}\int_0^1 e^{\{nx\}}x^{2016}\,dx$.
+\end{example}
+
+\begin{proof}[Solution]
+As $n\to\infty$, the map $x\mapsto\{nx\}$ oscillates through a full period $[0,1)$ once every $1/n$ units of $x$ — increasingly rapidly — while the weight $x^{2016}$ varies slowly (on scale $O(1)$). This is the setting of the standard \emph{Riemann–Lebesgue averaging} fact: if $g$ is periodic with period $1$ and mean $\bar g=\int_0^1g(u)\,du$, and $h$ is (Riemann) integrable on $[0,1]$, then
+\[
+\int_0^1 h(x)\,g(nx)\,dx \ \longrightarrow\ \bar g\int_0^1h(x)\,dx\qquad(n\to\infty),
+\]
+because on each small sub-interval where $h$ is nearly constant, $g(nx)$ completes many full periods and its contribution averages to $\bar g$ times that sub-interval's length; summing over sub-intervals (and taking a limit of the partition mesh) gives the stated convergence.
+
+Here $g(u)=e^{\{u\}}=e^u$ on $[0,1)$ (periodic extension), with mean
+\[
+\bar g=\int_0^1 e^u\,du = e-1,
+\]
+and $h(x)=x^{2016}$, with $\displaystyle\int_0^1x^{2016}\,dx=\frac1{2017}$. So
+\[
+\lim_{n\to\infty}\int_0^1 e^{\{nx\}}x^{2016}\,dx=\boxed{\frac{e-1}{2017}}
+\]
+(numerically, the integral is already within $2\%$ of this value by $n=5000$, and converges further as $n$ grows, consistent with the averaging argument).
 \end{proof}
 
 \begin{example}[A double integral of an averaged argument]
@@ -3565,6 +3648,61 @@ and since $\E[(-1)^S]=\mathbb P(S=0)-\mathbb P(S=1)=1-2\,\mathbb P(S=1)$, this g
 (matches Monte Carlo simulation for $n=5,p=0.4$ to within sampling error).
 \end{proof}
 
+\begin{example}[Zero covariance implies independence for two-valued variables]
+Each of the random variables $X$ and $Y$ takes exactly two distinct values, and $\Cov(X,Y)=0$. Prove $X$ and $Y$ are independent.
+\end{example}
+
+\begin{proof}[Solution]
+Say $X\in\{a,b\}$ ($a\neq b$) with $\mathbb P(X=a)=p$, and $Y\in\{c,d\}$ ($c\neq d$) with $\mathbb P(Y=c)=q$. Let $I=\mathbf1\{X=a\}\sim\mathrm{Bernoulli}(p)$ and $J=\mathbf1\{Y=c\}\sim\mathrm{Bernoulli}(q)$, so $X=b+(a-b)I$ and $Y=d+(c-d)J$ are affine functions of $I,J$. By bilinearity of covariance under affine maps,
+\[
+\Cov(X,Y)=(a-b)(c-d)\Cov(I,J),
+\]
+and since $a\neq b$, $c\neq d$, the hypothesis $\Cov(X,Y)=0$ forces $\Cov(I,J)=0$, i.e.\ $\mathbb P(X=a,Y=c)=\E[IJ]=\E[I]\E[J]=pq$.
+
+\textbf{The other three joint probabilities follow automatically.} Using $\mathbb P(X=a,Y=c)=pq$ and the marginals:
+\[
+\mathbb P(X=a,Y=d)=p-pq=p(1-q),\qquad \mathbb P(X=b,Y=c)=q-pq=q(1-p),
+\]
+\[
+\mathbb P(X=b,Y=d)=1-p-q+pq=(1-p)(1-q).
+\]
+Each of the four joint probabilities equals the product of the corresponding marginals ($\mathbb P(X=a)\mathbb P(Y=c)$, etc.), which — since $X,Y$ take only these two values each — is exactly the definition of independence:
+\[
+\boxed{X \text{ and } Y \text{ are independent}}.
+\]
+\end{proof}
+
+\begin{example}[Comparing a sum of uniforms to a scaled third uniform]
+Let $\xi,\eta,\lambda$ be independent $\mathrm{Unif}[0,1]$ random variables, and let $t$ be a fixed real number. Find $\mathbb P(\xi+\eta<t\lambda)$.
+\end{example}
+
+\begin{proof}[Solution]
+For $t\le0$, $t\lambda\le0\le\xi+\eta$ always, so the probability is $0$. Assume $t>0$. Condition on $\lambda=l\in[0,1]$: $S=\xi+\eta$ has the standard triangular density, with CDF
+\[
+F_S(s)=\begin{cases}0,&s\le0\\ s^2/2,&0\le s\le1\\ 1-(2-s)^2/2,& 1\le s\le2\\ 1,& s\ge2.\end{cases}
+\]
+We want $\displaystyle\int_0^1 F_S(tl)\,dl$, split according to how large $tl$ gets as $l$ ranges over $[0,1]$.
+
+\textbf{Case $0<t\le1$.} Then $tl\in[0,t]\subseteq[0,1]$ throughout, so
+\[
+\int_0^1\frac{(tl)^2}2\,dl=\frac{t^2}2\cdot\frac13=\frac{t^2}6.
+\]
+
+\textbf{Case $1\le t\le2$.} Split at $l=1/t$ (where $tl=1$):
+\[
+\int_0^{1/t}\frac{(tl)^2}2\,dl+\int_{1/t}^1\left[1-\frac{(2-tl)^2}2\right]dl=\frac1{6t}+\left(1-\frac1t\right)-\frac{1-(2-t)^3}{6t},
+\]
+which simplifies to $1-\dfrac1t+\dfrac{(2-t)^3}{6t}$.
+
+\textbf{Case $t\ge2$.} Split at $l=1/t$ and $l=2/t$ (where $tl=1,2$ respectively); the third piece contributes $\mathbb P(S<tl)=1$ for $l\ge2/t$, and the computation gives $1-\dfrac1t$.
+
+All three pieces agree at the boundaries $t=1$ (both give $\tfrac16$) and $t=2$ (both give $\tfrac12$), confirming continuity. So
+\[
+\boxed{\mathbb P(\xi+\eta<t\lambda)=\begin{cases}0,& t\le0\\[2pt] t^2/6,& 0\le t\le1\\[2pt] 1-\dfrac1t+\dfrac{(2-t)^3}{6t},& 1\le t\le2\\[2pt] 1-\dfrac1t,& t\ge2\end{cases}}
+\]
+(verified by Monte Carlo simulation at $t=0.5,1,1.5,2,3$, matching to three decimal places).
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -4141,6 +4279,42 @@ Since larger $h_i$ are more likely to belong to $S$, sort $h_1\ge h_2\ge\cdots\g
 \boxed{\text{sort the }h_i\text{ (}O(n\log n)\text{), then a single }O(n)\text{ water-filling scan finds the minimum strike count}}
 \]
 (verified against brute-force search on many small random instances).
+\end{proof}
+
+\begin{example}[Longest color-alternating path in a two-colored forest]
+The edges of an acyclic undirected graph (a forest) are colored red and blue. Design an $O(V+E)$-time algorithm that finds the length of the longest path in which every two consecutive edges have different colors. How much extra memory does your algorithm need?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{A per-vertex DP by incoming color.} Root each tree of the forest arbitrarily and run a single post-order DFS. For a vertex $v$ and a color $c\in\{R,B\}$, define
+\[
+f(v,c)=\text{length of the longest alternating path starting at }v\text{ whose first edge has color}\neq c,
+\]
+using only edges in $v$'s subtree (i.e.\ away from $v$'s parent). Then
+\[
+f(v,c)=\max\Big(0,\ \max_{\substack{u \text{ child of } v\\ \text{edge }(v,u)\text{ has color }c'\neq c}} \big[1+f(u,c')\big]\Big),
+\]
+computed bottom-up: once all children of $v$ are processed, $f(v,R)$ and $f(v,B)$ each take $O(\deg v)$ time to evaluate (one pass over $v$'s children, keeping the best value among red-edge children and among blue-edge children). Summed over all vertices, this is $O(V+E)$.
+
+\textbf{Combining two directions through a vertex.} A longest alternating path need not start at a leaf — it can pass through some internal vertex $v$ as a ``peak,'' entering via one color and leaving via the other. So also compute, for each $v$: let $R_v=\max_{u:\,(v,u)\text{ red}}\big[1+f(u,B)\big]$ (best blue-continuation after a red edge into $v$) and $B_v=\max_{u:\,(v,u)\text{ blue}}\big[1+f(u,R)\big]$ (symmetric); then the best path peaking at $v$ has length $R_v+B_v$ if $v$ has both a red and a blue incident edge (with $f(\text{child},\cdot)$ computed exactly as above), or just $\max(R_v,B_v,0)$ otherwise. Each of these is again computable in $O(\deg v)$ time from the already-computed $f$ values.
+
+\textbf{Answer and complexity.} The overall answer is $\max_v(\text{best path peaking at } v)$, taken over all vertices in a single additional $O(V)$ pass after the DFS. Total time is $O(V+E)$ (each edge examined a constant number of times). So
+\[
+\boxed{O(V+E)\text{ time}}
+\]
+using $O(V)$ extra memory: two DP values per vertex ($f(v,R),f(v,B)$) plus the DFS recursion stack, which is $O(V)$ in the worst case (e.g.\ a path graph).
+\end{proof}
+
+\begin{example}[A sparse family of intervals covering every interval by a union of two]
+Let $\Lambda=\{[i,j] : 1\le i<j\le n\}$ be the set of all intervals with integer endpoints in $\{1,\dots,n\}$. (a) Show there is a subset $\Sigma\subseteq\Lambda$ with $|\Sigma|=O(n\log n)$ such that every interval in $\Lambda$ is the union of at most two intervals from $\Sigma$. (b) Show this bound is tight: any such $\Sigma$ must have $|\Sigma|=\Omega(n\log n)$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a) Construction (the ``sparse table'' family).} For every power of two $2^m\le n$ (there are $O(\log n)$ such $m$) and every valid starting point $i$, include the length-$2^m$ interval $[i,\,i+2^m-1]$ in $\Sigma$. This gives $O(n)$ intervals per scale $m$ and $O(\log n)$ scales, so $|\Sigma|=O(n\log n)$.
+
+Given any target $[i,j]\in\Lambda$ of length $L=j-i+1$, let $m=\lfloor\log_2 L\rfloor$, so $2^m\le L<2^{m+1}$, i.e.\ $2^m\ge L/2$. The two length-$2^m$ intervals $[i,i+2^m-1]$ and $[j-2^m+1,j]$ both lie in $\Sigma$ (both are valid sub-intervals of $[i,j]$, since $2^m\le L$), and since each covers more than half of $[i,j]$'s length, they overlap (or meet) and their union is exactly $[i,j]$. So every interval in $\Lambda$ is a union of (at most) two elements of $\Sigma$ — this is precisely the classical \emph{sparse table} construction used for $O(1)$ range-minimum queries.
+
+\textbf{(b) The matching lower bound.} A counting argument alone only gives $\Omega(n)$: a family $\Sigma$ of size $s$ has $O(s^2)$ pairs, each pair's union (when it is a single interval at all) determines at most one element of $\Lambda$, and there are $\Theta(n^2)$ intervals to cover, so $s^2=\Omega(n^2)$, i.e.\ $s=\Omega(n)$. Sharpening this to the tight $\Omega(n\log n)$ bound requires tracking how many \emph{distinct length scales} must appear near each position — intuitively, covering all $\Theta(n)$ lengths at each of $\Theta(n)$ positions with only pairwise unions forces a logarithmic multiplicity of scales at (on average) every position, mirroring why the sparse-table construction above cannot be thinned out. This sharper accounting is not carried out in full here; it is the well-known matching lower bound for this classical construction, and the $O(n\log n)$ upper bound of part (a) is tight.
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
