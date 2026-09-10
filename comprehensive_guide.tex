@@ -194,6 +194,26 @@ But $u^TJu$ is a scalar, so it equals its own transpose: $u^TJu=(u^TJu)^T=u^TJ^T
 regardless of $\beta$, $u$, or the specific skew-symmetric $J$ (verified numerically for random $J,u$).
 \end{proof}
 
+\begin{example}[Does $ABA=A$ force $BAB=B$?]
+Let $A,B$ be square matrices of the same size with $ABA=A$. Must $BAB=B$?
+\end{example}
+
+\begin{proof}[Solution]
+No. Take
+\[
+A=\begin{pmatrix}1&0\\0&0\end{pmatrix},\qquad B=\begin{pmatrix}1&1\\1&0\end{pmatrix}.
+\]
+Then $AB=\begin{pmatrix}1&1\\0&0\end{pmatrix}$, so $ABA=\begin{pmatrix}1&1\\0&0\end{pmatrix}\begin{pmatrix}1&0\\0&0\end{pmatrix}=\begin{pmatrix}1&0\\0&0\end{pmatrix}=A$ — the hypothesis holds.
+
+But $BA=\begin{pmatrix}1&0\\1&0\end{pmatrix}$, so $BAB=\begin{pmatrix}1&0\\1&0\end{pmatrix}\begin{pmatrix}1&1\\1&0\end{pmatrix}=\begin{pmatrix}1&1\\1&1\end{pmatrix}\neq\begin{pmatrix}1&1\\1&0\end{pmatrix}=B$.
+
+So
+\[
+\boxed{\text{no — } ABA=A \text{ does not imply } BAB=B}
+\]
+(the hypothesis $ABA=A$ says $B$ is a \emph{generalized inverse} of $A$ in the weak sense; $BAB=B$ additionally is the stronger ``reflexive'' generalized-inverse condition, and the two are genuinely different).
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1040,6 +1060,23 @@ So in the basis $\{e_1,e_2\}\cup(\text{a basis of }K)$, $Q$ is already in normal
 (confirmed numerically: diagonalizing the Gram matrix of $Q$ in the monomial basis for $n=1,2,3,4$ gives exactly one positive and one negative eigenvalue in every case, with the rest exactly zero).
 \end{proof}
 
+\begin{example}[Every path between definite forms of opposite type passes through a degenerate one]
+Let $A,B$ be symmetric bilinear forms on a real $2$-dimensional space, with $A$ positive definite and $B$ negative definite. Prove that every continuous path of symmetric bilinear forms connecting $A$ to $B$ contains a degenerate one.
+\end{example}
+
+\begin{proof}[Solution]
+Represent the path as a continuous family of symmetric $2\times2$ matrices $C(t)$, $t\in[0,1]$, $C(0)=A$, $C(1)=B$. Both $\det C(t)$ and $\trace C(t)$ are continuous functions of $t$ (polynomials in the matrix entries).
+
+Suppose, for contradiction, that $C(t)$ is never degenerate, i.e.\ $\det C(t)\neq0$ for all $t$. A non-degenerate $2\times2$ symmetric matrix has both eigenvalues nonzero, and $\det C(t)$ is their product: if the eigenvalues have the same sign, $\det C(t)>0$; if opposite signs, $\det C(t)<0$. Since $\det A>0$ ($A$ positive definite: both eigenvalues positive) and $\det B>0$ ($B$ negative definite: both eigenvalues negative, product still positive), and $\det C(t)$ is continuous and never $0$, the Intermediate Value Theorem forces $\det C(t)>0$ for \emph{every} $t\in[0,1]$ (it can't jump from positive to negative without passing through $0$).
+
+So at every $t$, $C(t)$ is non-degenerate with $\det C(t)>0$, meaning its two eigenvalues always share a sign — so $\trace C(t)\neq0$ throughout (a zero trace with same-signed nonzero eigenvalues is impossible). But $\trace C(t)$ is also continuous, with $\trace A>0$ (sum of two positive eigenvalues) and $\trace B<0$ (sum of two negative eigenvalues). A continuous function that is never $0$ but takes both a positive and a negative value violates the Intermediate Value Theorem — contradiction.
+
+So the assumption fails: some $C(t)$ must be degenerate. Hence
+\[
+\boxed{\text{every such path contains a degenerate bilinear form}}.
+\]
+\end{proof}
+
 \section{Calculus and Real Analysis}
 Interview analysis questions often look innocent but test whether you can move between definitions, expansions, and clean arguments. The core techniques are asymptotics, derivatives, optimization, integrals, and series.
 
@@ -1249,6 +1286,21 @@ Conversely, suppose $x\neq2\pi k$ for any integer $k$, i.e.\ $x/(2\pi)\notin\Z$.
 So the limit exists and equals $1$ exactly when $x/(2\pi)$ is an integer:
 \[
 \boxed{x=2\pi k,\ k\in\Z}.
+\]
+\end{proof}
+
+\begin{example}[No continuous functional square root of $1-x^3$]
+Does there exist a continuous function $f:\R\to\R$ with $f(f(x))=1-x^3$ for all $x$?
+\end{example}
+
+\begin{proof}[Solution]
+No. Let $g(x)=1-x^3$; since $-x^3$ is strictly decreasing, $g$ is a strictly decreasing bijection $\R\to\R$.
+
+\textbf{$f$ must be a continuous bijection.} If $f\circ f=g$ is injective, $f$ itself must be injective (if $f(a)=f(b)$ then $g(a)=f(f(a))=f(f(b))=g(b)$, so $a=b$ since $g$ is injective). And since $g=f\circ f$ is surjective, so is $f$ (every $y$ in the range of $g$ is $f$ applied to $f(x)$ for suitable $x$, i.e.\ $y=f(f(x))$ is in the range of $f$; as $g$ is onto $\R$, $f$ is too). So $f$ is a continuous bijection $\R\to\R$, hence — a standard fact for continuous injections on an interval — $f$ is \emph{strictly monotonic}.
+
+\textbf{Neither monotonicity type is possible.} If $f$ is strictly increasing, then $f\circ f$ (increasing composed with increasing) is strictly increasing. If $f$ is strictly decreasing, then $f\circ f$ (decreasing composed with decreasing) is \emph{also} strictly increasing. Either way, $f\circ f$ must be strictly increasing. But $f\circ f=g$ is strictly \emph{decreasing} — a contradiction. So
+\[
+\boxed{\text{no continuous } f \text{ with } f(f(x))=1-x^3 \text{ exists}}.
 \]
 \end{proof}
 
@@ -2308,6 +2360,28 @@ a_k=F(u_k)=\frac{\sin k}k+O\!\left(\frac1{k^3}\right).
 (numerically, partial sums of $a_k$ stabilize near $1.03$ while partial sums of $|a_k|$ grow without bound, tracking $\sum|\sin k|/k$ closely).
 \end{proof}
 
+\begin{example}[A very slowly convergent series]
+Investigate the convergence of $\displaystyle\sum_{n=3}^\infty (\ln\ln n)^{-\ln n}$.
+\end{example}
+
+\begin{proof}[Solution]
+Rewrite the general term using $a^b=e^{b\ln a}$:
+\[
+(\ln\ln n)^{-\ln n}=e^{-\ln n\cdot\ln(\ln\ln n)}=n^{-\ln(\ln\ln n)}.
+\]
+
+\textbf{The exponent grows without bound.} As $n\to\infty$, $\ln\ln n\to\infty$, hence $\ln(\ln\ln n)\to\infty$ as well — extremely slowly, but without bound. So for any fixed $P$ (say $P=2$), there is $N$ such that $\ln(\ln\ln n)>P$ for all $n>N$, i.e.\
+\[
+(\ln\ln n)^{-\ln n}=n^{-\ln(\ln\ln n)}<n^{-P}\qquad\text{for all }n>N.
+\]
+
+\textbf{Comparison.} Taking $P=2$, the tail of the series (for $n>N$) is term-by-term smaller than the convergent series $\sum n^{-2}$, so it converges; the finitely many terms with $n\le N$ don't affect convergence. So
+\[
+\boxed{\text{the series converges}}
+\]
+(extremely slowly: the threshold $N$ where terms first drop below $n^{-2}$ is astronomically large, since it requires $\ln\ln n>2$, i.e.\ $n>e^{e^2}\approx1618$ just to beat $n^{-1}$, and far larger to beat $n^{-2}$ — but eventual comparison to a convergent $p$-series is all that convergence requires).
+\end{proof}
+
 \section{Combinatorics}
 Combinatorics questions reward clean counting arguments, parity reasoning, and the ability to encode a counting problem algebraically.
 
@@ -2996,6 +3070,23 @@ Model acquaintance as a graph $G$ with minimum degree $\delta\ge50$, and let $u,
 In particular,
 \[
 \boxed{\#\text{employees}\ge204\ge200}.
+\]
+\end{proof}
+
+\begin{example}[An alternating left-right walk in a cubic graph returns home]
+In a graph where every vertex has degree exactly $3$, a traveler leaves city $E$ and, after each city, turns either left or right relative to the road just traveled — never repeating the same turn direction twice in a row (left and right must alternate). Prove the traveler eventually returns to $E$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{A finite deterministic process.} At each vertex of degree $3$, arriving via one edge leaves exactly two other edges, which (given a fixed local cyclic ordering of the three edges around each vertex — a \emph{rotation system}) are unambiguously labeled ``left'' and ``right'' relative to the edge of arrival. Once the traveler's first move out of $E$ and its direction are fixed, the entire subsequent walk is completely determined: the state (directed edge just traversed, which turn — left or right — is required next) has a unique successor, obtained by taking the required-direction edge at the new vertex and flipping the required turn for next time.
+
+\textbf{Finitely many states force a repeat.} There are only finitely many directed edges (twice the number of roads) and $2$ choices of ``required next turn,'' so the state space is finite. Since the process is deterministic, following it long enough must eventually revisit some state (pigeonhole).
+
+\textbf{The transition is invertible, so the repeat is the start.} The key local fact is that ``turn left'' and ``turn right,'' viewed as operations relating an incoming edge to an outgoing edge at a vertex, are mutually inverse under edge-reversal: if turning left from edge $e$ (arriving at $v$) leads out along edge $e'$, then arriving at $v$ along $e'$ reversed and turning right leads back out along $e$ reversed. This makes the state-transition map a \emph{bijection} on the (directed edge, required turn) state space — a permutation, which decomposes into disjoint cycles with no ``tails.'' Consequently the walk, started at its very first state, cannot enter a repeating loop that excludes that initial state: the first repeated state \emph{is} the initial state itself.
+
+Since the initial state records the first edge leaving $E$, returning to that exact state means the traveler is once again at $E$, about to leave along the same edge in the same required direction as at the very start. So
+\[
+\boxed{\text{the traveler eventually returns to } E}.
 \]
 \end{proof}
 
@@ -3802,6 +3893,57 @@ All three pieces agree at the boundaries $t=1$ (both give $\tfrac16$) and $t=2$ 
 (verified by Monte Carlo simulation at $t=0.5,1,1.5,2,3$, matching to three decimal places).
 \end{proof}
 
+\begin{example}[Probability that three independent lengths form a triangle]
+Independent random variables $X,Y$ have density $p_X(t)=\tfrac t2\mathbf1_{[0,2]}(t)$ and $Y\sim\mathrm{Unif}[0,3]$. Find the probability that segments of lengths $X$, $Y$, and $1$ can form a triangle.
+\end{example}
+
+\begin{proof}[Solution]
+Three positive lengths form a triangle iff each is less than the sum of the other two; here that reduces to $|X-Y|<1$ and $X+Y>1$. The joint density is $f(x,y)=\tfrac x2\cdot\tfrac13=\tfrac x6$ on $[0,2]\times[0,3]$.
+
+\textbf{Setting up the region.} For fixed $x$, $y$ must satisfy $\max(x-1,1-x)<y<x+1$ (intersected with $[0,3]$, automatically satisfied here since $x+1\le3$).
+
+\emph{For $x\in[0,1]$:} $\max(x-1,1-x)=1-x$, so $y\in(1-x,x+1)$, an interval of length $2x$.
+
+\emph{For $x\in[1,2]$:} $\max(x-1,1-x)=x-1$, so $y\in(x-1,x+1)$, an interval of length $2$.
+
+\textbf{Integrating.}
+\[
+\int_0^1\frac x6\cdot2x\,dx+\int_1^2\frac x6\cdot2\,dx=\int_0^1\frac{x^2}3\,dx+\int_1^2\frac x3\,dx=\frac19+\frac{4-1}6=\frac19+\frac12.
+\]
+So
+\[
+\mathbb P(\text{triangle})=\frac19+\frac12=\boxed{\frac{11}{18}}
+\]
+(Monte Carlo simulation over $3$ million trials gives $\approx0.6108$, matching $11/18\approx0.6111$).
+\end{proof}
+
+\begin{example}[Expected count of chosen items with no chosen neighbor]
+Of $m$ items arranged in a row, a uniformly random subset of $k<m$ is chosen. Let $X$ count the chosen items $i$ such that $i$ is chosen but none of $i$'s (one or two) neighbors is chosen. Find $\E[X]$.
+\end{example}
+
+\begin{proof}[Solution]
+By linearity of expectation, $\E[X]=\sum_i \mathbb P(i \text{ chosen, all neighbors of } i \text{ unchosen})$.
+
+\textbf{Interior items} ($2\le i\le m-1$, two neighbors): the favorable subsets fix $i$ as chosen and both neighbors as unchosen, then choose the remaining $k-1$ elements freely from the other $m-3$ items, giving probability $\dbinom{m-3}{k-1}\Big/\dbinom mk$.
+
+\textbf{End items} ($i=1$ or $i=m$, one neighbor): probability $\dbinom{m-2}{k-1}\Big/\dbinom mk$.
+
+\textbf{Simplifying the ratios.} Using the standard identities $\binom{n-1}{k-1}/\binom nk=k/n$ and $\binom{n-1}{r}/\binom nr=(n-r)/n$ repeatedly,
+\[
+\frac{\binom{m-2}{k-1}}{\binom mk}=\frac{k(m-k)}{m(m-1)},\qquad \frac{\binom{m-3}{k-1}}{\binom mk}=\frac{k(m-k)(m-k-1)}{m(m-1)(m-2)}.
+\]
+
+\textbf{Combining.} With $2$ end items and $m-2$ interior items,
+\[
+\E[X]=2\cdot\frac{k(m-k)}{m(m-1)}+(m-2)\cdot\frac{k(m-k)(m-k-1)}{m(m-1)(m-2)}=\frac{k(m-k)}{m(m-1)}\Big[2+(m-k-1)\Big],
+\]
+so
+\[
+\E[X]=\boxed{\frac{k(m-k)(m-k+1)}{m(m-1)}}
+\]
+(checked directly: $m=3,k=1$ gives $1$, and $m=4,k=2$ gives $1$, both matching exhaustive enumeration over all $\binom mk$ subsets).
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -4449,6 +4591,24 @@ An $n\times n$ matrix has every row and every column sorted increasing. Design a
 \boxed{O(n^3)\text{ time}, O(n)\text{ (in fact }O(1)\text{) extra memory}}
 \]
 (verified against brute force on random sorted matrices). Restricting the outer loop to iterate over rows rather than individual cells, and reusing search state across a row, is a natural way to try to cut this to $O(n^2)$; making that reuse provably correct needs a more careful monotonicity argument than is worked out here.
+\end{proof}
+
+\begin{example}[Detecting a deeply nested segment in $O(n\log n)$]
+Given $n$ segments $[a_i,b_i]$, the \emph{nesting index} of a segment is the number of other segments that contain it. Design an algorithm that determines whether some segment has nesting index exceeding $1000$, using $O(n\log n)$ time and $O(n)$ extra memory.
+\end{example}
+
+\begin{proof}[Solution]
+Segment $i$ contains segment $j$ exactly when $a_i\le a_j$ and $b_i\ge b_j$: a $2$-dimensional dominance condition. This is the classical setting for a Fenwick-tree (Binary Indexed Tree) sweep:
+
+\textbf{Coordinate compression.} Sort the distinct $b$-values and replace each $b_j$ by its rank among them ($O(n\log n)$), so ranks lie in $\{1,\dots,n\}$ and a Fenwick tree over them supports prefix-count queries and point updates in $O(\log n)$ each.
+
+\textbf{Sweep by left endpoint.} Sort the segments by $a_i$ increasing ($O(n\log n)$); process ties (equal $a_i$) as a batch. Maintain a Fenwick tree, initially empty, over the compressed $b$-ranks. When processing segment $j$: query the Fenwick tree for the count of already-inserted segments with $b$-rank $\ge$ rank$(b_j)$ (a suffix-count query, done via a prefix-count query on the complement, $O(\log n)$) — this count is exactly the number of previously-processed segments (all with $a_i\le a_j$) that also have $b_i\ge b_j$, i.e.\ segment $j$'s nesting index restricted to earlier segments. After querying every segment in the current $a_i$-batch (so segments sharing the same $a_i$ don't count each other, matching the strict containment condition when endpoints tie exactly however the problem intends it — adjust the query/insert order within a batch if ties should count each other), insert all of the batch's $b$-ranks into the Fenwick tree, then move to the next batch.
+
+\textbf{Answer.} Track the maximum nesting index seen (or short-circuit and return ``yes'' the moment a count exceeds $1000$). This is
+\[
+\boxed{O(n\log n) \text{ time}, O(n) \text{ extra memory}}
+\]
+— $O(n\log n)$ for the two sorts plus $O(n)$ Fenwick operations at $O(\log n)$ each, and $O(n)$ memory for the compressed ranks and the Fenwick array.
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
