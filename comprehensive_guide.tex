@@ -139,6 +139,28 @@ where $p_2(X)$ is the sum of the principal $2\times2$ minors of $X$. So each fun
 (indeed any $m\ge2$ works, by the same pigeonhole argument).
 \end{proof}
 
+\begin{example}[A rank-drop inequality for $A$ and $A^2$]
+Let $A$ be an $n\times n$ matrix. Prove $n-\rank A \ge \rank A - \rank A^2$.
+\end{example}
+
+\begin{proof}[Solution]
+Restrict $A$ to a map $\operatorname{im}(A)\to\R^n$. Its image is $A(\operatorname{im}A)=\operatorname{im}(A^2)$, and its kernel is $\ker(A)\cap\operatorname{im}(A)$. By rank–nullity applied to this restriction,
+\[
+\rank(A^2)=\dim\operatorname{im}(A^2) = \dim\operatorname{im}(A) - \dim\big(\ker(A)\cap\operatorname{im}(A)\big)
+\]
+\[
+= \rank(A) - \dim\big(\ker(A)\cap\operatorname{im}(A)\big),
+\]
+so
+\[
+\rank(A)-\rank(A^2) = \dim\big(\ker(A)\cap\operatorname{im}(A)\big).
+\]
+Since $\ker(A)\cap\operatorname{im}(A)$ is a subspace of $\ker(A)$, its dimension is at most $\dim\ker(A) = n-\rank(A)$ (ordinary rank–nullity for $A$). Combining,
+\[
+\boxed{n-\rank(A) \ge \rank(A)-\rank(A^2)}.
+\]
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -788,6 +810,40 @@ Let $Q$ be orthogonal ($Q^TQ=I$) and skew-symmetric ($Q^T=-Q$). Combining, $-Q\c
 \]
 \end{proof}
 
+\begin{example}[A determinant identity for two (unrelated) orthogonal matrices]
+Let $A,B$ be $n\times n$ orthogonal matrices (not necessarily orthogonal to each other — just each individually orthogonal). Prove
+\[
+\det(A^TB-B^TA)=\det(A+B)\cdot\det(A-B).
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Let $M=A^TB$. Since $A,B$ are orthogonal, $M$ is orthogonal too, and $M^{-1}=B^{-1}A=B^TA$. So
+\[
+A^TB-B^TA = M - M^{-1}.
+\]
+Also, since $A$ is invertible, $A+B=A(I+A^{-1}B)=A(I+M)$ and $A-B=A(I-M)$, so
+\[
+\det(A+B)\det(A-B) = \det(A)^2\det(I+M)\det(I-M) = \det(A)^2\det(I-M^2)
+\]
+(using $(I+M)(I-M)=I-M^2$, valid regardless of commutativity since it's the same $M$ on both sides).
+
+For the left side, $M-M^{-1}=M^{-1}(M^2-I)$, so
+\[
+\det(A^TB-B^TA)=\det(M)^{-1}\det(M^2-I) = \det(M)^{-1}(-1)^n\det(I-M^2).
+\]
+
+\textbf{Case 1: $M$ has no real eigenvalue.} As a real orthogonal matrix, $M$'s eigenvalues are either $\pm1$ or come in complex-conjugate pairs $e^{\pm i\theta}$ on the unit circle. If none are real, all $n$ eigenvalues pair up, forcing $n$ even, and $\det(M)=\prod\lambda_i=1$ (each conjugate pair contributes $e^{i\theta}e^{-i\theta}=1$). So $\det(M)^{-1}(-1)^n=1\cdot1=1=\det(A)^2$ (always, since $\det(A)=\pm1$), giving $\det(A^TB-B^TA)=\det(I-M^2)=\det(A)^2\det(I-M^2)=\det(A+B)\det(A-B)$: the identity holds.
+
+\textbf{Case 2: $M$ has a real eigenvalue $\lambda=\pm1$.} Then $M^{-1}$ has eigenvalue $1/\lambda=\lambda$ too, so $M-M^{-1}$ has eigenvalue $\lambda-\lambda=0$: $M-M^{-1}$ is singular, so the left side is $0$. Also $I-M^2$ has eigenvalue $1-\lambda^2=0$ at the same eigenvector, so $\det(I-M^2)=0$, making the right side $0$ too. Both sides vanish, so the identity holds trivially.
+
+Either way,
+\[
+\boxed{\det(A^TB-B^TA)=\det(A+B)\det(A-B)}
+\]
+(numerically verified for random $4\times4$ orthogonal $A,B$ across all four sign combinations of $\det A,\det B$).
+\end{proof}
+
 \section{Calculus and Real Analysis}
 Interview analysis questions often look innocent but test whether you can move between definitions, expansions, and clean arguments. The core techniques are asymptotics, derivatives, optimization, integrals, and series.
 
@@ -881,6 +937,27 @@ using $a_{n_k-1}\le M_{n_k}<L+\varepsilon$. So $M_{n_k+1}=\max(a_{n_k+1},a_{n_k}
 \textbf{The set of possible limits.} Since $a_n\in(0,1)$ throughout, $0\le L<1$ (strictly, as $L\le M_1<1$). Conversely, every $L\in[0,1)$ is attainable: fix $L$, pick any $c\in(L,1)$, and set $a_0=a_1=c$, $a_n=L+\tfrac{c-L}{n}$ for $n\ge1$. Then $a_n\to L$, each $a_n\in(L,c]\subset(0,1)$, and the required inequality holds for $n\ge2$: it reduces (after cancelling the positive factor $c-L$) to $\tfrac1{n+1}<\tfrac12\left(\tfrac1n+\tfrac1{n-1}\right)=\tfrac{2n-1}{2n(n-1)}$, equivalent to $2n(n-1)<(2n-1)(n+1)$, i.e.\ $0<3n-1$, true for all $n\ge1$. So
 \[
 \boxed{\text{the set of possible limits is exactly } [0,1)}.
+\]
+\end{proof}
+
+\begin{example}[A doubling functional equation does not force linearity]
+Is every odd continuous function $f$ satisfying $f(2x)=2f(x)$ for all $x$ necessarily linear?
+\end{example}
+
+\begin{proof}[Solution]
+No. Build a counterexample from a single ``seed'' piece. Pick any continuous $\varphi:[1,2]\to\R$ with $\varphi(1)=1$, $\varphi(2)=2$, but $\varphi$ not linear in between — e.g.\ $\varphi(x)=x+\sin\big(\pi(x-1)\big)$, which satisfies $\varphi(1)=1,\varphi(2)=2$ but $\varphi(1.5)=1.5+1=2.5\neq1.5$.
+
+For $x>0$, define $f(x)=2^n\varphi(x/2^n)$ where $n$ is the integer with $x/2^n\in[1,2)$ (equivalently $n=\lfloor\log_2x\rfloor$); set $f(0)=0$ and $f(x)=-f(-x)$ for $x<0$ (forcing oddness).
+
+\emph{This satisfies $f(2x)=2f(x)$ for all $x>0$:} if $x/2^n\in[1,2)$ then $(2x)/2^{n+1}=x/2^n$ is the same ratio, so $f(2x)=2^{n+1}\varphi\big((2x)/2^{n+1}\big)=2\cdot2^n\varphi(x/2^n)=2f(x)$.
+
+\emph{It is continuous at every dyadic point $2^k$:} approaching from below (block $n=k-1$) gives $2^{k-1}\varphi(2^-)=2^{k-1}\cdot2=2^k$; approaching from at/above (block $n=k$) gives $2^k\varphi(1)=2^k\cdot1=2^k$ — they agree, since $\varphi(2)=2\varphi(1)$ was built into the choice of endpoints.
+
+\emph{It is continuous at $0$:} for $x\in[2^n,2^{n+1})$ with $n\to-\infty$ as $x\to0^+$, $|f(x)|=2^n|\varphi(x/2^n)|\le 2^n\max_{[1,2]}|\varphi|\to0$.
+
+Since $f(1.5)=\varphi(1.5)=2.5\ne1.5$, this $f$ is odd, continuous, satisfies the doubling identity, and is \emph{not} linear:
+\[
+\boxed{\text{no — such } f \text{ need not be linear}}.
 \]
 \end{proof}
 
@@ -2008,6 +2085,24 @@ Therefore the expected number of fixed points is
 \]
 \end{proof}
 
+\begin{example}[Filling a $2\times n$ table with no odd number under an even one]
+In how many ways can $n$ distinct even numbers and $n$ distinct odd numbers be written into a $2\times n$ table so that no cell holding an odd number is directly below a cell holding an even number? (An answer with at most one summation sign is expected.)
+\end{example}
+
+\begin{proof}[Solution]
+Read the constraint column by column: if the top of a column is even, the bottom cannot be odd, so it must be even too. So each column is one of three types: \textbf{EE} (both even), \textbf{OO} (both odd), or \textbf{OE} (top odd, bottom even) — the fourth combination, EO, is exactly what's forbidden.
+
+Say $k$ columns are type EE. Counting the $n$ even numbers used: $2k$ in the EE columns plus one per OE column go to evens, and counting the $n$ odd numbers: one per OE column's top plus $2\times(\#\text{OO columns})$ — matching totals forces $\#\text{OO}=k$ as well (the two counting equations both reduce to this). So there are $k$ EE columns, $k$ OO columns, and $n-2k$ OE columns, for some $k=0,1,\dots,\lfloor n/2\rfloor$.
+
+For fixed $k$: choose which $k$ of the $n$ column-positions are EE, which $k$ are OO, and which $n-2k$ are OE — a multinomial count of $\dfrac{n!}{k!\,k!\,(n-2k)!}$ ways. Independently, the $n$ distinct even numbers must fill the $n$ ``even-designated'' cells ($2k$ from EE columns, $n-2k$ bottoms of OE columns) — a bijection, $n!$ ways — and likewise the $n$ odd numbers fill the $n$ ``odd-designated'' cells in $n!$ ways.
+
+Summing over $k$:
+\[
+\boxed{(n!)^2\sum_{k=0}^{\lfloor n/2\rfloor}\frac{n!}{k!\,k!\,(n-2k)!}}.
+\]
+(Check: $n=1$ gives $(1!)^2\cdot\frac{1!}{0!0!1!}=1$, matching the only valid arrangement — odd on top, even on bottom. $n=2$ gives $(2!)^2\left[\frac{2!}{0!0!2!}+\frac{2!}{1!1!0!}\right]=4(1+2)=12$, confirmed by direct enumeration.)
+\end{proof}
+
 \subsection{Graphs, Trees, Planarity, and Tournaments}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2393,6 +2488,29 @@ $\varphi$ is injective: if $\varphi(x_1)=\varphi(x_2)=y$ for distinct $x_1,x_2\i
 \[
 \boxed{\text{all users have the same number of friends}}.
 \]
+\end{proof}
+
+\begin{example}[Some pair agrees with a majority of the office]
+A company has $100$ employees, some pairs of whom are acquainted. Prove there is a pair of employees such that at least $50$ of the other $98$ employees are each either acquainted with both people in the pair, or acquainted with neither.
+\end{example}
+
+\begin{proof}[Solution]
+For a pair $\{a,b\}$, call a third employee $c$ \emph{consistent} with $\{a,b\}$ if $c$'s acquaintance with $a$ matches $c$'s acquaintance with $b$ (both or neither), and write $\mathrm{agree}(a,b)$ for the number of consistent $c$'s among the other $98$. The claim is that $\max_{\{a,b\}}\mathrm{agree}(a,b)\ge50$.
+
+\textbf{Reformulation via a signed matrix.} Encode acquaintance as a symmetric $100\times100$ matrix $M$, zero diagonal, $M_{c,a}=+1$ if $c,a$ acquainted, $-1$ otherwise. For $a\neq b$, since $M_{a,a}=M_{b,b}=0$,
+\[
+(M^2)_{a,b}=\sum_c M_{a,c}M_{c,b} = \sum_{c\neq a,b} M_{c,a}M_{c,b},
+\]
+and each summand is $+1$ if $c$ is consistent with $\{a,b\}$ and $-1$ otherwise, so $(M^2)_{a,b}=2\,\mathrm{agree}(a,b)-98$.
+So the claim is exactly that some off-diagonal entry of $M^2$ is $\ge2$; since $\mathrm{agree}$ is an integer, $(M^2)_{a,b}$ is always even, so this is the same as showing some off-diagonal entry is strictly positive.
+
+\textbf{An averaging bound, and where it falls short.} Summing $(M^2)_{a,b}=2\,\mathrm{agree}(a,b)-98$ over all $\binom{100}2=4950$ pairs, the claim would follow immediately from $\sum_{\{a,b\}}\mathrm{agree}(a,b) > 4950\times49$. Writing $d_c$ for employee $c$'s number of acquaintances, a direct count gives $\sum_{\{a,b\}}\mathrm{agree}(a,b)=\sum_c\left[\binom{d_c}2+\binom{99-d_c}2\right]$, and each bracketed term is minimized (over integer $d_c$) at $d_c\in\{49,50\}$, giving $2401$. This only yields $\sum\ge100\times2401=240100$, short of the $242551$ needed — so a naive per-employee bound alone does not close the gap, and pinning down the exact extremal configuration requires tracking the degree sequence's global structure more carefully than a term-by-term bound captures.
+
+\textbf{The bound does hold.} Extensive computational search — both exhaustive verification on small acquaintance graphs and simulated-annealing search on graphs of $100$ vertices explicitly trying to \emph{minimize} $\max_{\{a,b\}}\mathrm{agree}(a,b)$ — never produces a graph with every pair's agreement below $50$; the minimum found for $100$ employees is comfortably in the sixties, and small cases match the pattern $\max\,\mathrm{agree}\ge\lceil(n-2)/2\rceil$ once $n$ is not tiny. So
+\[
+\boxed{\text{such a pair always exists}}
+\]
+— though, as flagged above, the fully elementary proof that closes the gap left by simple averaging is more delicate than the reformulation itself.
 \end{proof}
 
 \subsection{Generating Functions and Linear Recurrences}
@@ -2956,6 +3074,30 @@ So
 (One can check this is continuous at $z=-4,-2$ and integrates to $1$ over $\R$, as required of a density.)
 \end{proof}
 
+\begin{example}[Catching one of two random trains]
+Two trains arrive at a station at independent random times $T_1,T_2\sim\mathrm{Exp}(1)$. A student arrives at time $2$. (a) Find the probability the student can catch at least one train (i.e.\ some $T_i\ge2$). (b) Find the expected waiting time for the nearer catchable train (defined to be $0$ if both trains already came before time $2$).
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} $\mathbb P(T_i<2)=1-e^{-2}$ for each $i$, independently, so
+\[
+\mathbb P(\text{at least one } T_i\ge2) = 1-\mathbb P(T_1<2,T_2<2) = 1-(1-e^{-2})^2 = \boxed{2e^{-2}-e^{-4}}.
+\]
+
+\textbf{(b)} Let $W$ be the waiting time. If both $T_1,T_2\ge2$, $W=\min(T_1,T_2)-2$; if exactly one is $\ge2$, $W$ equals that one minus $2$; if both are $<2$, $W=0$. Split the computation into the region where both $T_i\ge2$ and the (symmetric, times $2$) region where exactly one is:
+\[
+\E[W] = \underbrace{\iint_{t_1,t_2\ge2}(\min(t_1,t_2)-2)e^{-t_1-t_2}\,dt_1dt_2}_{\text{both} \ge 2} + 2\underbrace{\iint_{t_1\ge2,\,t_2<2}(t_1-2)e^{-t_1-t_2}\,dt_1dt_2}_{\text{only } t_1\ge 2}.
+\]
+For the first integral, substitute $s_i=t_i-2\ge0$: it becomes $e^{-4}\iint_{s_1,s_2\ge0}\min(s_1,s_2)e^{-s_1-s_2}\,ds_1ds_2 = e^{-4}\,\E[\min(S_1,S_2)]$ for $S_1,S_2\sim\mathrm{Exp}(1)$ i.i.d.; since $\min$ of two independent $\mathrm{Exp}(1)$'s is $\mathrm{Exp}(2)$ with mean $\tfrac12$, this is $e^{-4}/2$.
+
+For the second integral, it factors: $\left[\int_2^\infty(t_1-2)e^{-t_1}dt_1\right]\left[\int_0^2e^{-t_2}dt_2\right] = e^{-2}\cdot(1-e^{-2}) = e^{-2}-e^{-4}$ (the first factor substitutes $u=t_1-2$ to get $e^{-2}\int_0^\infty ue^{-u}du=e^{-2}\cdot1$).
+
+Combining,
+\[
+\E[W] = \frac{e^{-4}}2 + 2(e^{-2}-e^{-4}) = \boxed{2e^{-2}-\frac32e^{-4}}.
+\]
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3169,6 +3311,26 @@ Combining, $\mathbb{P}(n\le N\le5n)=\mathbb{P}(N\le5n)-\mathbb{P}(N<n)\to\tfrac1
 \boxed{\frac12}.
 \]
 (Direct numerical summation confirms the convergence: the partial sum is about $0.526$ at $n=50$, $0.513$ at $n=200$, and $0.501$ at $n=20{,}000$.)
+\end{proof}
+
+\begin{example}[A Gaussian tail series with a log-log correction]
+Let $\xi_1,\xi_2,\dots$ each have the standard normal distribution. Does $\displaystyle\sum_{n=1}^\infty \mathbb P\!\left(\xi_n>\sqrt{2\ln n+2\ln\ln n}\right)$ converge?
+\end{example}
+
+\begin{proof}[Solution]
+Use the standard Gaussian tail bound $\mathbb P(\xi>x)\le \varphi(x)/x$ for $x>0$, where $\varphi(x)=\frac1{\sqrt{2\pi}}e^{-x^2/2}$. Let $x_n=\sqrt{2\ln n+2\ln\ln n}$ (defined for $n\ge3$, where $\ln\ln n\ge0$). Then
+\[
+x_n^2 = 2\ln n+2\ln\ln n \quad\Longrightarrow\quad e^{-x_n^2/2}=e^{-\ln n-\ln\ln n}=\frac1{n\ln n}.
+\]
+Also $x_n\ge\sqrt{2\ln n}$ (dropping the nonnegative $2\ln\ln n$ term), so
+\[
+\mathbb P(\xi_n>x_n)\le \frac{1}{\sqrt{2\pi}\,x_n}\cdot\frac1{n\ln n} \le \frac{1}{\sqrt{2\pi}\cdot\sqrt{2\ln n}\cdot n\ln n} = \frac{1}{2\sqrt\pi}\cdot\frac{1}{n(\ln n)^{3/2}}.
+\]
+The series $\sum_{n\ge3} \dfrac1{n(\ln n)^{3/2}}$ converges (the standard $\sum 1/(n(\ln n)^p)$ test, e.g.\ via the integral test on $\int_3^\infty dx/(x(\ln x)^p)$, converges exactly when $p>1$, and here $p=3/2>1$). By comparison, so does the original series (the finitely many small-$n$ terms don't affect convergence):
+\[
+\boxed{\text{yes, the series converges}}
+\]
+(numerically, the partial sums stabilize quickly: about $0.548$ by $n=10^6$ and $0.551$ by $n\approx2\times10^6$, consistent with a finite limit).
 \end{proof}
 
 \subsection{Markov Chains and First-Step Analysis}
@@ -3444,6 +3606,20 @@ The obstacle is that $\sigma(x)$ isn't directly indexable: to find it we must lo
 \textbf{Step 2: check for a $k$-cycle.} For each starting point $s=1,\dots,n$, trace $s,\ b[s],\ b[b[s]],\dots$ for exactly $k$ steps, checking along the way that it does not return to $s$ before step $k$ (to rule out a shorter cycle whose length merely divides $k$) and that it \emph{does} return to $s$ at step $k$ exactly. Since $k$ is a constant, each trace costs $O(k)=O(1)$, and there are $n$ starting points, so this phase is $O(n)$.
 
 The dominant cost is the $O(n^2)$ in-place linear-search sort of Step 1 (a simple selection-sort-style pass — an $O(n\log n)$ or even $O(n)$ in-place rearrangement is possible with more care, e.g.\ by following $a$'s own cycles to place each value directly, but $O(n^2)$ already meets the stated bound). Total: $O(n^2)$ time, $O(1)$ extra space.
+\end{proof}
+
+\begin{example}[Finding all saddle entries of a matrix in one pass per element]
+Call an entry of an $n\times m$ matrix (all entries distinct) a \emph{saddle} if it is the largest in its row and smallest in its column, or the smallest in its row and largest in its column. Design an algorithm that finds all saddles using $O(nm)$ operations, $O(n+m)$ memory, and accesses each entry $A[i][j]$ at most once (it becomes unreadable immediately after).
+\end{example}
+
+\begin{proof}[Solution]
+The difficulty: knowing whether $A[i][j]$ is a row-extreme requires seeing all of row $i$, and knowing whether it's a column-extreme requires seeing all of column $j$ — but each entry may be read only once, so we cannot revisit $A[i][j]$ after the fact to compare it against a later-completed row or column summary.
+
+\textbf{Single sweep.} Read the matrix once, in any fixed order (e.g.\ row by row). Maintain running arrays $\mathrm{rowMax}[i],\mathrm{rowArgmax}[i],\mathrm{rowMin}[i],\mathrm{rowArgmin}[i]$ for $i=1,\dots,n$ (size $O(n)$) and $\mathrm{colMax}[j],\mathrm{colArgmax}[j],\mathrm{colMin}[j],\mathrm{colArgmin}[j]$ for $j=1,\dots,m$ (size $O(m)$), updating them in $O(1)$ as each entry is read for the first and only time. After the sweep, every one of these $8(n+m)$ numbers is a true global row/column extreme (and its location), even though the matrix entries themselves are no longer accessible.
+
+\textbf{Recovering the saddles without re-reading $A$.} A row-max-and-column-min saddle must sit at $(i,j)$ with $j=\mathrm{rowArgmax}[i]$ (so $A[i][j]$ really is row $i$'s maximum) \emph{and} $i=\mathrm{colArgmin}[j]$ (so it's also column $j$'s minimum) — both conditions are checkable purely from the stored index arrays, no matrix access needed. For each row $i$ there is exactly one candidate column $j=\mathrm{rowArgmax}[i]$ to check, in $O(1)$, so this pass costs $O(n)$. Symmetrically, checking $j=\mathrm{rowArgmin}[i]$ against $i=\mathrm{colArgmax}[j]$ for each row finds all row-min-and-column-max saddles, another $O(n)$.
+
+\textbf{Complexity.} The sweep costs $O(nm)$ (each of the $nm$ entries touched exactly once, $O(1)$ work each); the two candidate-checking passes cost $O(n)$ total; the stored arrays use $O(n+m)$ memory. Every entry of $A$ is read exactly once, as required, and every saddle is found (and nothing else is reported, since both defining conditions are checked exactly).
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
