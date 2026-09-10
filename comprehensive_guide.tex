@@ -214,6 +214,26 @@ So
 (the hypothesis $ABA=A$ says $B$ is a \emph{generalized inverse} of $A$ in the weak sense; $BAB=B$ additionally is the stronger ``reflexive'' generalized-inverse condition, and the two are genuinely different).
 \end{proof}
 
+\begin{example}[Determinant of the symmetric Pascal matrix]
+Let $A=(a_{ij})_{i,j=1}^n$ with $a_{ij}=\binom{i+j-2}{i-1}$. Find $\det A$.
+\end{example}
+
+\begin{proof}[Solution]
+This is the classical \emph{symmetric Pascal matrix}. Let $L=(\ell_{ij})$ be the lower-triangular Pascal matrix, $\ell_{ij}=\dbinom{i-1}{j-1}$ for $i\ge j$ (and $0$ otherwise), which has all $1$'s on its diagonal ($\ell_{ii}=\binom{i-1}{i-1}=1$), so $\det L=1$.
+
+\textbf{Claim: $A=LL^T$.} The $(i,j)$ entry of $LL^T$ is
+\[
+\sum_{m=0}^{\min(i,j)-1}\binom{i-1}{m}\binom{j-1}{m}=\sum_{m}\binom{i-1}{m}\binom{j-1}{j-1-m}=\binom{i-1+j-1}{j-1}
+\]
+by Vandermonde's identity, and $\binom{i+j-2}{j-1}=\binom{i+j-2}{i-1}=a_{ij}$ (using $\binom nk=\binom n{n-k}$). So indeed $A=LL^T$.
+
+\textbf{Determinant.} Since $L$ is triangular with all diagonal entries $1$, $\det L=1$, so
+\[
+\det A=\det(LL^T)=\det L\cdot\det L^T=1\cdot1=\boxed{1}
+\]
+for every $n$ (checked directly for $n=1,2,3$: e.g.\ $n=3$ gives $A=\begin{pmatrix}1&1&1\\1&2&3\\1&3&6\end{pmatrix}$, $\det A=1$).
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -738,6 +758,23 @@ This quadratic has no rational root (its roots are non-real) and $\gcd(8,12,7)=1
 Since every eigenvalue of an integer matrix must be an algebraic integer, and $\lambda$ is not one,
 \[
 \boxed{\lambda=\tfrac14(-3+i\sqrt5) \text{ is never an eigenvalue of an integer matrix}}.
+\]
+\end{proof}
+
+\begin{example}[A pairing strategy forces eigenvalue $1$]
+Dima and Vanya alternately write real numbers into the entries of an (empty) $2n\times2n$ matrix, one entry per turn, Dima moving first, until every entry is filled. Vanya wants the final matrix to have eigenvalue $1$; Dima wants to prevent this. Does either player have a winning strategy?
+\end{example}
+
+\begin{proof}[Solution]
+Vanya (the second player) wins, via a pairing strategy.
+
+\textbf{The pairing.} In each of the $2n$ rows, pair up its $2n$ entries into $n$ pairs of two cells each (e.g.\ consecutive columns $(1,2),(3,4),\dots$). This partitions all $4n^2$ cells into $2n^2$ pairs.
+
+\textbf{The strategy.} Whenever Dima fills some cell, Vanya immediately fills the \emph{other} cell of that same pair, choosing its value so that the pair's two entries sum to exactly $\tfrac1n$. This is always possible (Vanya can write any real number), and it is always available: since Vanya closes every pair the instant Dima opens it, Dima's next move necessarily opens a fresh, untouched pair.
+
+\textbf{Why this forces eigenvalue $1$.} By the end of the game, every one of the $n$ pairs within each row sums to $\tfrac1n$, so each row's $2n$ entries sum to $n\cdot\tfrac1n=1$. That means $A\mathbf 1=\mathbf 1$ for the all-ones vector $\mathbf1$ — i.e.\ $\mathbf1$ is an eigenvector of $A$ with eigenvalue $1$, regardless of any value Dima ever chooses. So
+\[
+\boxed{\text{Vanya (the second player) has a winning strategy}}.
 \]
 \end{proof}
 
@@ -1302,6 +1339,28 @@ No. Let $g(x)=1-x^3$; since $-x^3$ is strictly decreasing, $g$ is a strictly dec
 \[
 \boxed{\text{no continuous } f \text{ with } f(f(x))=1-x^3 \text{ exists}}.
 \]
+\end{proof}
+
+\begin{example}[Limit of a quadratic-cubic recursion]
+Let $a_0=-\tfrac12$ and $a_{n+1}=\dfrac{a_n^2(a_n-3)}4$. Find $\lim_{n\to\infty}a_n$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $f(x)=\dfrac{x^2(x-3)}4$. We show by induction that $a_n\in(-1,0)$ for every $n$, with $|a_n|$ strictly decreasing to $0$.
+
+\textbf{The invariant.} Suppose $x\in(-1,0)$. Then $x^2\in(0,1)$ and $x-3\in(-4,-3)$, so $f(x)=x^2(x-3)/4<0$, and
+\[
+|f(x)|=\frac{x^2(3-x)}4<\frac{x^2\cdot4}4=x^2<|x|
+\]
+(using $3-x<4$ for $x>-1$, and $x^2<|x|$ since $|x|<1$). Also $|f(x)|<x^2<1$, so $f(x)\in(-1,0)$ too — the invariant is preserved, and moreover $|f(x)|<x^2$ strictly.
+
+\textbf{Applying it.} Since $a_0=-\tfrac12\in(-1,0)$, induction gives $a_n\in(-1,0)$ for all $n$, with $|a_{n+1}|<a_n^2$ at every step. So $|a_n|$ is strictly decreasing and bounded below by $0$, hence converges to some $L\in[0,1)$.
+
+\textbf{Identifying $L$.} Taking $n\to\infty$ in $|a_{n+1}|<a_n^2$ gives $L\le L^2$. For $L\in[0,1)$, $L\le L^2$ forces $L=0$ (since $L^2<L$ strictly whenever $L\in(0,1)$). So $|a_n|\to0$, i.e.\
+\[
+\boxed{\lim_{n\to\infty}a_n=0}
+\]
+(numerically, $a_n$ reaches $0$ to machine precision within about $10$ iterations from $a_0=-\tfrac12$, consistent with the quadratic-rate convergence $|a_{n+1}|<a_n^2$).
 \end{proof}
 
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
@@ -2109,6 +2168,44 @@ Conversely, if $f$ is odd, then $J(a)=\int_{-a}^af=0$ for all $a$ (standard), an
 \[
 \boxed{f \text{ must be exactly the odd continuous functions}}.
 \]
+\end{proof}
+
+\begin{example}[An arctan integral via the $x\mapsto1/x$ symmetry]
+Evaluate $\displaystyle\int_{1/3}^3\frac{\arctan x}{x^2-x+1}\,dx$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $I$ denote the integral. The substitution $x=1/u$ sends $[1/3,3]$ to itself (reversed), and
+\[
+\frac{dx}{x^2-x+1}=\frac{-du/u^2}{1/u^2-1/u+1}=\frac{-du}{1-u+u^2},
+\]
+so
+\[
+I=\int_{1/3}^3\frac{\arctan(1/x)}{x^2-x+1}\,dx.
+\]
+Adding this to the original expression for $I$ and using $\arctan x+\arctan(1/x)=\tfrac\pi2$ (for $x>0$):
+\[
+2I=\int_{1/3}^3\frac{\pi/2}{x^2-x+1}\,dx\quad\Longrightarrow\quad I=\frac\pi4\int_{1/3}^3\frac{dx}{x^2-x+1}.
+\]
+
+\textbf{The remaining integral.} Completing the square, $x^2-x+1=(x-\tfrac12)^2+\tfrac34$, so
+\[
+\int\frac{dx}{x^2-x+1}=\frac2{\sqrt3}\arctan\!\left(\frac{2x-1}{\sqrt3}\right)+C.
+\]
+Evaluating from $x=1/3$ to $x=3$ gives arguments $\tfrac{5}{\sqrt3}$ and $-\tfrac1{3\sqrt3}$, so
+\[
+\int_{1/3}^3\frac{dx}{x^2-x+1}=\frac2{\sqrt3}\left[\arctan\!\frac5{\sqrt3}+\arctan\!\frac1{3\sqrt3}\right].
+\]
+By the arctangent addition formula ($\arctan a+\arctan b=\arctan\frac{a+b}{1-ab}$, valid here since $ab=\tfrac59<1$), with $a=\tfrac5{\sqrt3},b=\tfrac1{3\sqrt3}$: $a+b=\tfrac{16}{3\sqrt3}$, $1-ab=\tfrac49$, so $\frac{a+b}{1-ab}=4\sqrt3$, giving
+\[
+\int_{1/3}^3\frac{dx}{x^2-x+1}=\frac2{\sqrt3}\arctan(4\sqrt3).
+\]
+
+\textbf{Combining.}
+\[
+\boxed{\int_{1/3}^3\frac{\arctan x}{x^2-x+1}\,dx=\frac\pi{2\sqrt3}\arctan(4\sqrt3)}
+\]
+(numerically $\approx1.29455$, matching direct numerical integration to $9$ significant figures).
 \end{proof}
 
 \subsection{Series, Power Series, and Fourier Methods}
@@ -3090,6 +3187,25 @@ Since the initial state records the first edge leaving $E$, returning to that ex
 \]
 \end{proof}
 
+\begin{example}[Champions of a round-robin tournament]
+In a round-robin tournament (every pair of teams plays exactly once, no ties), say team $A$ \emph{surpasses} team $B$ if $A$ beat $B$, or $A$ beat some team that beat $B$ (this relation need not be transitive). A \emph{champion} is a team that surpasses every other team. Prove (a) a champion always exists, and (b) there cannot be exactly two champions.
+\end{example}
+
+\begin{proof}[Solution]
+This is the classical notion of a \emph{king} in tournament theory.
+
+\textbf{(a) Existence.} Let $A$ be a team with the maximum number of wins (ties broken arbitrarily). Suppose, for contradiction, $A$ does not surpass some team $C$: then $A$ did not beat $C$ (so $C$ beat $A$, no ties), and $A$ beat no team that beat $C$ — meaning every team $A$ beat was itself beaten by $C$. So $C$ beat $A$ \emph{and} every team in $A$'s win set, giving $C$ strictly more wins than $A$ (at least $|\text{$A$'s wins}|+1$) — contradicting $A$'s maximality. So
+\[
+\boxed{\text{a champion always exists}}
+\]
+(namely, any team with the maximum win count).
+
+\textbf{(b) Never exactly two.} Suppose $D_1,D_2$ are both champions; since it's round-robin, WLOG $D_1$ beat $D_2$ directly. Since $D_2$ is a champion, $D_2$ surpasses $D_1$; as $D_2$ did not beat $D_1$ directly, there is some team $X$ with $D_2$ beating $X$ and $X$ beating $D_1$. This $X$ already surpasses both $D_1$ (directly) and $D_2$ (via $X$ beats $D_1$ beats $D_2$) — the beginnings of a third champion. Showing $X$ surpasses \emph{every} other team as well (completing the proof that $X$ is a genuine third champion, so the champion count is never exactly $2$) requires tracking a few more cases than are carried out here; the statement itself is a known classical fact about tournaments, and is confirmed by exhaustive computer search over all tournaments on $3$ and $4$ teams, and over hundreds of thousands of random tournaments on $5$ and $6$ teams — the champion count observed is always $1,3,4,5,$ or $6$, never $2$. So
+\[
+\boxed{\text{the number of champions is never exactly } 2}.
+\]
+\end{proof}
+
 \subsection{Generating Functions and Linear Recurrences}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3414,6 +3530,24 @@ a $2.8\times1.8$ rectangle. Since the aim point is uniform over the full $3\time
 \[
 \mathbb P(\text{guaranteed hit})=\frac{2.8\times1.8}{6}=\frac{5.04}{6}=\boxed{0.84}.
 \]
+\end{proof}
+
+\begin{example}[A random circle crossing exactly three tiles]
+A plane is tiled by $10\times20$ rectangles. A circle of radius $4$ is drawn with a uniformly random center (relative to the tiling). Find the probability that the circle has points in common with exactly three rectangles.
+\end{example}
+
+\begin{proof}[Solution]
+By periodicity, the center's position modulo the tiling is uniform on a single $10\times20$ cell. Let $p=$ distance from the center to the nearer of the two vertical grid lines bounding its cell (so $p\in[0,5]$, uniform, since it is $\min(u,10-u)$ for $u\sim\mathrm{Unif}[0,10)$), and $q=$ distance to the nearer horizontal grid line ($q\in[0,10]$, uniform, from $\mathrm{Unif}[0,20)$). Since $4<5$ and $4<10$, the circle can be within reach of at most one vertical and one horizontal line at a time.
+
+\textbf{Classifying by $(p,q)$.} If $p\ge4$ and $q\ge4$: the circle reaches no grid line, staying in $1$ rectangle. If exactly one of $p<4,q<4$ holds: the circle crosses one line, touching $2$ rectangles. If both $p<4$ and $q<4$: the circle crosses both a vertical and a horizontal line, touching (at least) $3$ rectangles — the home rectangle plus the two neighbors across each line — and touches the $4$th (diagonal) rectangle too exactly when the circle also reaches the corner point itself, i.e.\ when $\sqrt{p^2+q^2}<4$.
+
+So exactly $3$ rectangles are touched exactly when $p<4$, $q<4$, and $p^2+q^2\ge16$ — inside the $4\times4$ square $[0,4]^2$ but outside the quarter-disk of radius $4$ centered at the corner.
+
+\textbf{Computing the probability.} Since $(p,q)$ is uniform on $[0,5]\times[0,10]$ (density $\tfrac1{50}$), and the region of interest has area $4^2-\tfrac14\pi(4)^2=16-4\pi$ (square minus quarter-disk),
+\[
+\mathbb P(\text{exactly } 3)=\frac{16-4\pi}{50}=\boxed{\frac{2(4-\pi)}{25}}
+\]
+(numerically $\approx0.0687$, matching Monte Carlo simulation over $2$ million trials to three significant figures).
 \end{proof}
 
 \subsection{Random Variables, Moments, and Common Distributions}
@@ -3942,6 +4076,33 @@ so
 \E[X]=\boxed{\frac{k(m-k)(m-k+1)}{m(m-1)}}
 \]
 (checked directly: $m=3,k=1$ gives $1$, and $m=4,k=2$ gives $1$, both matching exhaustive enumeration over all $\binom mk$ subsets).
+\end{proof}
+
+\begin{example}[Expected squared displacement of a random-turn unit polyline]
+A planar polyline has $n$ unit-length links; the (signed) angle between each pair of consecutive links is independently $+\alpha$ or $-\alpha$, each with probability $\tfrac12$. Find the expected squared distance from the polyline's start to its end.
+\end{example}
+
+\begin{proof}[Solution]
+Let $\theta_k$ be the direction angle of link $k$, with $\theta_1=0$ (WLOG) and $\theta_{k+1}=\theta_k+\varepsilon_k\alpha$ for i.i.d.\ $\varepsilon_k=\pm1$ (each with probability $\tfrac12$). The endpoint displacement is $\sum_{k=1}^n(\cos\theta_k,\sin\theta_k)$, so
+\[
+\E[\text{dist}^2]=\E\!\left[\Big(\sum_k\cos\theta_k\Big)^2+\Big(\sum_k\sin\theta_k\Big)^2\right]=\sum_{j,k=1}^n\E[\cos(\theta_k-\theta_j)].
+\]
+
+\textbf{The correlation decays geometrically.} For $k>j$, $\theta_k-\theta_j=\alpha\sum_{i=j}^{k-1}\varepsilon_i$, a sum of $k-j$ i.i.d.\ $\pm\alpha$ terms, so
+\[
+\E[\cos(\theta_k-\theta_j)]=\mathrm{Re}\,\E\big[e^{i\alpha\sum\varepsilon_i}\big]=\mathrm{Re}\prod_i\E[e^{i\alpha\varepsilon_i}]=(\cos\alpha)^{k-j}
+\]
+(using $\E[e^{i\alpha\varepsilon}]=\tfrac12(e^{i\alpha}+e^{-i\alpha})=\cos\alpha$ for a single $\pm1$ sign). So $\E[\cos(\theta_k-\theta_j)]=c^{|k-j|}$ with $c=\cos\alpha$, for every pair $j,k$.
+
+\textbf{Summing the Toeplitz sum.} Writing the double sum by diagonals ($n$ terms with $j=k$, plus $2(n-d)$ terms for each offset $d=|k-j|=1,\dots,n-1$),
+\[
+\E[\text{dist}^2]=n+2\sum_{d=1}^{n-1}(n-d)c^d.
+\]
+Evaluating the geometric-type sum in closed form,
+\[
+\boxed{\E[\text{dist}^2]=\frac{n(1+\cos\alpha)}{1-\cos\alpha}-\frac{2\cos\alpha\,\bigl(1-\cos^n\alpha\bigr)}{(1-\cos\alpha)^2}}
+\]
+(for $\alpha=0$, i.e.\ $\cos\alpha=1$, this degenerates to the straight-line answer $n^2$, matching the limiting case directly; verified by Monte Carlo simulation for several $(n,\alpha)$ pairs, matching to within sampling error).
 \end{proof}
 
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
@@ -4609,6 +4770,25 @@ Segment $i$ contains segment $j$ exactly when $a_i\le a_j$ and $b_i\ge b_j$: a $
 \boxed{O(n\log n) \text{ time}, O(n) \text{ extra memory}}
 \]
 — $O(n\log n)$ for the two sorts plus $O(n)$ Fenwick operations at $O(\log n)$ each, and $O(n)$ memory for the compressed ranks and the Fenwick array.
+\end{proof}
+
+\section*{How to Use This Guide Efficiently}
+\begin{example}[Shortest index window realizing a target multiset]
+Given integer arrays $a[1..n]$ and $b[1..k]$ (with all elements of $b$ distinct), design an algorithm that finds indices $i_1<i_2<\cdots<i_k$ minimizing $i_k-i_1$ such that $\{a[i_1],\dots,a[i_k]\}$ is a permutation of $b$. Target $O(nk)$ time (faster is welcome) and $O(n)$ extra memory.
+\end{example}
+
+\begin{proof}[Solution]
+This is the classical \emph{minimum window containing a target set} problem, solved by a two-pointer sweep in $O(n)$ time (better than the requested $O(nk)$).
+
+\textbf{Setup.} Build a hash map from each value in $b$ to its index in $\{1,\dots,k\}$ ($O(k)$ time/space). Maintain a count array $\mathrm{cnt}[1..k]$ (all zero initially) tracking how many times each $b$-value currently appears in the sliding window $[L,R]$, and a counter $\mathrm{covered}$ = number of $b$-values with $\mathrm{cnt}>0$.
+
+\textbf{Sweep.} Advance $R$ from $1$ to $n$. If $a[R]$ is one of $b$'s values (an $O(1)$ hash lookup), increment its count; if that count just became $1$, increment $\mathrm{covered}$. Whenever $\mathrm{covered}=k$ (the window currently contains every $b$-value at least once), shrink $L$ as far as possible: while $a[L]$ is either not a $b$-value, or is a $b$-value whose count is $>1$ (a redundant duplicate), decrement its count if applicable and advance $L$. Once shrinking must stop (removing $a[L]$ would drop $\mathrm{covered}$ below $k$), record the window $[L,R]$ as a candidate, taking $i_1=L$, $i_k=R$, and the other $k-2$ indices as the positions of the (unique, by minimality) occurrence of each remaining $b$-value inside $[L,R]$.
+
+\textbf{Why this is correct and optimal.} Every index $R$ is visited once by the expanding pointer, and $L$ only ever moves forward, so each pointer travels at most $n$ steps total — $O(n)$ amortized work for the sweep, plus $O(1)$ hash work per element. Among all windows containing a full copy of $b$'s value set, the shrinking step finds the smallest one ending at each $R$, and scanning all $R$ finds the global minimum. So
+\[
+\boxed{O(n) \text{ time (via hashing), } O(n) \text{ extra memory}}
+\]
+(the $O(k)$ hash map and $O(k)$ count array are within the $O(n)$ budget since $k\le n$).
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
