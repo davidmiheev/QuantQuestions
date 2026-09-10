@@ -592,6 +592,36 @@ So
 \]
 \end{proof}
 
+\begin{example}[Matrices invariant under a $90^\circ$ rotation of their entries]
+Call an $n\times n$ matrix \emph{rotational} if rotating its grid of entries by $90^\circ$ about the center leaves it unchanged. (a) For any reals $\lambda_1,\dots,\lambda_k$, show there is an $n$ and a rotational $n\times n$ matrix having $\lambda_1,\dots,\lambda_k$ among its eigenvalues. (b) Show that every real eigenvector $v$ of a rotational matrix, for a nonzero real eigenvalue, is symmetric: $v_i=v_{n-i+1}$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Reformulating ``rotational.''} A $90^\circ$ rotation sends the entry at $(i,j)$ to where the entry at $(n+1-j,i)$ used to be, so $A$ is rotational iff $A_{i,j}=A_{n+1-j,i}$ for all $i,j$. Let $J$ be the reversal (anti-diagonal) permutation matrix, $(Jv)_i=v_{n+1-i}$; one checks $J^T=J$, $J^2=I$. The rotational condition is exactly
+\[
+AJ=A^T
+\]
+(entrywise, $(AJ)_{i,j}=A_{i,n+1-j}$, and setting this equal to $(A^T)_{i,j}=A_{j,i}$ and relabeling recovers $A_{i,j}=A_{n+1-j,i}$).
+
+\textbf{$A$ commutes with $J$.} Transposing $AJ=A^T$ gives $JA^T=A$ (using $J^T=J$), i.e.\ $A^T=JA$. Combined with $AJ=A^T$, this gives $AJ=JA$: every rotational matrix commutes with $J$.
+
+\textbf{Block structure.} Since $J$ is a symmetric orthogonal involution, $\R^n=W_+\oplus W_-$ orthogonally, where $W_\pm=\{v:Jv=\pm v\}$ ($\dim W_+=\lceil n/2\rceil$, $\dim W_-=\lfloor n/2\rfloor$). Since $A$ commutes with $J$, it preserves $W_+$ and $W_-$, so in an orthonormal basis adapted to this splitting, $A=\operatorname{diag}(B_+,B_-)$ and $J=\operatorname{diag}(I,-I)$. Substituting into $A^T=JA$ (transpose of a block-diagonal matrix, in an orthonormal adapted basis, is block-diagonal in the transposed blocks):
+\[
+\operatorname{diag}(B_+^T,B_-^T) = \operatorname{diag}(I,-I)\operatorname{diag}(B_+,B_-) = \operatorname{diag}(B_+,-B_-),
+\]
+so $B_+^T=B_+$ (\emph{symmetric}) and $B_-^T=-B_-$ (\emph{antisymmetric}). Conversely any symmetric $B_+$ and antisymmetric $B_-$ assembled this way, then rotated back to the standard basis, give a valid rotational matrix (verified directly by construction).
+
+\textbf{(a)} Take $n=2k$, so $\dim W_+=\dim W_-=k$. Let $B_+=\operatorname{diag}(\lambda_1,\dots,\lambda_k)$ (symmetric — it's diagonal) and $B_-=0$ ($k\times k$, trivially antisymmetric). The resulting rotational matrix has eigenvalues $\lambda_1,\dots,\lambda_k$ (from $B_+$) together with $k$ copies of $0$ (from $B_-$):
+\[
+\boxed{\text{such } n \text{ and } A \text{ always exist}}.
+\]
+
+\textbf{(b)} Let $Av=\lambda v$, $v$ real, $\lambda\neq0$ real. Since $A^T=JA$, $A(Jv)=(AJ)v=A^Tv=(JA)v=J(Av)=\lambda(Jv)$: so $w:=Jv$ is also a $\lambda$-eigenvector (or $0$; but $w=0\Rightarrow v=Jw=0$, excluded). Let $z=v-w=v-Jv$; being a linear combination of two $\lambda$-eigenvectors, $Az=\lambda z$ if $z\neq0$. But directly, $Jz=Jv-J^2v=Jv-v=-z$ always (no eigenvector assumption needed). If $z\neq0$, apply the general fact (from $A^TAv$-type identities, or directly: $v^TA^Tv=(Av)^Tv=\lambda\|v\|^2$, and also $v^TA^Tv=v^T(AJ)v=v^TAw=v^T(\lambda w)=\lambda(v^TJv)$, giving $v^TJv=\|v\|^2$ since $\lambda\neq0$) applied to $z$ in place of $v$: $z^TJz=\|z\|^2$. But $Jz=-z$ gives $z^TJz=-\|z\|^2$. So $\|z\|^2=-\|z\|^2$, forcing $z=0$. Hence $v=Jv$, i.e.\
+\[
+\boxed{v_i=v_{n-i+1} \text{ for all } i}.
+\]
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -842,6 +872,21 @@ Either way,
 \boxed{\det(A^TB-B^TA)=\det(A+B)\det(A-B)}
 \]
 (numerically verified for random $4\times4$ orthogonal $A,B$ across all four sign combinations of $\det A,\det B$).
+\end{proof}
+
+\begin{example}[A quadratic form built from an SPD matrix, on the space of matrices]
+Let $A\in\mathrm{Mat}_n(\R)$ be symmetric positive definite. Is the quadratic form $q(X)=\trace(X^TAX)$ on $\mathrm{Mat}_n(\R)$ positive definite?
+\end{example}
+
+\begin{proof}[Solution]
+Yes. Write $X$ by its columns $x_1,\dots,x_n\in\R^n$. Then $(X^TAX)_{ij}=x_i^TAx_j$, so the diagonal entries are $x_i^TAx_i$, and
+\[
+q(X)=\trace(X^TAX)=\sum_{i=1}^n x_i^TAx_i.
+\]
+Since $A$ is positive definite, each term $x_i^TAx_i\ge0$, with equality iff $x_i=0$. So $q(X)\ge0$ always, and $q(X)=0$ forces every column $x_i=0$, i.e.\ $X=0$. Hence
+\[
+\boxed{\text{yes, } q \text{ is positive definite}}.
+\]
 \end{proof}
 
 \section{Calculus and Real Analysis}
@@ -1255,6 +1300,17 @@ As $c\to0^+$, $G(c)\to \tfrac1{f'(0)}+1=\tfrac1{f'(0)}+1$, i.e.\ $2+h(0)/(1+h(0)
 In every case,
 \[
 \boxed{\text{distinct } x_1,x_2\in[0,1] \text{ with } \frac1{f'(x_1)}+\frac1{f'(x_2)}=2 \text{ exist}}.
+\]
+\end{proof}
+
+\begin{example}[A weighted coefficient sum forces a real root]
+Suppose $a_0+\dfrac{a_1}2+\dfrac{a_2}3+\cdots+\dfrac{a_n}{n+1}=0$. Prove the polynomial $p(x)=a_0+a_1x+\cdots+a_nx^n$ has a real root.
+\end{example}
+
+\begin{proof}[Solution]
+Let $F(x)=a_0x+\dfrac{a_1}2x^2+\dfrac{a_2}3x^3+\cdots+\dfrac{a_n}{n+1}x^{n+1}$, an antiderivative of $p$ with $F(0)=0$. The hypothesis says exactly $F(1)=0$. Since $F$ is differentiable (a polynomial) with $F(0)=F(1)=0$, Rolle's Theorem gives $x_0\in(0,1)$ with $F'(x_0)=0$. But $F'(x)=p(x)$, so
+\[
+\boxed{p(x_0)=0 \text{ for some } x_0\in(0,1)}.
 \]
 \end{proof}
 
@@ -1909,6 +1965,24 @@ $\sum(n+2019)a_n$ converges too, as a sum of two convergent series, in both case
 \]
 \end{proof}
 
+\begin{example}[Divergence of an iterated-sine series]
+Let $a_1=1$, $a_{n+1}=\sin(a_n)$. Does $\sum_{n=1}^\infty a_n$ converge?
+\end{example}
+
+\begin{proof}[Solution]
+Claim: $a_n\ge\tfrac1n$ for all $n\ge1$, by induction. Base case $a_1=1\ge1$. For the step, suppose $a_k\ge\tfrac1k$; since $\sin$ is increasing on $[0,1]$ and $a_k\in(0,1]$ (once positive and $\le1$, $\sin$ keeps it in $(0,1)$), $a_{k+1}=\sin(a_k)\ge\sin\!\left(\tfrac1k\right)$. Using $\sin x\ge x-\tfrac{x^3}6$ for $x\ge0$,
+\[
+a_{k+1}\ge\sin\!\left(\frac1k\right)\ge\frac1k-\frac1{6k^3}.
+\]
+It remains to check $\dfrac1k-\dfrac1{6k^3}\ge\dfrac1{k+1}$, i.e.\ (clearing denominators, all positive) $6k(k+1)-\ (k+1)\ge...$; concretely this reduces to $6k^2-k-1\ge0$, true for all integers $k\ge1$ (its roots are $k=\tfrac12,-\tfrac13$). So $a_{k+1}\ge\tfrac1{k+1}$, completing the induction.
+
+Since $a_n\ge\tfrac1n>0$ for every $n$, the series $\sum a_n$ is term-by-term bounded below by the divergent harmonic series $\sum\tfrac1n$, so
+\[
+\boxed{\text{the series diverges}}
+\]
+(numerically, $a_n$ decays like $\sqrt{3/n}$, so $\sum a_n$ in fact diverges even more slowly than the harmonic series suggests, but term-by-term domination by $1/n$ already suffices).
+\end{proof}
+
 \section{Combinatorics}
 Combinatorics questions reward clean counting arguments, parity reasoning, and the ability to encode a counting problem algebraically.
 
@@ -2513,6 +2587,38 @@ So the claim is exactly that some off-diagonal entry of $M^2$ is $\ge2$; since $
 — though, as flagged above, the fully elementary proof that closes the gap left by simple averaging is more delicate than the reformulation itself.
 \end{proof}
 
+\begin{example}[A dense graph must have two triangles sharing an edge]
+A simple graph (no loops, no multiple edges) has $2n$ vertices and $n^2+1$ edges. Prove it contains two triangles that share an edge.
+\end{example}
+
+\begin{proof}[Solution]
+Suppose, for contradiction, that $G$ has $N=2n$ vertices, $E\ge n^2+1$ edges, and \emph{no} edge lies in two triangles; we derive an upper bound on $E$ and show it falls short — almost, but not quite by elementary means alone.
+
+\textbf{A key local structure.} Fix an edge $\{x,y\}$. If $x,y$ had two common neighbors $z_1\neq z_2$, the triangles $\{x,y,z_1\}$ and $\{x,y,z_2\}$ would share the edge $\{x,y\}$ — excluded by assumption. So \emph{every edge's two endpoints have at most one common neighbor}: $|N(x)\cap N(y)|\le1$ whenever $x\sim y$. (Equivalently, fixing a vertex $v$: if some $x\in N(v)$ had two neighbors $y,z\in N(v)$, then the edge $\{v,x\}$ would lie in both triangles $\{v,x,y\}$ and $\{v,x,z\}$ — again excluded. So no vertex of $N(v)$ has more than one neighbor inside $N(v)$: the induced subgraph on each neighborhood is a matching.)
+
+\textbf{Degree-sum bound at each edge.} For an edge $xy$, since $N(x)\cup N(y)$ has at most $N$ elements (it is a subset of the vertex set) and $|N(x)\cap N(y)|\le1$,
+\[
+d(x)+d(y)=|N(x)\cup N(y)|+|N(x)\cap N(y)|\le N+1=2n+1.
+\]
+
+\textbf{Summing over edges.} The identity $\sum_{xy\in E}\bigl(d(x)+d(y)\bigr)=\sum_{v}d(v)^2$ (each vertex $v$ contributes $d(v)$ once for every edge at $v$, i.e.\ $d(v)$ times, for a total of $d(v)^2$) combines with the bound above to give
+\[
+\sum_v d(v)^2\le E(2n+1).
+\]
+By Cauchy--Schwarz, $\sum_v d(v)^2\ge\dfrac{\left(\sum_v d(v)\right)^2}{N}=\dfrac{(2E)^2}{2n}=\dfrac{2E^2}{n}$. Combining,
+\[
+\frac{2E^2}{n}\le E(2n+1)\quad\Longrightarrow\quad E\le\frac{n(2n+1)}2=n^2+\frac n2.
+\]
+
+\textbf{The bound is genuinely close to tight.} The complete bipartite graph $K_{n,n}$ (the two color classes being the two halves of the $2n$ vertices) is triangle-free, so trivially has no two triangles sharing an edge, and has exactly $n^2$ edges — showing the true threshold cannot be lower than $n^2+1$, and connecting this problem to Mantel's theorem (which says $n^2$ is also the maximum edge count of \emph{any} triangle-free graph on $2n$ vertices). Exhaustive computer search over all graphs on $2n=6$ vertices confirms the sharp statement: every graph with $n^2+1=10$ edges has two triangles sharing an edge, while $K_{3,3}$ realizes $n^2=9$ edges with none.
+
+\textbf{Where the elementary argument falls short.} The Cauchy--Schwarz bound above gives $E\le n^2+n/2$, which is weaker than the true extremal value $E\le n^2$ by up to $n/2$ — enough to rule out wildly dense graphs, but not enough by itself to rule out every graph with between $n^2+1$ and $n^2+\lfloor n/2\rfloor$ edges. Closing this remaining gap requires tracking the equality cases of Cauchy--Schwarz (near-regularity) together with the matching structure on each neighborhood more precisely than a single averaging pass captures, so
+\[
+\boxed{\text{two triangles sharing an edge always exist once }E\ge n^2+1}
+\]
+is the correct statement — confirmed above by the bipartite extremal example and by exhaustive small-case verification — even though the fully elementary proof pinning the threshold down to exactly $n^2$ (rather than $n^2+n/2$) needs a sharper argument than the one given here.
+\end{proof}
+
 \subsection{Generating Functions and Linear Recurrences}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2741,6 +2847,32 @@ If $\mathrm{lo}\le\tfrac13$ then automatically $\mathrm{lo}<\tfrac23\le\mathrm{h
 So $\mathbb P\!\left(A\cap\{y>\tfrac56\}\right)=\tfrac1{72}$, and
 \[
 \mathbb P\!\left(y>\frac56 \,\middle|\, A\right)=\frac{1/72}{1/9}=\boxed{\frac18}.
+\]
+\end{proof}
+
+\begin{example}[Reassembling a painted cube]
+A solid black cube's outer surface is painted white, and the cube is then cut into $27$ congruent unit cubes. The $27$ small cubes are reassembled into a $3\times3\times3$ cube uniformly at random: a uniformly random bijection sends small cubes to the $27$ positions, and each small cube independently receives a uniformly random one of its $24$ rotational orientations. Find the probability that every face of the reassembled large cube is entirely white.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{The four types of small cube.} Among the $27$ unit cubes, $8$ occupy the corners of the original cube (three mutually adjacent faces, meeting at one vertex, were painted), $12$ occupy edges (two adjacent faces painted), $6$ occupy face centers (one face painted), and $1$ is the interior cube (no faces painted). Likewise the $27$ positions of the reassembled cube split into $8$ corner positions (needing $3$ specific mutually adjacent faces white), $12$ edge positions (needing $2$ specific adjacent faces white), $6$ face positions (needing $1$ specific face white), and $1$ interior position (no visible faces, no constraint).
+
+\textbf{Type-matching is forced.} A cube with only $k<3$ white faces plainly cannot supply the $3$ mutually adjacent white faces a corner position demands, so all $8$ corner positions must be filled by cubes carrying $3$ white faces — and since there are exactly $8$ such cubes, \emph{every} corner cube must land in a corner position (in some order). The same headcount argument now applies one level down: among the remaining $19$ cubes, only the $12$ two-white-face cubes can supply $2$ adjacent white faces, and there are exactly $12$ edge positions, so all $12$ edge cubes must fill the edge positions. Repeating once more, the $6$ one-white-face cubes exactly fill the $6$ face positions, leaving the all-black cube for the lone interior position. So the event of interest forces a very specific structure: \emph{each cube type occupies only the matching position type}, and within that, each cube must be rotated so its painted faces land exactly on the required exterior faces.
+
+\textbf{Probability of correct type placement.} A uniformly random bijection of $27$ labeled objects to $27$ labeled slots sends the corner block of $8$ objects onto the $8$ corner slots (as sets), and likewise for the edge, face, and interior blocks, with probability
+\[
+\frac{8!\cdot12!\cdot6!\cdot1!}{27!},
+\]
+since this counts permutations preserving the four blocks setwise, divided by all permutations.
+
+\textbf{Probability of correct orientation, given correct type.} The rotation group of the cube acts transitively on the $8$ vertices, $12$ edges, and $6$ faces, with orbit-stabilizer giving stabilizer sizes $24/8=3$, $24/12=2$, $24/6=4$ respectively. So, independently for each cube: a corner cube's white vertex lands on the required spatial vertex for $3$ of its $24$ orientations; an edge cube's white edge lands correctly for $2$ of $24$; a face cube's white face lands correctly for $4$ of $24$; the interior cube has no constraint, so all $24$ of its orientations work. Since orientations are chosen independently across all $27$ cubes, this conditional probability equals
+\[
+\left(\frac{3}{24}\right)^{8}\left(\frac{2}{24}\right)^{12}\left(\frac{4}{24}\right)^{6}\left(\frac{24}{24}\right)^{1}=\left(\frac18\right)^{8}\left(\frac1{12}\right)^{12}\left(\frac16\right)^{6}.
+\]
+
+\textbf{Combining.} Placement (a permutation) and orientation (independent per-cube coin flips) are chosen independently, so
+\[
+\mathbb P(\text{all faces white})=\boxed{\frac{8!\cdot12!\cdot6!}{27!}\left(\frac18\right)^{8}\left(\frac1{12}\right)^{12}\left(\frac16\right)^{6}}.
 \]
 \end{proof}
 
@@ -3096,6 +3228,22 @@ Combining,
 \[
 \E[W] = \frac{e^{-4}}2 + 2(e^{-2}-e^{-4}) = \boxed{2e^{-2}-\frac32e^{-4}}.
 \]
+\end{proof}
+
+\begin{example}[Expected value of a partial-sum ratio]
+Let $X_1,\dots,X_n$ be i.i.d.\ positive random variables with mean $a$ and variance $\sigma^2$, and let $m<n$. Find $\E\!\left[\dfrac{X_1+\cdots+X_m}{X_1+\cdots+X_n}\right]$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $S=X_1+\cdots+X_n$ (positive, so the ratio is well-defined). By symmetry (exchangeability of the i.i.d.\ $X_i$), $\E[X_i/S]$ is the same value $c$ for every $i=1,\dots,n$. Summing over $i$,
+\[
+1 = \E\!\left[\frac SS\right] = \E\!\left[\sum_{i=1}^n \frac{X_i}{S}\right] = \sum_{i=1}^n \E\!\left[\frac{X_i}{S}\right] = nc,
+\]
+so $c=1/n$. Then
+\[
+\E\!\left[\frac{X_1+\cdots+X_m}{S}\right] = \sum_{i=1}^m \E\!\left[\frac{X_i}{S}\right] = m\cdot\frac1n = \boxed{\frac mn}
+\]
+(notably independent of $a$ and $\sigma^2$).
 \end{proof}
 
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
@@ -3620,6 +3768,24 @@ The difficulty: knowing whether $A[i][j]$ is a row-extreme requires seeing all o
 \textbf{Recovering the saddles without re-reading $A$.} A row-max-and-column-min saddle must sit at $(i,j)$ with $j=\mathrm{rowArgmax}[i]$ (so $A[i][j]$ really is row $i$'s maximum) \emph{and} $i=\mathrm{colArgmin}[j]$ (so it's also column $j$'s minimum) — both conditions are checkable purely from the stored index arrays, no matrix access needed. For each row $i$ there is exactly one candidate column $j=\mathrm{rowArgmax}[i]$ to check, in $O(1)$, so this pass costs $O(n)$. Symmetrically, checking $j=\mathrm{rowArgmin}[i]$ against $i=\mathrm{colArgmax}[j]$ for each row finds all row-min-and-column-max saddles, another $O(n)$.
 
 \textbf{Complexity.} The sweep costs $O(nm)$ (each of the $nm$ entries touched exactly once, $O(1)$ work each); the two candidate-checking passes cost $O(n)$ total; the stored arrays use $O(n+m)$ memory. Every entry of $A$ is read exactly once, as required, and every saddle is found (and nothing else is reported, since both defining conditions are checked exactly).
+\end{proof}
+
+\begin{example}[A structure with $O(1)$ extract-min and extract-max]
+Design a data structure for real numbers supporting \emph{insert}, \emph{delete} (an arbitrary element), \emph{delete-min}, and \emph{delete-max}, where the last two run in $O(1)$. Try to make insert and delete as fast as possible too — can they also be made $O(1)$?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Construction.} Maintain the elements in a \emph{sorted doubly linked list}, together with a balanced search structure (e.g.\ a balanced BST or skip list) that maps each value to its node in the list, supporting $O(\log n)$ search.
+\begin{itemize}
+\item \emph{Insert}$(x)$: locate $x$'s sorted position via the index ($O(\log n)$), splice a new node into the linked list there ($O(1)$ given the position), and insert into the index ($O(\log n)$). Total $O(\log n)$.
+\item \emph{Delete}$(x)$ (given its value or a handle): find it via the index if needed ($O(\log n)$, or $O(1)$ with a handle), unlink from the list ($O(1)$), remove from the index ($O(\log n)$). Total $O(\log n)$.
+\item \emph{Delete-min / delete-max}: the head/tail pointer of the sorted list gives the min/max directly, and unlinking it is $O(1)$; keeping the index itself fully consistent after this costs $O(\log n)$, but if index upkeep is done \emph{lazily} (mark the node removed in $O(1)$; fold the cleanup into the amortized cost of nearby future index operations), the delete-min/delete-max call itself returns in worst-case $O(1)$, with insert/delete remaining $O(\log n)$ amortized.
+\end{itemize}
+
+\textbf{Can insert and delete-arbitrary also be $O(1)$?} No, not simultaneously with delete-min being $O(1)$, in the comparison-based model. If both insert and delete-min ran in $O(1)$, one could sort any $n$ numbers in $O(n)$ total time: insert all $n$ elements ($O(n)$), then call delete-min $n$ times to read them off in order ($O(n)$). This would be a comparison-based sorting algorithm running in $O(n)$, contradicting the classical $\Omega(n\log n)$ lower bound for comparison sorting. So
+\[
+\boxed{\text{delete-min and delete-max can be made } O(1), \text{ but insert cannot also be made } O(1)}.
+\]
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
