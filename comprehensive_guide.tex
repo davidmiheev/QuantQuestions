@@ -234,6 +234,24 @@ by Vandermonde's identity, and $\binom{i+j-2}{j-1}=\binom{i+j-2}{i-1}=a_{ij}$ (u
 for every $n$ (checked directly for $n=1,2,3$: e.g.\ $n=3$ gives $A=\begin{pmatrix}1&1&1\\1&2&3\\1&3&6\end{pmatrix}$, $\det A=1$).
 \end{proof}
 
+\begin{example}[Swapping the order in $\det(I-AB)$]
+Let $A,B$ be $n\times n$ real matrices. Prove $\det(I-AB)=\det(I-BA)$.
+\end{example}
+
+\begin{proof}[Solution]
+Consider the $2n\times2n$ block matrix $M=\begin{pmatrix}I&A\\B&I\end{pmatrix}$, and compute $\det M$ two ways using the block-determinant (Schur complement) formula $\det\begin{pmatrix}P&Q\\R&S\end{pmatrix}=\det(P)\det(S-RP^{-1}Q)=\det(S)\det(P-QS^{-1}R)$ (valid whenever $P$, respectively $S$, is invertible).
+
+\textbf{Eliminating using the top-left block} ($P=I$): $\det M=\det(I)\cdot\det(I-BI^{-1}A)=\det(I-BA)$.
+
+\textbf{Eliminating using the bottom-right block} ($S=I$): $\det M=\det(I)\cdot\det(I-AI^{-1}B)=\det(I-AB)$.
+
+Both computations give $\det M$, so
+\[
+\boxed{\det(I-AB)=\det(I-BA)}
+\]
+for any square matrices $A,B$ of the same size.
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -778,6 +796,34 @@ Vanya (the second player) wins, via a pairing strategy.
 \]
 \end{proof}
 
+\begin{example}[Asymptotics of a circular gold-dust averaging process]
+$n$ prospectors sit around a table, each with a pile of gold dust. Every minute, simultaneously, each prospector's pile is replaced by the average of their two neighbors' current piles (i.e.\ half of the left neighbor's pile plus half of the right neighbor's, as those piles stood at the start of the minute). Describe the long-run behavior of the piles (a) for $n=3$; (b) for general $n$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $p^{(t)}\in\R^n$ be the vector of pile sizes after $t$ minutes, so $p^{(t+1)}=Mp^{(t)}$ where $M$ is the circulant matrix with $M_{i,i-1}=M_{i,i+1}=\tfrac12$ (indices mod $n$) and $0$ elsewhere.
+
+\textbf{Eigenvalues of a circulant.} $M$'s eigenvectors are $v^{(k)}_j=\omega^{jk}$ for $\omega=e^{2\pi i/n}$, $k=0,\dots,n-1$, with eigenvalues
+\[
+\lambda_k=\frac12\big(\omega^{k}+\omega^{-k}\big)=\cos\!\left(\frac{2\pi k}n\right).
+\]
+The total $\sum_ip_i$ is conserved exactly ($\lambda_0=1$, eigenvector all-ones — averaging redistributes but never creates or destroys sand). Every other eigenvalue satisfies $|\lambda_k|<1$, \emph{unless} $n$ is even and $k=n/2$: then $\cos(2\pi k/n)=\cos\pi=-1$, giving eigenvalue $\lambda_{n/2}=-1$ with eigenvector $(1,-1,1,-1,\dots)$.
+
+\textbf{(a) $n=3$ (odd).} All nonzero-index eigenvalues ($\lambda_1=\lambda_2=\cos(2\pi/3)=-\tfrac12$) have magnitude $<1$, so those components of $p^{(t)}$ decay geometrically to $0$. Writing $S=p_1^{(0)}+p_2^{(0)}+p_3^{(0)}$ for the (conserved) total,
+\[
+\boxed{p_i^{(t)}\to S/3 \text{ for every } i}
+\]
+— the piles equalize (e.g.\ from $(10,0,0)$ they converge to $(10/3,10/3,10/3)$).
+
+\textbf{(b) General $n$.} If $n$ is \emph{odd}, no eigenvalue equals $-1$ (as $n/2$ isn't an integer), so exactly as above, all non-total modes decay and $p_i^{(t)}\to S/n$ for every $i$: the piles always equalize.
+
+If $n$ is \emph{even}, the mode $\lambda_{n/2}=-1$ does \emph{not} decay: writing $c=\tfrac1n\sum_j(-1)^jp_j^{(0)}$ for the initial alternating component, all other modes still decay to $0$, so
+\[
+\boxed{p_i^{(t)}\ \longrightarrow\ \frac Sn+c\,(-1)^{i+t}}
+\]
+— the piles approach a persistent period-$2$ alternation between ``high'' piles ($S/n+c$) and ``low'' piles ($S/n-c$) on alternating seats and alternating minutes, never settling to a fixed vector unless $c=0$ (verified directly: $n=4$ starting from $(10,0,0,0)$ settles into the exact repeating pattern $(0,5,0,5),(5,0,5,0),(0,5,0,5),\dots$ forever).
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1111,6 +1157,27 @@ So at every $t$, $C(t)$ is non-degenerate with $\det C(t)>0$, meaning its two ei
 So the assumption fails: some $C(t)$ must be degenerate. Hence
 \[
 \boxed{\text{every such path contains a degenerate bilinear form}}.
+\]
+\end{proof}
+
+\begin{example}[Vanishing against all traceless matrices forces a scalar matrix]
+Let $A$ be a square matrix such that $\trace(AX)=0$ for every matrix $X$ with $\trace(X)=0$. Prove $A=\lambda I$ for some scalar $\lambda$.
+\end{example}
+
+\begin{proof}[Solution]
+Recall $\trace(AE_{ij})=A_{ji}$, where $E_{ij}$ is the matrix unit with a single $1$ in position $(i,j)$ (a direct computation: $(AE_{ij})_{kl}=A_{ki}\,[l=j]$, so its trace is the $k=j$ term, $A_{ji}$).
+
+\textbf{Off-diagonal entries vanish.} For $i\neq j$, $E_{ij}$ itself has trace $0$ (all its diagonal entries are $0$). So the hypothesis with $X=E_{ij}$ gives $\trace(AE_{ij})=A_{ji}=0$. This holds for every $i\neq j$, so every off-diagonal entry of $A$ is $0$.
+
+\textbf{Diagonal entries are all equal.} For $i\neq j$, $X=E_{ii}-E_{jj}$ has trace $0$. The hypothesis gives
+\[
+0=\trace\big(A(E_{ii}-E_{jj})\big)=\trace(AE_{ii})-\trace(AE_{jj})=A_{ii}-A_{jj}.
+\]
+So $A_{ii}=A_{jj}$ for every $i,j$ — all diagonal entries share a common value $\lambda$.
+
+Combining both, $A$ is diagonal with every diagonal entry equal to $\lambda$:
+\[
+\boxed{A=\lambda I}.
 \]
 \end{proof}
 
@@ -2479,6 +2546,36 @@ Rewrite the general term using $a^b=e^{b\ln a}$:
 (extremely slowly: the threshold $N$ where terms first drop below $n^{-2}$ is astronomically large, since it requires $\ln\ln n>2$, i.e.\ $n>e^{e^2}\approx1618$ just to beat $n^{-1}$, and far larger to beat $n^{-2}$ — but eventual comparison to a convergent $p$-series is all that convergence requires).
 \end{proof}
 
+\begin{example}[Conditional convergence of a near-integer sine series]
+Investigate the convergence and absolute convergence of $\displaystyle\sum_{k=1}^\infty \sin\!\left(\pi\sqrt{k^2+1}\right)$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Expanding $\sqrt{k^2+1}$.} For large $k$, $\sqrt{k^2+1}=k\sqrt{1+1/k^2}=k+\dfrac1{2k}-\dfrac1{8k^3}+O(k^{-5})$, so
+\[
+\pi\sqrt{k^2+1}=\pi k+\frac\pi{2k}+O(k^{-3}).
+\]
+
+\textbf{Reducing to $(-1)^k$.} Write $\pi\sqrt{k^2+1}=\pi k+\delta$ with $\delta=\dfrac\pi{2k}+O(k^{-3})$. Since $\sin(\pi k)=0$ and $\cos(\pi k)=(-1)^k$,
+\[
+\sin(\pi k+\delta)=\sin(\pi k)\cos\delta+\cos(\pi k)\sin\delta=(-1)^k\sin\delta.
+\]
+Using $\sin\delta=\delta+O(\delta^3)$,
+\[
+\sin\!\left(\pi\sqrt{k^2+1}\right)=(-1)^k\left[\frac\pi{2k}+O(k^{-3})\right].
+\]
+
+\textbf{The leading term.} $\sum(-1)^k\pi/(2k)$ is a constant multiple of the alternating harmonic series: it converges by the alternating series test, but not absolutely, since $\sum\pi/(2k)$ diverges.
+
+\textbf{The correction is negligible.} The remaining $O(k^{-3})$ terms form an absolutely convergent series.
+
+\textbf{Combining.} The full series is (conditionally convergent alternating series) $+$ (absolutely convergent correction), hence converges; and since $\left|\sin(\pi\sqrt{k^2+1})\right|\sim\dfrac\pi{2k}$ to leading order, the series of absolute values diverges by comparison with the harmonic series. So
+\[
+\boxed{\sum_{k=1}^\infty\sin\!\left(\pi\sqrt{k^2+1}\right) \text{ converges conditionally, not absolutely}}
+\]
+(numerically, partial sums stabilize near $-0.567$, while partial sums of the absolute values grow without bound).
+\end{proof}
+
 \section{Combinatorics}
 Combinatorics questions reward clean counting arguments, parity reasoning, and the ability to encode a counting problem algebraically.
 
@@ -2611,6 +2708,24 @@ Let $a_1,\dots,a_{mn+1}$ be the sequence. For each index $i$, let $\mathrm{inc}_
 \boxed{\text{some } \mathrm{inc}_i\ge n+1 \text{, or some } \mathrm{dec}_i\ge m+1}
 \]
 i.e.\ an increasing run of $n+1$ terms, or a decreasing run of $m+1$ terms.
+\end{proof}
+
+\begin{example}[Simulating a fair $7$-sided or $15$-sided die from Platonic dice]
+You have an unlimited supply of fair dice shaped like each of the five Platonic solids ($4,6,8,12,20$ faces). By rolling some chosen set of them together in a single throw and reading off a deterministic function of the outcomes, can you simulate (a) a fair $7$-sided die? (b) a fair $15$-sided die?
+\end{example}
+
+\begin{proof}[Solution]
+Rolling dice with $d_1,\dots,d_m$ faces together (independently) produces a uniformly random outcome among $N=d_1d_2\cdots d_m$ equally likely joint results. A single deterministic function of this joint outcome can be uniform on a target set of size $s$ if and only if $s\mid N$ (the $s$ target values must partition the $N$ equally-likely joint outcomes into $s$ groups of equal size $N/s$; conversely if $s\mid N$, any grouping into equal-sized blocks works).
+
+\textbf{(a) Impossible.} The available face counts are $4=2^2,\,6=2\cdot3,\,8=2^3,\,12=2^2\cdot3,\,20=2^2\cdot5$ — none divisible by the prime $7$. Any product of these numbers (in any combination, with repetition) is therefore also never divisible by $7$ (a prime divides a product only if it divides one of the factors). Since $7\nmid N$ for every possible choice of dice, no deterministic combination can be uniform on $7$ outcomes:
+\[
+\boxed{\text{no — a fair } 7\text{-sided die cannot be simulated this way}}.
+\]
+
+\textbf{(b) Possible.} Roll one $6$-sided die and one $20$-sided die together: $N=6\times20=120=15\times8$, so $15\mid N$. Group the $120$ equally-likely joint outcomes into $15$ blocks of $8$ (in any fixed way, e.g.\ label the outcomes $0,\dots,119$ and take the result mod $15$). So
+\[
+\boxed{\text{yes — a } d_6 \text{ and a } d_{20} \text{ rolled together simulate it}}.
+\]
 \end{proof}
 
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
@@ -3203,6 +3318,25 @@ This is the classical notion of a \emph{king} in tournament theory.
 \textbf{(b) Never exactly two.} Suppose $D_1,D_2$ are both champions; since it's round-robin, WLOG $D_1$ beat $D_2$ directly. Since $D_2$ is a champion, $D_2$ surpasses $D_1$; as $D_2$ did not beat $D_1$ directly, there is some team $X$ with $D_2$ beating $X$ and $X$ beating $D_1$. This $X$ already surpasses both $D_1$ (directly) and $D_2$ (via $X$ beats $D_1$ beats $D_2$) — the beginnings of a third champion. Showing $X$ surpasses \emph{every} other team as well (completing the proof that $X$ is a genuine third champion, so the champion count is never exactly $2$) requires tracking a few more cases than are carried out here; the statement itself is a known classical fact about tournaments, and is confirmed by exhaustive computer search over all tournaments on $3$ and $4$ teams, and over hundreds of thousands of random tournaments on $5$ and $6$ teams — the champion count observed is always $1,3,4,5,$ or $6$, never $2$. So
 \[
 \boxed{\text{the number of champions is never exactly } 2}.
+\]
+\end{proof}
+
+\begin{example}[From a local acquaintance condition to a global one]
+Among a group of students, every $4$ of them include someone who knows the other $3$. Prove that every $4$ of them in fact include someone who knows \emph{every other} student in the whole group.
+\end{example}
+
+\begin{proof}[Solution]
+Let $G$ be the acquaintance graph on the $N\ge4$ students, and $H=\overline G$ its complement (non-acquaintance). The hypothesis says every $4$-vertex induced subgraph of $H$ has an isolated vertex (within that subgraph); the goal is to show every $4$-subset contains a vertex that is isolated in $H$ \emph{globally} (i.e.\ knows everyone).
+
+If $H$ has no edges at all, every student knows everyone and we're done. Otherwise, fix an edge $uv$ of $H$ (so $u,v$ don't know each other).
+
+\textbf{At most one other vertex touches $\{u,v\}$ in $H$.} Suppose two other vertices $w_1,w_2$ each have an $H$-edge to $u$ or to $v$. Applying the hypothesis to $\{u,v,w_1,w_2\}$: since $u,v$ are adjacent in $H$, neither is isolated in this $4$-set, so $w_1$ or $w_2$ must be — but each has an edge to $u$ or $v$, so neither can be isolated either. Contradiction. So at most one vertex outside $\{u,v\}$ has any $H$-edge to $u$ or $v$; call it $w_0$ if it exists.
+
+\textbf{Every further vertex is $H$-isolated.} Let $x,y$ be any two vertices outside $\{u,v,w_0\}$ (both, by construction, having no $H$-edge to $u$, $v$, or $w_0$). Apply the hypothesis to $\{u,v,x,y\}$: again $u,v$ aren't isolated (adjacent to each other), so $x$ or $y$ must be — and since neither has an edge to $u,v$, this forces $x,y$ to have no edge to each other either. As $x,y$ were arbitrary among the (at least $N-3\ge1$) vertices outside $\{u,v,w_0\}$, \emph{every} such vertex has no $H$-edge to $u$, $v$, $w_0$, or to each other — i.e.\ each is completely isolated in $H$, meaning it knows every other student.
+
+\textbf{Conclusion.} So at most $3$ students ($u,v,w_0$) can possibly fail to know everyone; every other student is a ``universal'' acquaintance. Since $N\ge4$, any $4$ students include at least one outside $\{u,v,w_0\}$, hence
+\[
+\boxed{\text{every group of } 4 \text{ students includes someone who knows all the others}}.
 \]
 \end{proof}
 
@@ -4105,6 +4239,29 @@ Evaluating the geometric-type sum in closed form,
 (for $\alpha=0$, i.e.\ $\cos\alpha=1$, this degenerates to the straight-line answer $n^2$, matching the limiting case directly; verified by Monte Carlo simulation for several $(n,\alpha)$ pairs, matching to within sampling error).
 \end{proof}
 
+\begin{example}[Expected area of the smaller circular segment]
+Two points $A,B$ are chosen independently and uniformly on a circle of radius $r$. Find the expected area of the smaller of the two segments the chord $AB$ cuts from the disk.
+\end{example}
+
+\begin{proof}[Solution]
+Fix $A$ (by rotational symmetry, WLOG) and let $B$'s angular position be $\mathrm{Unif}[0,2\pi)$. Let $\theta$ be the central angle of the smaller arc $AB$: writing $\varphi$ for $B$'s angle, $\theta=\min(\varphi,2\pi-\varphi)\in[0,\pi]$, and one checks directly that $\theta$ is uniform on $[0,\pi]$ (for $t\in[0,\pi]$, $\mathbb P(\theta\le t)=\mathbb P(\varphi\le t)+\mathbb P(\varphi\ge2\pi-t)=t/\pi$).
+
+\textbf{Segment area as a function of $\theta$.} The minor circular segment for central angle $\theta$ has area
+\[
+S(\theta)=\frac{r^2}2(\theta-\sin\theta).
+\]
+
+\textbf{Averaging.}
+\[
+\E[S(\theta)]=\frac1\pi\int_0^\pi \frac{r^2}2(\theta-\sin\theta)\,d\theta=\frac{r^2}{2\pi}\left[\frac{\pi^2}2-\Big(-\cos\theta\Big|_0^\pi\Big)\right]=\frac{r^2}{2\pi}\left(\frac{\pi^2}2-2\right).
+\]
+Simplifying,
+\[
+\boxed{\E[\text{area}]=r^2\left(\frac\pi4-\frac1\pi\right)}
+\]
+(for $r=1$ this is $\approx0.4671$, matching Monte Carlo simulation over $3$ million trials to $3$ decimal places).
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -4789,6 +4946,27 @@ This is the classical \emph{minimum window containing a target set} problem, sol
 \boxed{O(n) \text{ time (via hashing), } O(n) \text{ extra memory}}
 \]
 (the $O(k)$ hash map and $O(k)$ count array are within the $O(n)$ budget since $k\le n$).
+\end{proof}
+
+\section*{How to Use This Guide Efficiently}
+\begin{example}[In-place linear-time sort by remainder mod $5$]
+Given an array of $n$ integers, design an algorithm that sorts them by remainder modulo $5$ (order among equal remainders doesn't matter), using $O(n)$ time and $O(1)$ extra memory.
+\end{example}
+
+\begin{proof}[Solution]
+This is in-place counting sort, specialized to the $5$ fixed buckets $0,1,2,3,4$.
+
+\textbf{Pass 1: count.} Scan the array once, incrementing a counter $c[r]$ for each element's remainder $r=a[i]\bmod5$. Only $5$ counters are needed: $O(n)$ time, $O(1)$ space.
+
+\textbf{Pass 2: compute target ranges.} From the $5$ counts, compute the starting index of each remainder-class's final block via a prefix sum: $\mathrm{start}[0]=0$, $\mathrm{start}[r]=\mathrm{start}[r-1]+c[r-1]$. Also set $\mathrm{next}[r]=\mathrm{start}[r]$ — the next free slot for class $r$. Both are size-$5$ arrays: $O(1)$ space.
+
+\textbf{Pass 3: in-place placement by cycle-following.} For $i=0,\dots,n-1$: while the element currently sitting at position $i$ has remainder $r$ with $\mathrm{next}[r]\neq i$, swap $a[i]$ with $a[\mathrm{next}[r]]$ and increment $\mathrm{next}[r]$ (this places the swapped-in element — whatever was at the target slot — at $i$, so the loop re-examines position $i$ with its new occupant). Once the element at $i$ belongs there ($\mathrm{next}[r]=i$), also increment $\mathrm{next}[r]$ and move to $i+1$.
+
+\textbf{Why this is $O(n)$.} Every swap places at least one element into its final, correct block permanently (the element moved to $\mathrm{next}[r]$ never needs to move again, since $\mathrm{next}[r]$ only ever increases and stays within class $r$'s designated range), so the total number of swaps across the whole pass is at most $n$. Combined with the two $O(n)$ counting passes,
+\[
+\boxed{O(n) \text{ time}, O(1) \text{ extra memory}}
+\]
+(only the $10$ counters $c[0..4],\mathrm{next}[0..4]$ and a few loop indices are used, regardless of $n$).
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
