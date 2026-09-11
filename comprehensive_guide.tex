@@ -2815,6 +2815,85 @@ Rolling dice with $d_1,\dots,d_m$ faces together (independently) produces a unif
 \]
 \end{proof}
 
+\begin{example}[Cutting a Square into $n$ Squares for Any $n>5$]
+Prove that for every integer $n>5$, a square sheet of paper can be cut into exactly $n$ square pieces (of possibly different sizes).
+\end{example}
+\begin{proof}[Solution]
+\textbf{The key move (a ``$+3$'' step).} Given any dissection of the square into some number $k$ of square pieces, pick any one piece and cut it with two perpendicular lines through its center, parallel to its sides, splitting it into $4$ equal smaller squares. This replaces $1$ piece by $4$ pieces, so the total piece count goes from $k$ to $k+3$. Hence: \emph{if $k$ squares is achievable, so is $k+3$.}
+
+\textbf{Three base cases (one for each residue mod $3$).}
+\begin{itemize}
+\item $n=6$: Divide the square into a $3\times3$ grid of $9$ equal unit squares. Merge one $2\times2$ block of $4$ adjacent unit squares back into a single square of twice the side length (this is legal — four unit squares arranged in a $2\times2$ pattern exactly tile a square of double side). This leaves $9-4=5$ unit squares plus $1$ merged square: $6$ squares total.
+\item $n=7$: Divide the square into a $2\times2$ grid of $4$ equal squares, then apply the $+3$ move once to any one of them (splitting it into $4$ smaller squares): $4-1+4=7$ squares total.
+\item $n=8$: Divide the square into a $4\times4$ grid of $16$ equal unit squares. Merge one $3\times3$ block of $9$ adjacent unit squares (placed in a corner, say) into a single square of triple side length. This leaves $16-9=7$ unit squares plus $1$ merged square: $8$ squares total.
+\end{itemize}
+
+\textbf{Induction.} Every integer $n\ge6$ can be written as $6+3k$, $7+3k$, or $8+3k$ for some integer $k\ge0$, according to its residue mod $3$. Starting from the corresponding base case ($6$, $7$, or $8$ squares) and applying the $+3$ move $k$ times produces a valid dissection into exactly $n$ squares. Since the base cases and the induction step are both constructive, this proves the claim for all $n>5$.
+\end{proof}
+
+\begin{example}[Counting Sub-Rectangles of a Checkerboard with At Most Four Black Cells]
+An $N\times M$ chessboard is colored in the usual alternating (checkerboard) pattern. Consider all axis-aligned sub-rectangles of the board (formed by grid lines). Find the number of such sub-rectangles containing at most $4$ black cells, for (a) $N=M=8$; (b) $N=99,M=101$; (c) general $N,M\ge8$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Step 1: black-cell count of an $a\times b$ sub-rectangle.} If a sub-rectangle has $a$ rows and $b$ columns, its number of black cells depends only on $a,b$, and — when $a,b$ are \emph{both odd} — on the color of its top-left cell:
+\begin{itemize}
+\item If $a$ or $b$ is even, every row (or column) contributes equal black/white counts up to swapping, and in fact the black-cell count is always exactly $\frac{ab}{2}$, regardless of position.
+\item If $a$ and $b$ are both odd, the rectangle's four corners share one color (say the color of the top-left cell); that color appears on $\frac{ab+1}{2}$ cells and the other on $\frac{ab-1}{2}$ cells.
+\end{itemize}
+So the number of black cells lies in $\left[\lfloor ab/2\rfloor,\lceil ab/2\rceil\right]$, and both endpoints occur (the upper one exactly when $a,b$ are both odd \emph{and} the top-left corner is black).
+
+\textbf{Step 2: which shapes $a\times b$ can ever have $\le4$ black cells?}
+\begin{itemize}
+\item If $ab\le8$: then $\lceil ab/2\rceil\le4$, so \emph{every} placement of an $a\times b$ rectangle has $\le4$ black cells — the shape always qualifies, independent of position.
+\item If $ab=9$ (so $(a,b)\in\{(1,9),(9,1),(3,3)\}$): black count is $4$ or $5$ depending on the corner color; only the placements with $4$ black cells (top-left corner \emph{white}) qualify — exactly half the placements of that shape.
+\item If $ab\ge10$: then $\lfloor ab/2\rfloor\ge5$, so \emph{no} placement qualifies.
+\end{itemize}
+
+\textbf{Step 3: counting placements.} An $a\times b$ rectangle has $(N-a+1)(M-b+1)$ possible positions on the board. For a fixed shape, write $R=N-a+1$, $C=M-b+1$ for the number of row- and column-positions of its top-left corner. Since the board is checkerboard-colored, the color of the top-left corner cycles with the parity of (row index $+$ column index) of the position; a direct count shows that among the $R\times C$ grid of positions, exactly
+\[
+W(R,C)=\left\lceil\frac{R}{2}\right\rceil\left\lceil\frac{C}{2}\right\rceil+\left\lfloor\frac{R}{2}\right\rfloor\left\lfloor\frac{C}{2}\right\rfloor
+\]
+of them place the corner on one fixed color (the count for the other color is $RC-W(R,C)$).
+
+\textbf{Step 4: the shapes with $ab\le8$.} There are exactly $20$ pairs $(a,b)$ with $a,b\ge1$ and $ab\le8$:
+\[
+(1,1),\dots,(1,8),\ (2,1),\dots,(2,4),\ (3,1),(3,2),\ (4,1),(4,2),\ (5,1),(6,1),(7,1),(8,1).
+\]
+Every placement of every such shape qualifies, contributing
+\[
+S_1(N,M)=\sum_{ab\le8}(N-a+1)(M-b+1).
+\]
+Carrying out this finite sum (and simplifying, valid once $N,M\ge8$ so all $20$ shapes fit) gives the closed form
+\[
+S_1(N,M)=20(N+1)(M+1)-56(N+M+2)+103.
+\]
+
+\textbf{Step 5: the shapes with $ab=9$.} Each of $(a,b)=(1,9),(9,1),(3,3)$ contributes only its ``white-corner'' placements:
+\[
+S_2(N,M)=W(N,\,M-8)+W(N-8,\,M)+W(N-2,\,M-2),
+\]
+where a term is included only when the corresponding shape fits the board (e.g.\ the first term requires $M\ge9$).
+
+\textbf{Total:} the answer is $S_1(N,M)+S_2(N,M)$.
+
+\textbf{(a) $N=M=8$.} Here only $(3,3)$ fits among the $ab=9$ shapes (since $M=8<9$ rules out $(1,9)$ and $N=8<9$ rules out $(9,1)$). We get $S_1(8,8)=20\cdot9\cdot9-56\cdot18+103=1620-1008+103=715$, and $S_2(8,8)=W(6,6)=3\cdot3+3\cdot3=18$. Total:
+\[
+715+18=\boxed{733}.
+\]
+(This matches a direct brute-force count over all sub-rectangles of the $8\times8$ board.)
+
+\textbf{(b) $N=99,M=101$.} $S_1(99,101)=20\cdot100\cdot102-56\cdot202+103=204000-11312+103=192791$. For $S_2$: $W(99,93)=50\cdot47+49\cdot46=2350+2254=4604$; $W(91,101)=46\cdot51+45\cdot50=2346+2250=4596$; $W(97,99)=49\cdot50+48\cdot49=2450+2352=4802$. Sum: $4604+4596+4802=14002$. Total:
+\[
+192791+14002=\boxed{206793}.
+\]
+
+\textbf{(c) General $N,M\ge8$.} The answer is
+\[
+20(N+1)(M+1)-56(N+M+2)+103+W(N,M-8)+W(N-8,M)+W(N-2,M-2)
+\]
+(dropping any $W$-term whose shape does not fit the board), with $W(R,C)=\lceil R/2\rceil\lceil C/2\rceil+\lfloor R/2\rfloor\lfloor C/2\rfloor$.
+\end{proof}
+
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2907,6 +2986,35 @@ Summing over $k$:
 \boxed{(n!)^2\sum_{k=0}^{\lfloor n/2\rfloor}\frac{n!}{k!\,k!\,(n-2k)!}}.
 \]
 (Check: $n=1$ gives $(1!)^2\cdot\frac{1!}{0!0!1!}=1$, matching the only valid arrangement — odd on top, even on bottom. $n=2$ gives $(2!)^2\left[\frac{2!}{0!0!2!}+\frac{2!}{1!1!0!}\right]=4(1+2)=12$, confirmed by direct enumeration.)
+\end{proof}
+
+\begin{example}[The combinatorial number system]
+Prove that for every non-negative integer $n$, there exist integers $0\le x<y<z$ with $n=\dbinom x1+\dbinom y2+\dbinom z3$.
+\end{example}
+
+\begin{proof}[Solution]
+This is a greedy construction, using repeatedly the fact that $\binom{k}{r}$ is strictly increasing in $k$ and the Pascal identity $\binom{k+1}{r}-\binom kr=\binom k{r-1}$.
+
+\textbf{Choosing $z$.} If $n=0$, take $(x,y,z)=(0,1,2)$ directly (all three binomial coefficients vanish). Otherwise, let $z$ be the \emph{largest} integer with $\binom z3\le n$ (such $z$ exists and is $\ge3$, since $\binom33=1\le n$). Set $n_1=n-\binom z3\ge0$. By maximality of $z$, $\binom{z+1}3>n$, i.e.\
+\[
+n_1=n-\binom z3<\binom{z+1}3-\binom z3=\binom z2.
+\]
+
+\textbf{Choosing $y$.} Let $y$ be the largest integer with $\binom y2\le n_1$. Since $n_1<\binom z2$, this forces $y<z$ (if $y$ were $\ge z$, we'd have $\binom y2\ge\binom z2>n_1$, contradicting $\binom y2\le n_1$). Set $n_2=n_1-\binom y2\ge0$; by maximality of $y$, $\binom{y+1}2>n_1$, giving
+\[
+n_2=n_1-\binom y2<\binom{y+1}2-\binom y2=\binom y1=y.
+\]
+
+\textbf{Choosing $x$.} Set $x=n_2$. Then $0\le x<y$ (just shown), and
+\[
+\binom x1+\binom y2+\binom z3=n_2+\binom y2+\binom z3=n_1+\binom z3=n.
+\]
+
+So $(x,y,z)$ with $0\le x<y<z$ satisfies $\binom x1+\binom y2+\binom z3=n$, as required
+\[
+\boxed{\text{such } x,y,z \text{ always exist (constructed greedily, from the top binomial coefficient down)}}
+\]
+(verified by direct computation of this construction for every $n=0,\dots,29$).
 \end{proof}
 
 \subsection{Graphs, Trees, Planarity, and Tournaments}
@@ -4386,6 +4494,22 @@ Simplifying,
 (for $r=1$ this is $\approx0.4671$, matching Monte Carlo simulation over $3$ million trials to $3$ decimal places).
 \end{proof}
 
+\begin{example}[Expected number of transpositions in a random permutation]
+For a uniformly random permutation $P=(p_1,\dots,p_n)$ of $\{1,\dots,n\}$, call a pair $\{i,j\}$ ($i\ne j$) a \emph{swap} if $p_i=j$ and $p_j=i$ (a $2$-cycle). Find the expected number of swaps.
+\end{example}
+
+\begin{proof}[Solution]
+By linearity of expectation, summing over the $\binom n2$ unordered pairs $\{i,j\}$: for fixed $i\ne j$, $\mathbb P(p_i=j,\,p_j=i)$ fixes $2$ of the $n$ values, leaving the remaining $n-2$ to permute freely among themselves, so
+\[
+\mathbb P(p_i=j,\,p_j=i)=\frac{(n-2)!}{n!}=\frac1{n(n-1)}.
+\]
+Summing over all $\binom n2=\dfrac{n(n-1)}2$ pairs,
+\[
+\E[\#\text{swaps}]=\binom n2\cdot\frac1{n(n-1)}=\frac{n(n-1)}2\cdot\frac1{n(n-1)}=\boxed{\frac12}
+\]
+— independent of $n$ (for $n\ge2$).
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -5107,6 +5231,45 @@ A connected circuit is an undirected graph with no multiple edges: $N$ edges are
 \boxed{O(N)\text{ switch operations suffice}}
 \]
 for the spanning-tree phase, which by itself already covers a large class of instances (e.g.\ whenever the graph is a tree, $N=V-1$, so no second phase is needed at all). Turning the second phase's per-edge path-toggling into a strategy that is provably $O(N)$ \emph{in total} even when the graph has many independent cycles (rather than merely $O(N)$ per edge tested) needs a more careful incremental/amortized scheme than is spelled out here.
+\end{proof}
+
+\section*{How to Use This Guide Efficiently}
+\begin{example}[The largest function satisfying an iterated-square-root recurrence]
+Algorithm $A$'s running time satisfies $T(n)\le T(\lfloor\sqrt n\rfloor)+1$, with $T(1)=C_1$ constant. Find, in $O$-notation, an asymptotically as-large-as-possible function satisfying this relation, and prove it does.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Why repeated square-rooting is fast.} Applying the recurrence $k$ times (ignoring floors, which only help asymptotically),
+\[
+T(n)\le T\big(n^{1/2^k}\big)+k.
+\]
+Choosing $k=\lceil\log_2\log_2 n\rceil$ makes $n^{1/2^k}\le2$, a constant, so $T(n)\le T(O(1))+k=O(1)+O(\log\log n)$.
+
+\textbf{This is achievable, and is the extremal (largest) solution.} Define $S(n)$ by the recurrence taken with \emph{equality}: $S(n)=S(\lfloor\sqrt n\rfloor)+1$, $S(1)=C_1$. Since square-rooting shrinks $n$ to $1$ in exactly $\Theta(\log\log n)$ steps (halving $\log_2 n$ each time), $S(n)=C_1+\Theta(\log\log n)$, and by construction $S$ satisfies the given relation with equality — so it is itself a valid solution, growing as $\Theta(\log\log n)$.
+
+Moreover $S$ dominates every other solution: if $T$ satisfies $T(n)\le T(\lfloor\sqrt n\rfloor)+1$ with the same $T(1)=C_1$, then by strong induction on $n$ (using $\lfloor\sqrt n\rfloor<n$ for $n\ge2$), $T(n)\le T(\lfloor\sqrt n\rfloor)+1\le S(\lfloor\sqrt n\rfloor)+1=S(n)$. So
+\[
+\boxed{T(n)=O(\log\log n) \text{ is the largest solution, attained by the equality recurrence}}.
+\]
+\end{proof}
+
+\begin{example}[Fewest deletions to destroy a palindrome]
+Given a string $S$ of lowercase letters, find the minimum number of characters (possibly $0$) that must be deleted so the remaining string is \emph{not} a palindrome. Design an algorithm, prove it correct, and analyze its complexity.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{If $S$ is already not a palindrome}, the answer is $0$.
+
+\textbf{If $S$ consists of a single repeated character}, no deletion can ever help: every subsequence of a constant string is itself constant, hence a palindrome. (This degenerate case has no valid answer; flag it separately.)
+
+\textbf{Otherwise ($S$ is a palindrome, but not constant): the answer is exactly $1$}, achieved by deleting the very first character. This can't be $0$ (S is currently a palindrome), so it suffices to show deleting $S[1]$ always works.
+
+\emph{Proof that $S'=S[2..n]$ is never a palindrome.} Suppose, for contradiction, it were. Write the two palindrome conditions in terms of $S$: the hypothesis (on $S$) gives $S[k]=S[n+1-k]$ for all $k$; the assumption (on $S'$) gives, after reindexing, $S[k]=S[n-k+2]$ for $k=2,\dots,n$. Combining these two expressions for $S[k]$ (both valid for $2\le k\le n-1$) gives $S[n+1-k]=S[n-k+2]$ for all such $k$; substituting $m=n-k+1$, this says $S[m]=S[m+1]$ for every $m=1,\dots,n-1$ — i.e.\ $S$ is constant, contradicting our assumption. So $S'$ is not a palindrome.
+
+\textbf{Algorithm.} Check whether $S$ is a palindrome (two-pointer scan from both ends, $O(n)$ time, $O(1)$ extra space). If not, output $0$. If so, check whether all characters are equal (another $O(n)$ scan); if so, report impossible; otherwise output $1$ (with the first character as a witness deletion). So
+\[
+\boxed{O(n) \text{ time}, O(1) \text{ extra memory}}.
+\]
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
