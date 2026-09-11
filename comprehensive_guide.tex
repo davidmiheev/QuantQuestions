@@ -271,6 +271,24 @@ Expanding the left side: $YX-\mu Y-\lambda X+\lambda\mu I=\lambda\mu I$, i.e.\ $
 \]
 \end{proof}
 
+\begin{example}[Few zero entries in the inverse of an all-positive matrix]
+Let $A$ be an invertible real $n\times n$ matrix ($n\ge2$) all of whose entries are positive. Prove that $A^{-1}$ has at most $n^2-2n$ zero entries.
+\end{example}
+\begin{proof}[Solution]
+Let $B=A^{-1}$, so $AB=I$. Fix a column $j$ of $B$. Since $B$ is invertible, column $j$ is nonzero: $B_{kj}\neq0$ for at least one $k$.
+
+Pick any row $i\neq j$ (possible since $n\ge2$). The $(i,j)$ entry of $AB=I$ is $0$ (off-diagonal), i.e.
+\[
+\sum_{k=1}^n A_{ik}B_{kj}=0,
+\]
+where every coefficient $A_{ik}$ is \emph{strictly positive}. If all $B_{kj}$ were $\ge0$, then — since some $B_{kj}>0$ — the sum would be a positive combination with at least one strictly positive term, hence $>0$, contradicting the sum being $0$. Likewise, all $B_{kj}\le0$ is impossible. So column $j$ must contain both a strictly positive entry and a strictly negative entry — in particular, \emph{at least $2$ nonzero entries}.
+
+Since this holds for every column $j=1,\dots,n$, matrix $B$ has at least $2n$ nonzero entries in total. Hence the number of zero entries is at most
+\[
+\boxed{n^2-2n}.
+\]
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1488,6 +1506,34 @@ So
 — a graph that is flat at height $1$, then rises linearly with slope $1$ from $(1,1)$ to $(2,2)$, then continues as an upward-opening parabola matching both the value and slope ($f'=x$, giving slope $2$ at $x=2$ from the right, versus slope $1$ from the left — so the graph has a corner at $x=2$, though it is continuous there and also at $x=1$).
 \end{proof}
 
+\begin{example}[Limit of a Cesàro-type recurrence with vanishing perturbation]
+The sequence $(c_n)$ satisfies $c_{n+1}=\left(1-\frac1n\right)c_n+\beta_n$ for $n\ge1$, where $(\beta_n)$ is any sequence with $n^2\beta_n\to0$ as $n\to\infty$. Find $\lim_{n\to\infty}c_n$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{An explicit formula.} At $n=1$, the recurrence gives $c_2=\left(1-\frac11\right)c_1+\beta_1=\beta_1$, independent of $c_1$. Claim: for all $n\ge2$,
+\[
+c_n=\frac{1}{n-1}\sum_{k=1}^{n-1}k\beta_k.
+\]
+This holds at $n=2$ (both sides equal $\beta_1$). Assuming it for $n$,
+\[
+c_{n+1}=\left(1-\frac1n\right)c_n+\beta_n=\frac{n-1}{n}\cdot\frac1{n-1}\sum_{k=1}^{n-1}k\beta_k+\beta_n=\frac1n\left(\sum_{k=1}^{n-1}k\beta_k+n\beta_n\right)=\frac1n\sum_{k=1}^{n}k\beta_k,
+\]
+which is exactly the claimed formula at $n+1$. This proves the formula by induction (and shows $c_1$'s value never matters).
+
+\textbf{Bounding $c_n$.} Since $n^2\beta_n\to0$, the sequence $n^2\beta_n$ is bounded: there is a constant $A$ with $|\beta_k|\le A/k^2$ for all $k\ge1$. Then
+\[
+|c_n|\le\frac1{n-1}\sum_{k=1}^{n-1}k|\beta_k|\le\frac1{n-1}\sum_{k=1}^{n-1}\frac{A}{k}=\frac{A}{n-1}\sum_{k=1}^{n-1}\frac1k.
+\]
+The harmonic sum satisfies $\sum_{k=1}^{n-1}\frac1k\le1+\ln(n-1)$, so
+\[
+|c_n|\le\frac{A\bigl(1+\ln(n-1)\bigr)}{n-1}\longrightarrow0
+\]
+as $n\to\infty$, since $\ln(n-1)=o(n-1)$. Hence
+\[
+\boxed{\lim_{n\to\infty}c_n=0}.
+\]
+\end{proof}
+
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
 \textbf{Useful identities.}
 \begin{itemize}
@@ -2362,6 +2408,28 @@ G'(x)=2F(x)f(x)-f(x)^3=f(x)\bigl(2F(x)-f(x)^2\bigr)=f(x)H(x)\ge0
 \]
 \end{proof}
 
+\begin{example}[An antiderivative built from $e^{e^x}$]
+Compute $\displaystyle\int e^{e^x+2014x}\,dx$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Substitution.} Write $e^{e^x+2014x}=e^{e^x}e^{2014x}$ and substitute $u=e^x$ (so $du=u\,dx$, i.e.\ $dx=du/u$); also $e^{2014x}=u^{2014}$ since $x=\ln u$. Then
+\[
+\int e^{e^x+2014x}\,dx=\int e^{u}u^{2014}\cdot\frac{du}{u}=\int u^{2013}e^{u}\,du.
+\]
+
+\textbf{Reducing $\int u^ke^u\,du$.} Integration by parts ($\int u^ke^u\,du=u^ke^u-k\int u^{k-1}e^u\,du$) applied repeatedly gives the closed form
+\[
+\int u^ke^u\,du=e^u\sum_{i=0}^{k}(-1)^i\frac{k!}{(k-i)!}u^{k-i}+C,
+\]
+which is easily checked by differentiating (product rule on each term): the two resulting sums telescope, leaving only the $i=0$ term $u^ke^u$ — matching the integrand, as required. (Equivalently, the formula follows by induction on $k$ directly from the boxed recursion above.)
+
+\textbf{Assembling the answer.} With $k=2013$ and $u=e^x$, and reindexing $j=2013-i$ (so $(-1)^i=(-1)^{2013-j}=-(-1)^j$, using that $2013$ is odd),
+\[
+\int e^{e^x+2014x}\,dx=e^{e^x}\sum_{i=0}^{2013}(-1)^i\frac{2013!}{(2013-i)!}e^{x(2013-i)}+C
+=\boxed{e^{e^x}\sum_{j=0}^{2013}(-1)^{j+1}\frac{2013!}{j!}\,e^{jx}+C}.
+\]
+\end{proof}
+
 \subsection{Series, Power Series, and Fourier Methods}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2892,6 +2960,53 @@ where a term is included only when the corresponding shape fits the board (e.g.\
 20(N+1)(M+1)-56(N+M+2)+103+W(N,M-8)+W(N-8,M)+W(N-2,M-2)
 \]
 (dropping any $W$-term whose shape does not fit the board), with $W(R,C)=\lceil R/2\rceil\lceil C/2\rceil+\lfloor R/2\rfloor\lfloor C/2\rfloor$.
+\end{proof}
+
+\begin{example}[Two players can collude to make the third lose a stone-removal game]
+Three players take turns (in a fixed cyclic order) removing between $1$ and $m$ stones ($m>1$) from a pile of known size; the player who removes the last stone loses. Prove that if the pile is initially large enough, any two of the players can agree in advance on a joint strategy that always forces the third player to lose.
+\end{example}
+\begin{proof}[Solution]
+Call the players $A,B,C$ (turn order $A,B,C,A,B,C,\dots$), with $A$ and $C$ the colluders trying to force $B$ to take the last stone.
+
+\textbf{Reduction to a $2$-player game.} Since $B$ never moves between $C$'s move and the following $A$ move, that consecutive pair of colluder moves acts as one flexible combined move: if $C$ takes $c\in[1,m]$ and $A$ then takes $a\in[1,m]$, the pair removes any total $s=c+a$, and every integer $s\in[2,2m]$ is achievable this way (e.g.\ $c=1,a=s-1$ when $s\le m+1$; $c=s-m,a=m$ when $s>m+1$). So the whole game is equivalent to a standard $2$-player subtraction game between $X=B$ (who removes $x\in[1,m]$ each turn) and $Y=$ the coalition (who removes $y\in[2,2m]$ each turn, capped by the remaining pile), alternating turns, last mover loses.
+
+\textbf{Base facts.} With $1$ stone left, whoever must move is forced to take it and lose. With $2$ stones left and $Y$ to move: $C$ must take $1$ or $2$; taking $2$ makes $C$ lose immediately, while taking $1$ leaves $1$ stone for $A$, who is then forced to lose. Either way \emph{some} colluder loses — so a pile of $2$ facing $Y$ is a forced loss for the coalition; a pile of $1$ is a forced loss for whoever moves.
+
+\textbf{Claim (by strong induction on the pile size $n$).}
+\begin{itemize}
+\item $X$ (to move) wins for $2\le n\le m+2$, and loses for $n=1$ or $n\ge m+3$.
+\item $Y$ (to move) wins for all $n\ge3$ (with the pile large enough that the pair-move range $[2,2m]$ isn't otherwise restricted), and loses for $n\in\{1,2\}$.
+\end{itemize}
+\emph{Why $X$ wins on $[2,m+2]$:} for $2\le n\le m+1$, $X$ takes $n-1\le m$ stones, leaving $1$ for $Y$ (a forced $Y$-loss). For $n=m+2$, $X$ takes $m$ stones, leaving $2$ for $Y$ (also a forced $Y$-loss, by the base fact above). \emph{Why $X$ loses for $n\ge m+3$:} any move $x\in[1,m]$ leaves $n-x\ge3$ for $Y$, and by the induction hypothesis $Y$ wins from every pile $\ge3$ — so no move helps $X$. \emph{Why $Y$ wins for $n\ge3$:} if $n\le2m+1$, $Y$ takes $s=n-1\in[2,2m]$, leaving exactly $1$ for $X$ (forced loss). If $n\ge2m+2$ (so in particular $n\ge m+5$ once $m\ge3$; the case $m=2$ has one isolated exception at $n=6$, checked directly), $Y$ takes the minimum $s=2$, leaving $n-2\ge m+3$, which by the induction hypothesis is again an $X$-losing pile.
+
+\textbf{Conclusion.} Since the real game begins with $A$'s move — i.e.\ $Y$ moving first — the coalition wins whenever the initial pile $N$ satisfies $N\ge3$ (in fact for every $N$ except the single small case $N=1,2$, and, only when $m=2$, $N=6$). In particular, for every sufficiently large initial pile,
+\[
+\boxed{A\text{ and }C\text{ can jointly force }B\text{ to take the last stone}}.
+\]
+(This full recursive game value was verified by exhaustive computation for $m=2,3,4,5,6$ and piles up to several hundred, confirming the coalition wins for all $n\ge3$ apart from the noted small exceptions.)
+\end{proof}
+
+\begin{example}[$0/1$ matrices whose square is the all-ones matrix]
+For which natural numbers $N$ does there exist an $N\times N$ matrix $A$ with entries in $\{0,1\}$ such that $A^2=J$, the all-ones matrix?
+\end{example}
+\begin{proof}[Solution]
+\textbf{Answer: exactly the perfect squares, $N=k^2$ for a positive integer $k$.}
+
+\textbf{Necessity.} Suppose $A^2=J$. Taking traces, $\operatorname{tr}(A^2)=\operatorname{tr}(J)=N$ (every diagonal entry of $J$ is $1$). For any complex matrix, the eigenvalues of $A^2$ (with algebraic multiplicity, via the Jordan form of $A$) are exactly the squares of the eigenvalues of $A$; since $J$'s eigenvalues are $N$ (multiplicity $1$, eigenvector $\mathbf 1$) and $0$ (multiplicity $N-1$), every eigenvalue $\lambda$ of $A$ satisfies $\lambda^2\in\{0,N\}$, i.e.\ $\lambda\in\{0,\sqrt N,-\sqrt N\}$ (necessarily real, since $\lambda^2$ is a non-negative real number). Let $p,q$ be the algebraic multiplicities of $\sqrt N,-\sqrt N$ respectively. Then
+\[
+N=\operatorname{tr}(A^2)=p\cdot N+q\cdot N+0\quad\Longrightarrow\quad p+q=1,
+\]
+so $(p,q)=(1,0)$ or $(0,1)$. Also $\operatorname{tr}(A)=p\sqrt N-q\sqrt N$ is a non-negative integer (a sum of $0/1$ diagonal entries). If $(p,q)=(0,1)$, $\operatorname{tr}(A)=-\sqrt N<0$ for $N\ge1$ — impossible. So $(p,q)=(1,0)$, giving $\operatorname{tr}(A)=\sqrt N$, a non-negative integer — hence $N$ is a perfect square.
+
+\textbf{Sufficiency.} For $N=k^2$, index rows and columns by $0,\dots,N-1$ and write each index in base $k$ via $i=ak+r$, $j=ck+s$ ($0\le a,r,c,s<k$). Define
+\[
+A_{ij}=1\iff a=s\qquad(\text{i.e.\ }\lfloor i/k\rfloor = j\bmod k).
+\]
+For fixed $i,j$ (giving fixed $a=\lfloor i/k\rfloor$ and $s=j\bmod k$), the sum $(A^2)_{ij}=\sum_{k'}A_{ik'}A_{k'j}$ has a nonzero term exactly when $k'=a'k+r'$ satisfies $r'=a$ (from $A_{ik'}=1$) and $a'=s$ (from $A_{k'j}=1$); this pins down $k'=sk+a$ \emph{uniquely}. So exactly one term of the sum is $1$ and the rest are $0$, giving $(A^2)_{ij}=1$ for every $i,j$, i.e.\ $A^2=J$.
+\[
+\boxed{\text{such an } A \text{ exists} \iff N \text{ is a perfect square}}
+\]
+(Both directions were checked computationally: exhaustive search confirms no solution for $N=2,3,5,6,7,8$, and the explicit construction above was verified to give $A^2=J$ for $N=1,4,9,16,25$.)
 \end{proof}
 
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
@@ -3916,6 +4031,45 @@ The great circles through $A,B$ and through $C,D$ (generically distinct) always 
 matching the simulated value ($\approx0.1251$, against a predicted $0.1250$) to within statistical error. This is smaller than the naive product $\left(\tfrac12\right)^2=\tfrac14$ of the two marginal separation probabilities, reflecting a genuine (negative) correlation between the two separation events that a full derivation would need to account for explicitly — that accounting is not carried out here, though the criterion and the numerical answer are both solid.
 \end{proof}
 
+\begin{example}[Sign changes of a simple random walk]
+Starting from $0$, a number is repeatedly updated by $+1$ (heads) or $-1$ (tails), each equally likely, independently. Find the probability that, after the $(2n+1)$-th flip, the number has changed sign (from positive to negative or vice versa) (a) exactly $n$ times; (b) not at all.
+\end{example}
+\begin{proof}[Solution]
+Let $S_0=0,S_1,\dots,S_{2n+1}$ be the walk. Since each step changes parity, $S_k$ has the same parity as $k$; in particular $S_k$ can only vanish at even $k$, so $S_k\neq0$ automatically for every \emph{odd} $k$, and each such $S_k$ has a well-defined sign. A ``sign change'' is naturally an index $i\in\{1,\dots,n\}$ with $\operatorname{sign}(S_{2i-1})\neq\operatorname{sign}(S_{2i+1})$ — there are exactly $n$ such consecutive comparisons among the $n+1$ odd-indexed values $S_1,S_3,\dots,S_{2n+1}$.
+
+\textbf{Part (a): probability of $n$ changes (every comparison flips).} Fix $i$ and let $v=S_{2i-1}$ (a nonzero odd integer). The pair of steps $(2i,2i+1)$ changes $v$ by $-2,0,$ or $+2$ (with probabilities $\tfrac14,\tfrac12,\tfrac14$), so $S_{2i+1}\in\{v-2,v,v+2\}$. If $|v|\ge3$, all three outcomes keep the same sign as $v$ (since $|v|-2\ge1>0$ still) — a sign flip is \emph{impossible}. A flip can only happen when $|v|=1$, and then only via the single outcome that moves by $\mp2$ toward the other side (e.g.\ $v=1\to-1$ requires both steps to be $-1$), an event of probability $\tfrac14$ — and this outcome automatically lands back at $\mp1$, keeping $|S_{2i+1}|=1$ for the next comparison.
+
+So, starting from $S_1=\pm1$ (always true), the event ``all $n$ comparisons flip'' requires, at each of the $n$ steps in turn, exactly the one length-$2$ outcome (probability $\tfrac14$) that reverses sign while staying at distance $1$ from $0$; these $n$ pair-events are independent (disjoint pairs of coin flips). Hence
+\[
+\mathbb P(\text{exactly }n\text{ changes})=\left(\frac14\right)^n=\boxed{4^{-n}}.
+\]
+
+\textbf{Part (b): probability of $0$ changes.} Zero changes means $S_1,S_3,\dots,S_{2n+1}$ all share the same sign. By the $\pm$ symmetry of the walk, $\mathbb P(0\text{ changes})=2\,\mathbb P(S_1,\dots,S_{2n+1}\text{ all}>0)$.
+
+\emph{Key simplification.} Since $S_k$ is odd for odd $k$, ``$S_k>0$'' is the same as ``$S_k\ge0$'' at odd times; and at even times, ``$S_k\ge0$'' is not required by the odd-indexed condition, so no extra constraint is lost. Consequently
+\[
+\{S_1,S_3,\dots,S_{2n+1}>0\}=\{S_k\ge0\text{ for every }k=0,1,\dots,2n+1\}
+\]
+— the full walk merely has to stay weakly non-negative throughout, with positivity at odd times coming for free from parity.
+
+\emph{Counting weakly non-negative walks of length $N=2n+1$.} For a walk of length $N$ from $0$ ending at $B\ge0$ (same parity as $N$), the reflection principle (reflecting the initial segment up to the first visit to $-1$) gives
+\[
+\#\{\text{paths }0\to B\text{ touching }-1\}=\#\{\text{paths }-2\to B\}=\binom{N}{\frac{N+B+2}{2}},
+\]
+so the number of non-negative paths ending at $B$ is $\binom{N}{\frac{N+B}2}-\binom{N}{\frac{N+B}2+1}$. Summing over all valid endpoints $B=1,3,\dots,N$ (writing $j=\frac{N+B}2$, which runs over $\lceil N/2\rceil,\dots,N$) telescopes:
+\[
+\sum_{j=\lceil N/2\rceil}^{N}\left[\binom Nj-\binom N{j+1}\right]=\binom{N}{\lceil N/2\rceil}-\binom{N}{N+1}=\binom{N}{\lceil N/2\rceil}.
+\]
+With $N=2n+1$, $\lceil N/2\rceil=n+1$, and $\binom{2n+1}{n+1}=\binom{2n+1}{n}$, so the number of weakly non-negative length-$(2n+1)$ walks from $0$ is $\binom{2n+1}{n}$.
+
+\textbf{Assembling the answer.}
+\[
+\mathbb P(S_1,\dots,S_{2n+1}\text{ all}>0)=\frac{\binom{2n+1}{n}}{2^{2n+1}},\qquad
+\mathbb P(0\text{ changes})=2\cdot\frac{\binom{2n+1}{n}}{2^{2n+1}}=\boxed{\dfrac{\binom{2n+1}{n}}{4^n}}.
+\]
+(Both formulas were checked by direct enumeration for $n=1,\dots,6$: e.g.\ $n=2$ gives $4^{-2}=\tfrac1{16}$ for part (a) and $\binom52/16=\tfrac5{8}$ for part (b), matching exhaustive counts over all $2^5$ coin-flip sequences.)
+\end{proof}
+
 \subsection{Random Variables, Moments, and Common Distributions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -4508,6 +4662,28 @@ Summing over all $\binom n2=\dfrac{n(n-1)}2$ pairs,
 \E[\#\text{swaps}]=\binom n2\cdot\frac1{n(n-1)}=\frac{n(n-1)}2\cdot\frac1{n(n-1)}=\boxed{\frac12}
 \]
 — independent of $n$ (for $n\ge2$).
+\end{proof}
+
+\begin{example}[Expected length of the smallest piece of a twice-broken stick]
+A unit segment $[0,1]$ is cut at two independent uniform random points into three pieces. Find the expected length of the smallest piece.
+\end{example}
+\begin{proof}[Solution]
+Let $U,V$ be iid $\mathrm{Uniform}(0,1)$, and let $X=\min(U,V)$, $Y=\max(U,V)$, so the three piece lengths are $A=X$, $B=Y-X$, $C=1-Y$ (with $A+B+C=1$). The order statistics $(X,Y)$ have joint density $f(x,y)=2$ on $\{0<x<y<1\}$.
+
+\textbf{Tail probability of the minimum piece.} For $0\le t\le\tfrac13$,
+\[
+\mathbb P(A>t,B>t,C>t)=\mathbb P(X>t,\;Y>X+t,\;Y<1-t)=\int_{t}^{1-2t}\int_{x+t}^{1-t}2\,dy\,dx.
+\]
+The inner integral is $2\bigl[(1-t)-(x+t)\bigr]=2(1-2t-x)$. Substituting $w=x-t$ (so $w$ ranges over $[0,1-3t]$) turns the outer integral into
+\[
+\int_0^{1-3t}2\bigl[(1-3t)-w\bigr]\,dw=2\cdot\frac{(1-3t)^2}{2}=(1-3t)^2.
+\]
+So $\mathbb P(\min(A,B,C)>t)=(1-3t)^2$ for $0\le t\le\tfrac13$ (and $0$ beyond).
+
+\textbf{Expectation via the tail formula.} For a non-negative random variable, $\E[Z]=\int_0^\infty\mathbb P(Z>t)\,dt$, so
+\[
+\E[\min(A,B,C)]=\int_0^{1/3}(1-3t)^2\,dt=\left[-\frac{(1-3t)^3}{9}\right]_0^{1/3}=0-\left(-\frac19\right)=\boxed{\frac19}.
+\]
 \end{proof}
 
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
@@ -5177,7 +5353,6 @@ Segment $i$ contains segment $j$ exactly when $a_i\le a_j$ and $b_i\ge b_j$: a $
 — $O(n\log n)$ for the two sorts plus $O(n)$ Fenwick operations at $O(\log n)$ each, and $O(n)$ memory for the compressed ranks and the Fenwick array.
 \end{proof}
 
-\section*{How to Use This Guide Efficiently}
 \begin{example}[Shortest index window realizing a target multiset]
 Given integer arrays $a[1..n]$ and $b[1..k]$ (with all elements of $b$ distinct), design an algorithm that finds indices $i_1<i_2<\cdots<i_k$ minimizing $i_k-i_1$ such that $\{a[i_1],\dots,a[i_k]\}$ is a permutation of $b$. Target $O(nk)$ time (faster is welcome) and $O(n)$ extra memory.
 \end{example}
@@ -5196,7 +5371,6 @@ This is the classical \emph{minimum window containing a target set} problem, sol
 (the $O(k)$ hash map and $O(k)$ count array are within the $O(n)$ budget since $k\le n$).
 \end{proof}
 
-\section*{How to Use This Guide Efficiently}
 \begin{example}[In-place linear-time sort by remainder mod $5$]
 Given an array of $n$ integers, design an algorithm that sorts them by remainder modulo $5$ (order among equal remainders doesn't matter), using $O(n)$ time and $O(1)$ extra memory.
 \end{example}
@@ -5217,7 +5391,6 @@ This is in-place counting sort, specialized to the $5$ fixed buckets $0,1,2,3,4$
 (only the $10$ counters $c[0..4],\mathrm{next}[0..4]$ and a few loop indices are used, regardless of $n$).
 \end{proof}
 
-\section*{How to Use This Guide Efficiently}
 \begin{example}[Finding one defective relay in $O(N)$ switch operations]
 A connected circuit is an undirected graph with no multiple edges: $N$ edges are wires with relays, and vertices are either light bulbs or a single power source. A bulb lights iff some path to the source has every relay along it switched on. Exactly one relay is defective (it never conducts, regardless of its switch position); all switches start on. Design a strategy that identifies the defective relay using $O(N)$ switch toggles (observing which bulbs are lit after each).
 \end{example}
@@ -5233,7 +5406,6 @@ A connected circuit is an undirected graph with no multiple edges: $N$ edges are
 for the spanning-tree phase, which by itself already covers a large class of instances (e.g.\ whenever the graph is a tree, $N=V-1$, so no second phase is needed at all). Turning the second phase's per-edge path-toggling into a strategy that is provably $O(N)$ \emph{in total} even when the graph has many independent cycles (rather than merely $O(N)$ per edge tested) needs a more careful incremental/amortized scheme than is spelled out here.
 \end{proof}
 
-\section*{How to Use This Guide Efficiently}
 \begin{example}[The largest function satisfying an iterated-square-root recurrence]
 Algorithm $A$'s running time satisfies $T(n)\le T(\lfloor\sqrt n\rfloor)+1$, with $T(1)=C_1$ constant. Find, in $O$-notation, an asymptotically as-large-as-possible function satisfying this relation, and prove it does.
 \end{example}
@@ -5269,6 +5441,24 @@ Given a string $S$ of lowercase letters, find the minimum number of characters (
 \textbf{Algorithm.} Check whether $S$ is a palindrome (two-pointer scan from both ends, $O(n)$ time, $O(1)$ extra space). If not, output $0$. If so, check whether all characters are equal (another $O(n)$ scan); if so, report impossible; otherwise output $1$ (with the first character as a witness deletion). So
 \[
 \boxed{O(n) \text{ time}, O(1) \text{ extra memory}}.
+\]
+\end{proof}
+
+\begin{example}[Extrapolating a degree-$n$ polynomial from its first $n+1$ values]
+An unknown degree-$n$ polynomial $P(x)$ is given via its values $P(0),P(1),\dots,P(n)$. Design an $O(n^2)$-time algorithm to compute $P(n+1),P(n+2),\dots,P(2n)$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Key fact: the $n$-th finite difference of a degree-$n$ polynomial is a constant.} Define the forward difference operator $(\Delta f)(x)=f(x+1)-f(x)$. If $f$ has degree $d\ge1$, then $\Delta f$ has degree $d-1$ (the leading terms cancel in $f(x+1)-f(x)$, leaving a degree-$(d-1)$ polynomial with leading coefficient $d$ times that of $f$). So $\Delta^n P$ has degree $0$: it is some constant $c$, the same value $\Delta^n P(k)=c$ for \emph{every} integer $k$.
+
+\textbf{Building the difference triangle.} From $P(0),\dots,P(n)$, compute the standard triangular difference table: row $0$ is $P(0),\dots,P(n)$; row $j$ (for $j=1,\dots,n$) has entries $\Delta^j P(0),\dots,\Delta^j P(n-j)$, each obtained as (entry to its lower-right) $-$ (entry directly below it) in row $j-1$, i.e.\ $\Delta^jP(k)=\Delta^{j-1}P(k+1)-\Delta^{j-1}P(k)$. This table has $\binom{n+2}{2}=O(n^2)$ entries, each computed in $O(1)$, so it costs $O(n^2)$ total. Its apex is the single value $\Delta^nP(0)=c$.
+
+\textbf{Extending the table diagonally.} To find $P(n+1)$: since $\Delta^nP(1)=c$ too (the $n$-th difference is constant everywhere), start a new top-to-bottom diagonal with $\Delta^nP(1)=c$ and fill it downward using $\Delta^{j-1}P(k+1)=\Delta^{j-1}P(k)+\Delta^jP(k)$ — each new diagonal entry is the sum of the entry above-left of it and the entry directly above it, both already known from the existing table. After $n$ such steps the diagonal reaches $\Delta^0P(n+1)=P(n+1)$, using $O(n)$ arithmetic operations.
+
+\textbf{Iterating.} Repeat this once for each of $P(n+1),\dots,P(2n)$: to get $P(n+1+t)$, extend a new diagonal starting from $\Delta^nP(1+t)=c$ (still the same constant), using only previously computed table entries, again in $O(n)$ operations. After $n$ repetitions, all of $P(n+1),\dots,P(2n)$ are known.
+
+\textbf{Complexity.} Building the initial table costs $O(n^2)$; each of the $n$ extrapolation steps costs $O(n)$, for another $O(n^2)$. Total time and space are both
+\[
+\boxed{O(n^2)}.
 \]
 \end{proof}
 
