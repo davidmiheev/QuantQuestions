@@ -338,6 +338,29 @@ An $n\times n$ matrix has entries in $\{0,1\}$, and in every row the $1$'s (if a
 \]
 \end{proof}
 
+\begin{example}[Rank of the matrix $a_{ij}=(i-j)^2$]
+Let $A$ be the $n\times n$ matrix with $a_{ij}=(i-j)^2$. Find $\rank A$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Upper bound.} Expand $(i-j)^2=i^2-2ij+j^2$. Let $P_0,P_1,P_2\in\R^n$ have entries $(P_r)_i=i^r$ (so $P_0$ is all-ones, $P_1=(1,2,\dots,n)^T$, $P_2=(1^2,\dots,n^2)^T$). Then column $j$ of $A$ is
+\[
+A_{\cdot j}=P_2-2j\,P_1+j^2P_0\in\Span(P_0,P_1,P_2),
+\]
+so every column lies in a subspace of dimension at most $3$, giving $\rank A\le3$ (and $\rank A\le n$ trivially, relevant for $n<3$).
+
+\textbf{Exact rank for $n\ge3$.} Check the top-left $3\times3$ minor (rows and columns $1,2,3$):
+\[
+\begin{vmatrix}0&1&4\\1&0&1\\4&1&0\end{vmatrix}=0(0-1)-1(0-4)+4(1-0)=0+4+4=8\ne0,
+\]
+so columns $1,2,3$ of $A$ are linearly independent, giving $\rank A\ge3$. Combined with the upper bound, $\rank A=3$ for $n\ge3$.
+
+\textbf{Small cases.} For $n=1$: $A=(0)$, rank $0$. For $n=2$: $A=\begin{pmatrix}0&1\\1&0\end{pmatrix}$, $\det=-1\ne0$, rank $2$.
+
+\[
+\boxed{\rank A=\begin{cases}0,& n=1\\2,& n=2\\3,& n\ge3\end{cases}}
+\]
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1020,6 +1043,26 @@ So the assumption was false:
 \[
 \boxed{A\text{ has at least one negative eigenvalue}}.
 \]
+\end{proof}
+
+\begin{example}[$n+1$ eigenvectors with every $n$ independent forces a scalar matrix]
+A linear operator on an $n$-dimensional space has $n+1$ eigenvectors $v_1,\dots,v_{n+1}$ such that \emph{any} $n$ of them are linearly independent. Find all matrices that could represent such an operator.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Diagonalizability.} Since some $n$ of the $v_i$ are already linearly independent, they form a full eigenbasis: the operator is diagonalizable. For each eigenvalue $\lambda$, let $d_\lambda$ denote the dimension of its eigenspace, so
+\[
+\sum_\lambda d_\lambda=n.
+\]
+
+\textbf{Pigeonhole on eigenvalue membership.} Let $c_\lambda$ be the number of the given $n+1$ vectors that are eigenvectors for $\lambda$; then $\sum_\lambda c_\lambda=n+1>n=\sum_\lambda d_\lambda$. So some eigenvalue $\lambda$ has $c_\lambda>d_\lambda$: more than $d_\lambda$ of our vectors lie in a $d_\lambda$-dimensional eigenspace, so \emph{any} $d_\lambda+1$ of them are linearly dependent — in particular, all $c_\lambda$ of them (as a set) are linearly dependent.
+
+\textbf{Ruling out a second eigenvalue.} Suppose some $v_j$ (among the $n+1$) is an eigenvector for a different eigenvalue $\kappa\ne\lambda$. Remove $v_j$ from the collection: the remaining $n$ vectors still include \emph{all} $c_\lambda>d_\lambda$ of the $\lambda$-eigenvectors, which remain linearly dependent — contradicting the hypothesis that every $n$-subset is independent. So no such $v_j$ exists: \emph{every} one of the $n+1$ given vectors is an eigenvector for the same $\lambda$.
+
+\textbf{Conclusion.} These $n+1$ vectors (in particular, any $n$ of them) span the whole $n$-dimensional space, and every one of them satisfies $Tv=\lambda v$. Since eigenspaces are subspaces (closed under linear combination), every vector in their span — i.e.\ every vector in the space — satisfies $Tv=\lambda v$. So $T=\lambda I$ for some scalar $\lambda$:
+\[
+\boxed{\text{exactly the scalar matrices }\lambda I}
+\]
+(Conversely, any $\lambda I$ works: every nonzero vector is an eigenvector, so e.g.\ the $n$ standard basis vectors together with $(1,1,\dots,1)^T$ give $n+1$ eigenvectors, any $n$ of which are independent.)
 \end{proof}
 
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
@@ -1719,6 +1762,31 @@ matching the upper bound exactly.
 
 \[
 \boxed{\max\sum_{n=0}^\infty a_n=\frac23,\text{ attained at }a=\tfrac13\text{ (or }a=\tfrac23\text{, or any translate by an integer)}}
+\]
+\end{proof}
+
+\begin{example}[An infinite product of cosines telescopes to $\sin x/x$]
+Find $\displaystyle\prod_{k=1}^\infty\cos\left(\frac x{2^k}\right)$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{A telescoping identity.} From the double-angle formula $\sin(2\theta)=2\sin\theta\cos\theta$, solve for $\cos\theta=\dfrac{\sin(2\theta)}{2\sin\theta}$. Applying this with $\theta=x/2^k$:
+\[
+\cos\!\left(\frac x{2^k}\right)=\frac{\sin(x/2^{k-1})}{2\sin(x/2^k)}.
+\]
+
+\textbf{Partial products telescope.} Let $P_N=\displaystyle\prod_{k=1}^N\cos(x/2^k)$. Substituting the identity above for each factor,
+\[
+P_N=\prod_{k=1}^N\frac{\sin(x/2^{k-1})}{2\sin(x/2^k)}=\frac{\sin x}{2\sin(x/2)}\cdot\frac{\sin(x/2)}{2\sin(x/4)}\cdots\frac{\sin(x/2^{N-1})}{2\sin(x/2^N)}=\frac{\sin x}{2^N\sin(x/2^N)},
+\]
+since every intermediate $\sin(x/2^{k})$ cancels between consecutive factors.
+
+\textbf{Taking the limit.} As $N\to\infty$, $x/2^N\to0$, and $\sin\theta/\theta\to1$ as $\theta\to0$, so
+\[
+2^N\sin(x/2^N)=x\cdot\frac{\sin(x/2^N)}{x/2^N}\longrightarrow x.
+\]
+Hence
+\[
+\boxed{\prod_{k=1}^\infty\cos\!\left(\frac x{2^k}\right)=\lim_{N\to\infty}\frac{\sin x}{2^N\sin(x/2^N)}=\frac{\sin x}{x}}.
 \]
 \end{proof}
 
@@ -3059,6 +3127,39 @@ The exponential series gives $e^x=\sum_{n=0}^\infty\dfrac{x^n}{n!}=1+\sum_{n=1}^
 \section{Combinatorics}
 Combinatorics questions reward clean counting arguments, parity reasoning, and the ability to encode a counting problem algebraically.
 
+\begin{example}[Series weighted by the binary popcount function]
+Let $f(n)$ be the number of $1$'s in the binary representation of $n$. Find $\displaystyle\sum_{n=1}^\infty\frac{f(n)}{n(n+1)}$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Convergence.} Since $f(n)\le\log_2n+1$, the terms are $O(\log n/n^2)$, and $\sum\log n/n^2$ converges (e.g.\ by the integral test), so the series $S:=\sum_{n\ge1}f(n)/(n(n+1))$ converges absolutely (all terms are nonnegative anyway).
+
+\textbf{Splitting by parity.} Separate $S$ into the $n=1$ term plus even and odd $n\ge2$:
+\[
+S=\frac{f(1)}{1\cdot2}+\sum_{n=1}^\infty\frac{f(2n)}{2n(2n+1)}+\sum_{n=1}^\infty\frac{f(2n+1)}{(2n+1)(2n+2)}.
+\]
+Since appending a bit $0$ or $1$ to $n$'s binary expansion gives $2n$ or $2n+1$, $f(2n)=f(n)$ and $f(2n+1)=f(n)+1$; also $f(1)=1$. Substituting,
+\[
+S=\frac12+\sum_{n=1}^\infty f(n)\left[\frac1{2n(2n+1)}+\frac1{(2n+1)(2n+2)}\right]+\sum_{n=1}^\infty\frac1{(2n+1)(2n+2)}.
+\]
+
+\textbf{The bracket telescopes.}
+\[
+\frac1{2n(2n+1)}+\frac1{(2n+1)(2n+2)}=\left[\frac1{2n}-\frac1{2n+1}\right]+\left[\frac1{2n+1}-\frac1{2n+2}\right]=\frac1{2n}-\frac1{2n+2},
+\]
+which is $\dfrac12\cdot\dfrac1{n(n+1)}$. So the middle sum equals $\tfrac12\sum_n f(n)/(n(n+1))=\tfrac12S$, giving
+\[
+S=\frac12+\frac12S+T,\qquad T:=\sum_{n=1}^\infty\frac1{(2n+1)(2n+2)}.
+\]
+Solving, $S=1+2T$.
+
+\textbf{Evaluating $T$.} Partial fractions give $T=\sum_{n=1}^\infty\left[\dfrac1{2n+1}-\dfrac1{2n+2}\right]=\sum_{k=3}^\infty\dfrac{(-1)^{k+1}}{k}$ (the alternating harmonic series starting at $k=3$). Since $\sum_{k=1}^\infty\frac{(-1)^{k+1}}k=\ln2$, subtracting the $k=1,2$ terms gives $T=\ln2-\bigl(1-\tfrac12\bigr)=\ln2-\tfrac12$.
+
+\textbf{Answer.}
+\[
+S=1+2\left(\ln2-\frac12\right)=\boxed{2\ln2}.
+\]
+\end{proof}
+
 \subsection{Counting Rules, Inclusion--Exclusion, and Pigeonhole}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3377,6 +3478,37 @@ where $H_k$ is the $k$-th harmonic number. Since $H_k>\ln(k+1)$ (comparing the s
 This contradiction shows the assumption fails:
 \[
 \boxed{\exists\,(m,n):\ a_{mn}>mn}.
+\]
+\end{proof}
+
+\begin{example}[Largest subset of $\{1,\dots,256\}$ avoiding $x=2y$]
+Find the size of the largest subset $A'\subseteq\{1,2,\dots,256\}$ containing no two elements $x,y$ with $x=2y$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Chain decomposition.} Every $n\in\{1,\dots,256\}$ is uniquely $n=o\cdot2^t$ for an odd $o$ and $t\ge0$. Group the numbers into chains by their odd part $o$: $C_o=\{o,2o,4o,\dots\}\cap[1,256]$. These chains partition $\{1,\dots,256\}$, and the forbidden relation $x=2y$ only ever links \emph{consecutive} elements within the same chain — so avoiding it is exactly the problem of choosing a maximum independent set in a path graph on each chain (no two adjacent elements), independently per chain. A path on $m$ vertices has maximum independent set size $\lceil m/2\rceil$ (take every other element, starting from either end).
+
+\textbf{Chain lengths.} For odd $o$, the chain length is $m(o)=\bigl\lfloor\log_2(256/o)\bigr\rfloor+1$ (the number of $t\ge0$ with $o\cdot2^t\le256$). Grouping odd $o$ by which power-of-two interval it falls in:
+\[
+\begin{array}{c|c|c|c}
+\text{range of }o & \#\text{ odd }o\text{ in range} & m(o) & \lceil m(o)/2\rceil\\\hline
+o=1 & 1 & 9 & 5\\
+(2,4] & 1 & 7 & 4\\
+(4,8] & 2 & 6 & 3\\
+(8,16] & 4 & 5 & 3\\
+(16,32] & 8 & 4 & 2\\
+(32,64] & 16 & 3 & 2\\
+(64,128] & 32 & 2 & 1\\
+(128,256] & 64 & 1 & 1
+\end{array}
+\]
+Summing $(\#\text{odd }o)\times\lceil m(o)/2\rceil$ across all eight rows:
+\[
+1\cdot5+1\cdot4+2\cdot3+4\cdot3+8\cdot2+16\cdot2+32\cdot1+64\cdot1=5+4+6+12+16+32+32+64=171.
+\]
+(Verified by direct computation, and the same chain-decomposition method matches an exhaustive brute-force search for the analogous small case $\{1,\dots,8\}$, which gives $5$.)
+
+\[
+\boxed{|A'|_{\max}=171}
 \]
 \end{proof}
 
@@ -6183,6 +6315,27 @@ Given an array of $n$ zeros and ones, find the longest subarray containing an eq
 
 \[
 \boxed{O(n)\text{ time (one pass)},\ O(n)\text{ extra memory (the }\mathrm{first}[\,\cdot\,]\text{ array)}}
+\]
+\end{proof}
+
+\begin{example}[Searching a monotone matrix needs at least $n$ comparisons]
+Call an $n\times n$ array of reals $A$ \emph{monotone} if $A[k][l]\ge A[i][j]$ whenever $i\le k$ and $j\le l$. Given such an $A$ and a target $X$, an algorithm must decide whether $X$ occurs in $A$, using only comparisons of $A[i][j]$ against $X$. Prove no algorithm can guarantee an answer in fewer than $n$ comparisons.
+\end{example}
+\begin{proof}[Solution]
+\textbf{The hard set: the anti-diagonal.} Consider the $n$ cells $D=\{(k,n{+}1{-}k):k=1,\dots,n\}$. For $k\ne k'$, neither $(k,n{+}1{-}k)$ nor $(k',n{+}1{-}k')$ dominates the other (one has a larger row index and smaller column index than the other), so monotonicity imposes \emph{no} constraint between any two cells of $D$ — their values could a priori be in any relative order.
+
+\textbf{An adversary that never reveals information about $D$ for free.} The adversary answers each query $A[i][j]\lessgtr X$ on the fly, maintaining a set of numeric constraints consistent with monotonicity, as follows.
+\begin{itemize}
+\item If $(i,j)\in D$ itself, answer $A[i][j]\ne X$ (pick either direction) — this resolves exactly that one cell of $D$.
+\item If $(i,j)\notin D$ with $i+j<n+1$: such a cell is \emph{dominated by} every $(k,n{+}1{-}k)\in D$ with $k\in[i,\,n{+}1{-}j]$ (a nonempty range), meaning those cells of $D$ are $\ge A[i][j]$. Answer $A[i][j]<X$ — this says nothing about whether the dominating (still larger) cells of $D$ are above or below $X$.
+\item If $(i,j)\notin D$ with $i+j>n+1$: symmetrically, such a cell \emph{dominates} some cells of $D$ (which are therefore $\le A[i][j]$). Answer $A[i][j]>X$ — again uninformative about those dominated $D$-cells.
+\end{itemize}
+In every off-diagonal case the adversary's answer is consistent with \emph{any} eventual relationship between $X$ and the not-yet-queried cells of $D$ (a cell of $D$ bounded only from below by something $<X$, or only from above by something $>X$, can still be assigned any value, including exactly $X$, later). So off-diagonal queries never resolve any cell of $D$; only directly querying a cell of $D$ resolves it (and resolves only that one).
+
+\textbf{Forcing $n$ queries.} Suppose the algorithm halts after fewer than $n$ total queries. Then some cell $(k_0,n{+}1{-}k_0)\in D$ was never queried, and by the above, its value is still unconstrained relative to $X$ (consistent bounds on it never pinned it down, by construction). The adversary can now retroactively complete the matrix two different ways, both consistent with every answer already given: set that cell to exactly $X$ (making $X$ present), or to some nearby value avoiding $X$ (making $X$ absent, since no other cell was ever forced to equal $X$ either). A correct algorithm must give different final answers on these two completions, yet it observed identical query results in both — contradiction.
+
+\[
+\boxed{\text{at least }n\text{ comparisons are always necessary}}
 \]
 \end{proof}
 
