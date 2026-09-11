@@ -320,6 +320,24 @@ Since $A$ is invertible with exactly one positive entry per row, the map (row) $
 \]
 \end{proof}
 
+\begin{example}[The determinant of a $0/1$ matrix with contiguous $1$'s per row]
+An $n\times n$ matrix has entries in $\{0,1\}$, and in every row the $1$'s (if any) form a single contiguous block. Prove $\det\in\{-1,0,1\}$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Sort by first-one position.} Reorder the rows so that the column index of each row's leftmost $1$ (call it $+\infty$ for an all-zero row) is non-decreasing from top to bottom; this changes $\det$ by a factor of $\pm1$ (a product of transpositions).
+
+\textbf{Eliminate ties.} Suppose two rows share the same leftmost-$1$ column $p$, with one row's block of $1$'s running from $p$ to $a$ and the other's from $p$ to $b$, $a<b$. Subtracting the shorter row from the longer one (a determinant-preserving operation) gives, entrywise: positions $p,\dots,a$ cancel to $0$ (both rows had $1$ there); positions $a+1,\dots,b$ become $1-0=1$ (only the longer row had a $1$ there); everywhere else stays $0$. So the difference is again a valid ``contiguous block'' row, now with leftmost $1$ at $a+1>p$ — strictly increasing the tie-broken row's first-one position. Repeating this (it terminates, since each such operation strictly increases the sum of first-one positions among tied rows, which is bounded above by $n^2$) eventually produces a matrix where every row's first-one position is distinct, or some row becomes entirely zero.
+
+\textbf{Case: a zero row appears.} Then the determinant of the (row-operation-equivalent) matrix is $0$, and since row operations changed $\det$ only by $0$ (subtraction) or a sign (swaps), the original $\det=0$ too.
+
+\textbf{Case: all first-one positions become distinct.} There are $n$ rows and first-one positions lie in $\{1,\dots,n\}$ (using $n$ for ``no leading $1$ before column $n$''; if some row is entirely zero this is the previous case); $n$ distinct values from a set of size $n$, sorted increasing, must be exactly $1,2,\dots,n$ in order. So after sorting, row $i$'s first $1$ is exactly at column $i$, meaning entry $(i,j)=0$ for all $j<i$: the matrix is upper triangular, with diagonal entries $(i,i)=1$ (each row's leftmost $1$ sits exactly on the diagonal). Its determinant is the product of the diagonal, namely $1$.
+
+\textbf{Conclusion.} Throughout, $|\det(\text{current matrix})|=|\det(\text{original})|$ (swaps flip sign, subtractions preserve $\det$ exactly). The process ends with determinant $0$ or $1$, so
+\[
+\boxed{\det\in\{-1,0,1\}}.
+\]
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -982,6 +1000,26 @@ so $|\det M|\le\left(\|M\|_F^2/n\right)^{n/2}$. Given $\|M\|_F^2\le1$, this give
 \boxed{\max\det=\dfrac{1}{3\sqrt3}=\dfrac{\sqrt3}{9}}
 \]
 (As a check, the general formula $n^{-n/2}$ reduces to part (a)'s $\tfrac12$ when $n=2$.)
+\end{proof}
+
+\begin{example}[The adjacency matrix of a nonempty loopless graph has a negative eigenvalue]
+Let $G$ be a nonempty, loopless, undirected graph on $n$ labeled vertices, with adjacency matrix $A$ ($A_{ij}$ = number of edges between $i$ and $j$). Prove $A$ has a negative eigenvalue.
+\end{example}
+\begin{proof}[Solution]
+$A$ is symmetric with zero diagonal (no loops) and nonnegative entries, and $A\ne0$ since $G$ has at least one edge. Being symmetric, $A$ is diagonalizable with real eigenvalues.
+
+Suppose toward contradiction that every eigenvalue of $A$ is $\ge0$; then $A$ is positive semidefinite, i.e.\ $x^TAx\ge0$ for every vector $x$.
+
+Since $G$ is nonempty, fix an edge, i.e.\ indices $i\ne j$ with $A_{ij}>0$. Test $x=e_i-e_j$:
+\[
+x^TAx=A_{ii}-2A_{ij}+A_{jj}=0-2A_{ij}+0=-2A_{ij}<0,
+\]
+using $A_{ii}=A_{jj}=0$ (no loops) and $A_{ij}=A_{ji}$ (symmetry). This contradicts positive semidefiniteness.
+
+So the assumption was false:
+\[
+\boxed{A\text{ has at least one negative eigenvalue}}.
+\]
 \end{proof}
 
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
@@ -2675,6 +2713,38 @@ So
 \]
 \end{proof}
 
+\begin{example}[When is a product-of-cosines integral nonzero?]
+Let
+\[
+I_m=\int_0^{2\pi}\cos(x)\cos(2x)\cdots\cos(mx)\,dx.
+\]
+For which $m\in[1,10]$ is $I_m\ne0$?
+\end{example}
+\begin{proof}[Solution]
+\textbf{Expanding the product.} Repeatedly applying $\cos u\cos v=\tfrac12[\cos(u+v)+\cos(u-v)]$ to the $m$ factors expands the product into
+\[
+\cos x\cos2x\cdots\cos mx=\frac1{2^{m-1}}\sum_{\varepsilon_2,\dots,\varepsilon_m\in\{\pm1\}}\cos\bigl(\alpha\,x\bigr),\qquad \alpha=1+\varepsilon_22+\varepsilon_33+\cdots+\varepsilon_mm,
+\]
+a sum of $2^{m-1}$ terms (the first factor contributes $+1$ with no sign choice; each subsequent factor $k=2,\dots,m$ contributes an independent sign $\varepsilon_k$). Since $\int_0^{2\pi}\cos(\alpha x)\,dx$ is $2\pi$ if $\alpha=0$ and $0$ for any other integer $\alpha$,
+\[
+I_m=\frac{2\pi}{2^{m-1}}\cdot\#\{\text{sign choices with }\alpha=0\}.
+\]
+
+\textbf{A parity obstruction.} Flipping any single sign $\varepsilon_k\to-\varepsilon_k$ changes $\alpha$ by $\mp2k$, an even number — so $\alpha\bmod2$ is the \emph{same for every sign choice}, equal to the parity of $1+2+\cdots+m=\tfrac{m(m+1)}2$. If this is odd, $\alpha$ is always odd, so $\alpha=0$ is never attained and $I_m=0$.
+
+Checking $\tfrac{m(m+1)}2\bmod2$ for $m=1,\dots,10$: $1,3,6,10,15,21,28,36,45,55$, which are even exactly for $m=3,4,7,8$ (and odd for $m=1,2,5,6,9,10$). So $I_m=0$ automatically for $m=1,2,5,6,9,10$.
+
+\textbf{Explicit zero-sum constructions for $m=3,4,7,8$.} Parity only rules out the other six; for $m=3,4,7,8$ we exhibit signs achieving $\alpha=0$ directly:
+\[
+1+2-3=0,\qquad 1-2-3+4=0,\qquad 1+2-3+4-5-6+7=0,\qquad 1+2-3-4-5-6+7+8=0.
+\]
+(Each is checked by direct arithmetic.) So for these four values of $m$, at least one term of the sum survives, giving $I_m\ne0$.
+
+\[
+\boxed{I_m\ne0\text{ for }m=3,4,7,8\text{ (and }I_m=0\text{ for the other }m\in[1,10])}
+\]
+\end{proof}
+
 \subsection{Series, Power Series, and Fourier Methods}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3279,6 +3349,34 @@ Each successive inequality is immediate: increasing the second index while $x_1$
 Combining both parts,
 \[
 \boxed{\min|S_M|=2n-3}.
+\]
+\end{proof}
+
+\begin{example}[An infinite array where every value repeats $8$ times must exceed $mn$ somewhere]
+An infinite array $\{a_{ij}\}_{i,j=1}^\infty$ of natural numbers has the property that every value appears in the array exactly $8$ times. Prove there exist $m,n$ with $a_{mn}>mn$.
+\end{example}
+\begin{proof}[Solution]
+Suppose, toward contradiction, that $a_{mn}\le mn$ for \emph{every} $m,n\ge1$.
+
+\textbf{Counting cells under a hyperbola.} Fix $k\in\N$ and let $R_k=\{(i,j)\in\N^2:ij\le k\}$. For $(i,j)\in R_k$, the assumption gives $a_{ij}\le ij\le k$, so $a_{ij}\in\{1,\dots,k\}$. Since each of these $k$ values occurs exactly $8$ times in the \emph{entire} array, the number of cells with a value in $\{1,\dots,k\}$ is exactly $8k$ — so in particular
+\[
+|R_k|\le8k.
+\]
+
+\textbf{But $|R_k|$ grows like $k\ln k$.} Counting by columns, $|R_k|=\sum_{i=1}^k\left\lfloor\frac ki\right\rfloor$ (for each $i\le k$, $j$ ranges over $1,\dots,\lfloor k/i\rfloor$). Using $\lfloor x\rfloor>x-1$,
+\[
+|R_k|>\sum_{i=1}^k\left(\frac ki-1\right)=k\sum_{i=1}^k\frac1i-k=k H_k-k,
+\]
+where $H_k$ is the $k$-th harmonic number. Since $H_k>\ln(k+1)$ (comparing the sum to $\int_1^{k+1}\frac{dx}x$),
+\[
+|R_k|>k\ln(k+1)-k.
+\]
+
+\textbf{Contradiction for large $k$.} Combining the two bounds, $k\ln(k+1)-k<8k$, i.e.\ $\ln(k+1)<9$, i.e.\ $k<e^9-1\approx8102.6$. So for any $k\ge8103$, $|R_k|>8k$ — contradicting $|R_k|\le8k$ established above.
+
+This contradiction shows the assumption fails:
+\[
+\boxed{\exists\,(m,n):\ a_{mn}>mn}.
 \]
 \end{proof}
 
@@ -4059,6 +4157,25 @@ N_{2014}(0)=\frac{6^{2014}-(-1)^{2014}}{7}=\boxed{\frac{6^{2014}-1}{7}}.
 (Sanity check: Fermat's little theorem gives $6\equiv-1\pmod7$, so $6^{2014}\equiv1\pmod7$, confirming the quotient is a genuine integer. A direct brute-force count over all $6^k$ strings for $k=1,\dots,7$ matches $(6^k-(-1)^k)/7$ in every case except the resonant $k=6$, where the formula correctly instead gives $(6^6+6)/7=6666$.)
 \end{proof}
 
+\begin{example}[Closed form for a nonlinear recurrence via reciprocal substitution]
+The sequence $(a_n)_{n\ge0}$ is defined by $a_0=1$, $a_{n+1}=\dfrac{a_n}{1+na_n}$. Find a closed-form formula for $a_n$.
+\end{example}
+\begin{proof}[Solution]
+Since $a_0=1\ne0$ and the recursion preserves positivity ($a_{n+1}>0$ whenever $a_n>0$), every $a_n>0$, so $b_n:=1/a_n$ is well-defined. Taking reciprocals of the recursion,
+\[
+b_{n+1}=\frac{1+na_n}{a_n}=\frac1{a_n}+n=b_n+n,
+\]
+a simple linear (additive) recurrence, with $b_0=1/a_0=1$. Telescoping,
+\[
+b_n=b_0+\sum_{k=0}^{n-1}k=1+\frac{n(n-1)}2=\frac{n(n-1)+2}2.
+\]
+Hence
+\[
+\boxed{a_n=\frac1{b_n}=\frac{2}{n(n-1)+2}}.
+\]
+(Check: $n=0$ gives $2/2=1=a_0$ ✓; $n=1$ gives $2/2=1$, matching $a_1=a_0/(1+0\cdot a_0)=1$ ✓.)
+\end{proof}
+
 \section{Probability Theory and Statistics}
 This is the most frequently tested area in quant interviews. You are expected to move comfortably between combinatorics, conditional probability, expectation, convergence, and recursion.
 
@@ -4426,6 +4543,20 @@ and dividing by the total disk area $\pi R^2$,
 \boxed{\mathbb P(\text{obtuse})=\begin{cases}1, & 0<R\le1,\\[4pt] \dfrac{\pi+2R^2\arccos(1/R)-2\sqrt{R^2-1}}{\pi R^2}, & R>1.\end{cases}}
 \]
 (Continuity check: as $R\to1^+$, $\arccos(1/R)\to0$ and $\sqrt{R^2-1}\to0$, so the formula $\to\pi/\pi=1$, matching the $R\le1$ case. As $R\to\infty$, the two strips have area growing only like $O(R)$ against the disk's $\Theta(R^2)$, so $\mathbb P(\text{obtuse})\to1$ as well — consistent with almost every far-away $C$ making a very obtuse angle at $A$ or $B$.)
+\end{proof}
+
+\begin{example}[Probability that $k$ random subsets have empty intersection]
+Let $A=\{1,2,\dots,n\}$. Choose $k$ subsets $A_1,\dots,A_k$ of $A$ independently and uniformly at random (each of the $2^n$ subsets of $A$ equally likely). Find $\mathbb P(A_1\cap A_2\cap\cdots\cap A_k=\varnothing)$.
+\end{example}
+\begin{proof}[Solution]
+Fix an element $i\in A$. Since exactly half of all subsets of $A$ contain $i$, $\mathbb P(i\in A_j)=\tfrac12$ for each $j$, and these events are independent across $j=1,\dots,k$ (the subsets are chosen independently). So
+\[
+\mathbb P(i\in A_1\cap\cdots\cap A_k)=\left(\frac12\right)^k,\qquad \mathbb P(i\notin A_1\cap\cdots\cap A_k)=1-\frac1{2^k}.
+\]
+Moreover, membership of \emph{different} elements $i$ in a uniformly random subset are independent (a uniform random subset of $A$ is equivalent to $n$ independent fair coin flips, one per element), so these ``element $i$ survives'' events are independent across $i=1,\dots,n$ as well. The intersection is empty exactly when \emph{no} element survives in all $k$ subsets simultaneously, so
+\[
+\boxed{\mathbb P(A_1\cap\cdots\cap A_k=\varnothing)=\left(1-\frac1{2^k}\right)^{n}}.
+\]
 \end{proof}
 
 \subsection{Random Variables, Moments, and Common Distributions}
@@ -6037,6 +6168,21 @@ A binary tree of depth $d$ has at most $2^d$ leaves, so a correct algorithm need
 
 \[
 \boxed{\text{No: }20\text{ weighings are not always enough — the worst case needs at least }22}
+\]
+\end{proof}
+
+\begin{example}[Longest balanced $0/1$ subarray in $O(n)$ time and space]
+Given an array of $n$ zeros and ones, find the longest subarray containing an equal number of zeros and ones, in $O(n)$ time and $O(n)$ extra memory.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Reduction to prefix sums.} Replace each $0$ with $-1$, leaving the $1$'s unchanged, and let $S_0=0$, $S_i=S_{i-1}+a_i$ for $i=1,\dots,n$ be the running sum. A subarray from index $l+1$ to $r$ has equal counts of $0$'s and $1$'s if and only if $S_r=S_l$ (the $\pm1$ contributions cancel exactly).
+
+\textbf{Algorithm.} Since each $a_i\in\{-1,1\}$, $S_i\in[-n,n]$, so allocate an array $\mathrm{first}[\,\cdot\,]$ indexed by this range ($O(n)$ space), initialized to ``unset.'' Scan $i=0,\dots,n$ in order: if $\mathrm{first}[S_i]$ is unset, record $\mathrm{first}[S_i]=i$ (the earliest index reaching this running sum); otherwise, this is a repeat, and the subarray from $\mathrm{first}[S_i]+1$ to $i$ is balanced — update the best answer with length $i-\mathrm{first}[S_i]$ if it's larger.
+
+\textbf{Correctness.} For each value $v$ attained by $S$, the earliest index $l$ with $S_l=v$ paired with the \emph{latest} index $r$ with $S_r=v$ gives the longest balanced subarray with that particular running-sum value $v$ (since $S_l=S_r=v$ for any pair of indices with that value, and the longest such gap uses the extreme occurrences); processing indices left to right and always comparing against the first (earliest) occurrence, while continuously updating the best-so-far length, correctly finds this maximum length for every $v$, and hence overall.
+
+\[
+\boxed{O(n)\text{ time (one pass)},\ O(n)\text{ extra memory (the }\mathrm{first}[\,\cdot\,]\text{ array)}}
 \]
 \end{proof}
 
