@@ -289,6 +289,16 @@ Since this holds for every column $j=1,\dots,n$, matrix $B$ has at least $2n$ no
 \]
 \end{proof}
 
+\begin{example}[Determinant of the divisibility matrix]
+Let $A$ be the $n\times n$ matrix with $a_{ij}=1$ if $i$ divides $j$, and $a_{ij}=0$ otherwise (indices $1,\dots,n$). Compute $\det A$.
+\end{example}
+\begin{proof}[Solution]
+If $i>j$, then $i$ cannot divide the smaller positive integer $j$, so $a_{ij}=0$ for all $i>j$: $A$ is upper triangular. Its diagonal entries are $a_{ii}=1$ (every $i$ divides itself). The determinant of an upper triangular matrix is the product of its diagonal entries, so
+\[
+\boxed{\det A=1}.
+\]
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2169,6 +2179,22 @@ Hence the outward flux is
 As a quick check, on the unit sphere the outward unit normal is $n=(x,y,z)$, so $F\cdot n=x^2+y^2+z^2=1$, and the flux is just the surface area of the sphere, also equal to $4\pi$.
 \end{proof}
 
+\begin{example}[Extrema of a quadratic form on a disk, via completing the square]
+Find the minimum and maximum of $f(x,y)=x^2+y^2-12x+16y$ on the disk $x^2+y^2\le25$.
+\end{example}
+\begin{proof}[Solution]
+Complete the square: $f(x,y)=(x-6)^2+(y+8)^2-36-64=(x-6)^2+(y+8)^2-100$. So $f(x,y)+100$ is exactly the squared distance from $(x,y)$ to the fixed point $P=(6,-8)$, and extremizing $f$ over the disk is the same as extremizing this squared distance.
+
+\textbf{$P$ is outside the disk.} $|OP|=\sqrt{6^2+8^2}=\sqrt{100}=10$, while the disk has radius $5$ and is centered at the origin $O$; since $10>5$, $P$ lies strictly outside the disk.
+
+\textbf{Closest and farthest points.} For a point $P$ outside a disk of radius $r$ centered at $O$, the point of the disk closest to $P$ lies on segment $OP$ at distance $|OP|-r$ from $P$, and the farthest point is diametrically opposite, at distance $|OP|+r$. Here that gives closest distance $10-5=5$ and farthest distance $10+5=15$, attained at the points where the line through $O$ and $P$ meets the circle $x^2+y^2=25$: the unit vector from $O$ toward $P$ is $\left(\tfrac6{10},-\tfrac8{10}\right)=\left(\tfrac35,-\tfrac45\right)$, so the near point is $5\cdot\left(\tfrac35,-\tfrac45\right)=(3,-4)$ and the far point is $(-3,4)$.
+
+\textbf{Values.} Minimum squared distance $5^2=25$ gives $f_{\min}=25-100=-75$; maximum squared distance $15^2=225$ gives $f_{\max}=225-100=125$.
+\[
+\boxed{\min f=-75\ \text{(at }(3,-4)\text{)},\qquad \max f=125\ \text{(at }(-3,4)\text{)}}
+\]
+\end{proof}
+
 \subsection{Integration, Parameter Integrals, and Special Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2877,6 +2903,16 @@ Using $\sin\delta=\delta+O(\delta^3)$,
 \boxed{\sum_{k=1}^\infty\sin\!\left(\pi\sqrt{k^2+1}\right) \text{ converges conditionally, not absolutely}}
 \]
 (numerically, partial sums stabilize near $-0.567$, while partial sums of the absolute values grow without bound).
+\end{proof}
+
+\begin{example}[Sum of the series $\sum 2^n/n!$]
+Find $\displaystyle\sum_{n=1}^\infty\frac{2^n}{n!}$.
+\end{example}
+\begin{proof}[Solution]
+The exponential series gives $e^x=\sum_{n=0}^\infty\dfrac{x^n}{n!}=1+\sum_{n=1}^\infty\dfrac{x^n}{n!}$ for every real $x$. Setting $x=2$ and rearranging,
+\[
+\boxed{\sum_{n=1}^\infty\frac{2^n}{n!}=e^2-1}.
+\]
 \end{proof}
 
 \section{Combinatorics}
@@ -3924,6 +3960,34 @@ so
 \]
 \end{proof}
 
+\begin{example}[Counting $2014$-digit numbers from a restricted digit set divisible by $7$]
+How many $2014$-digit numbers, using only the digits $1,3,4,6,7,9$, are divisible by $7$?
+\end{example}
+\begin{proof}[Solution]
+\textbf{Setup.} Modulo $7$, the digits $1,3,4,6,7,9$ have residues $1,3,4,6,0,2$ — that is, our alphabet's residues are exactly $R=\{0,1,2,3,4,6\}=\Z_7\setminus\{5\}$, a bijection between the $6$ digits and $6$ of the $7$ residues. Let $N_k(t)$ be the number of $k$-digit strings over this alphabet whose value is $\equiv t\pmod7$; we want $N_{2014}(0)$.
+
+\textbf{A roots-of-unity filter.} Let $\omega=e^{2\pi i/7}$. Writing the value of a string $(d_1,\dots,d_k)$ as $V=\sum_{i=1}^kd_i\,10^{k-i}$,
+\[
+N_k(0)=\frac17\sum_{j=0}^{6}\ \prod_{i=1}^{k}\left(\sum_{d\in R}\omega^{\,jd\cdot10^{k-i}}\right).
+\]
+For $j=0$, each factor is $|R|=6$, contributing $6^k$. For $j\ne0$: since $\gcd(j\cdot10^{k-i},7)=1$, $\zeta:=\omega^{j\cdot10^{k-i}}$ is a primitive $7$th root of unity, so $\sum_{d\in R}\zeta^d=\sum_{d\in\Z_7}\zeta^d-\zeta^5=0-\zeta^5=-\zeta^5$ (using that all $7$th roots of unity sum to $0$). Multiplying these factors over $i=1,\dots,k$:
+\[
+\prod_{i=1}^k\Bigl(-\omega^{5j\cdot10^{k-i}}\Bigr)=(-1)^k\,\omega^{5j\,S_k},\qquad S_k:=\sum_{i=1}^k10^{k-i}=\sum_{m=0}^{k-1}10^m=\underbrace{11\cdots1}_{k}\ (\text{the length-}k\text{ repunit}).
+\]
+Summing over the $6$ nonzero $j$: if $5S_k\equiv0\pmod7$ (equivalently $S_k\equiv0$, since $5$ is invertible mod $7$), every term is $1$, contributing $6$; otherwise $\omega^{5S_k}$ is itself primitive and $\sum_{j=1}^6(\omega^{5S_k})^j=-1$ (the $6$ nontrivial powers of a primitive root sum to $-1$, since all $7$ powers sum to $0$). So
+\[
+N_k(0)=\frac17\Bigl[6^k+(-1)^k\cdot\bigl(6\text{ if }7\mid S_k,\text{ else }-1\bigr)\Bigr].
+\]
+
+\textbf{When does $7\mid S_k$?} $S_k=(10^k-1)/9$, so $7\mid S_k\iff10^k\equiv1\pmod7$. Since $10\equiv3\pmod7$ and the powers of $3$ mod $7$ are $3,2,6,4,5,1$ (returning to $1$ at the $6$th power), $10$ has multiplicative order $6$ mod $7$: so $7\mid S_k\iff6\mid k$.
+
+\textbf{Applying this to $k=2014$.} Since $2014=6\cdot335+4$, $6\nmid2014$, so we're in the generic case:
+\[
+N_{2014}(0)=\frac{6^{2014}-(-1)^{2014}}{7}=\boxed{\frac{6^{2014}-1}{7}}.
+\]
+(Sanity check: Fermat's little theorem gives $6\equiv-1\pmod7$, so $6^{2014}\equiv1\pmod7$, confirming the quotient is a genuine integer. A direct brute-force count over all $6^k$ strings for $k=1,\dots,7$ matches $(6^k-(-1)^k)/7$ in every case except the resonant $k=6$, where the formula correctly instead gives $(6^6+6)/7=6666$.)
+\end{proof}
+
 \section{Probability Theory and Statistics}
 This is the most frequently tested area in quant interviews. You are expected to move comfortably between combinatorics, conditional probability, expectation, convergence, and recursion.
 
@@ -4932,6 +4996,26 @@ by the binomial theorem. So
 (Check: $n=2$ gives $\E[T]=1.5$, matching a direct hand computation — the die shows $2$ immediately with probability $\tfrac12$ [one roll], or $1$ then anything [two rolls] with probability $\tfrac12$.)
 \end{proof}
 
+\begin{example}[Two rounds of break-and-discard-the-smaller-piece]
+A rod of length $L$ is broken at a uniform random point, and the smaller piece is discarded. The remaining piece is then broken again at a uniform random point, and again the smaller piece is discarded. Find the probability that the final remaining piece has length at least $L/2$.
+\end{example}
+\begin{proof}[Solution]
+Normalize $L=1$. Let $X$ be the length of the piece kept after the first break, and $Y$ the length kept after the second. Breaking $[0,1]$ at a uniform point and keeping the larger piece gives $X=\max(U,1-U)$ for $U\sim\mathrm{Uniform}(0,1)$, which is $\mathrm{Uniform}\bigl(\tfrac12,1\bigr)$ (density $2$ there). Given $X=x$, breaking that piece at a uniform point and keeping the larger sub-piece gives $Y\mid X=x\ \sim\ \mathrm{Uniform}\bigl(\tfrac x2,x\bigr)$ (density $\tfrac2x$ there).
+
+\textbf{Law of total probability.} We want $\mathbb P(Y\ge\tfrac12)$. Since $x\in[\tfrac12,1]$ always has $\tfrac x2\le\tfrac12\le x$, the conditional probability is
+\[
+\mathbb P\Bigl(Y\ge\tfrac12\ \Big|\ X=x\Bigr)=\frac{x-\tfrac12}{x-\tfrac x2}=\frac{x-\tfrac12}{x/2}=2-\frac1x.
+\]
+So
+\[
+\mathbb P\Bigl(Y\ge\tfrac12\Bigr)=\int_{1/2}^1 2\left(2-\frac1x\right)dx=\int_{1/2}^1\left(4-\frac2x\right)dx=\Bigl[4x-2\ln x\Bigr]_{1/2}^{1}=4-\bigl(2-2\ln\tfrac12\bigr)=2+2\ln\tfrac12.
+\]
+Since $\ln\tfrac12=-\ln2$,
+\[
+\boxed{\mathbb P\Bigl(Y\ge\tfrac L2\Bigr)=2-2\ln2}\approx0.614.
+\]
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -5786,6 +5870,42 @@ So only the pair $(P,Q)$, the current level $m$, and the current index $i$ need 
 \textbf{Complexity.} Step (1) performs $O(n)$ additions; step (2) performs $O(n)$ subtractions (the level $m$ decreases by $1$ or $2$ each time, so at most $n$ iterations). Each individual arithmetic operation involves numbers with $\Theta(k)$ digits at level $k$ (Fibonacci-like growth), so
 \[
 \boxed{O(n)\text{ arithmetic operations }(O(n^2)\text{ bit operations}),\ O(1)\text{ stored numbers}}.
+\]
+\end{proof}
+
+\begin{example}[Finding a social-network celebrity in $n$ queries]
+A social network has $n$ users; ``$A$ follows $B$'' need not be symmetric. It is known that exactly one user (the celebrity) is followed by all other $n-1$ users and follows no one. Using queries of the form ``does $A$ follow $B$?'', find the celebrity in at most $n$ queries.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Key elimination fact.} For any two users $A\ne B$: if $A$ follows $B$, then $A$ cannot be the celebrity (the celebrity follows no one); if $A$ does \emph{not} follow $B$, then $B$ cannot be the celebrity (everyone follows the celebrity, so $B$'s failure to be followed by $A$ disqualifies $B$). So a single query about any pair always eliminates exactly one of the two from contention.
+
+\textbf{Algorithm.} Maintain a single candidate, initialized to user $1$. For $l=2,\dots,n$, query whether the current candidate follows user $l$: if yes, the candidate is disqualified and $l$ becomes the new candidate; if no, $l$ is disqualified and the candidate is unchanged. This uses exactly $n-1$ queries.
+
+\textbf{Correctness.} Let $C$ be the true celebrity. Whenever the current candidate is $C$: since $C$ follows no one, every query ``does $C$ follow $l$?'' answers no, so $C$ is never replaced. Whenever $C$ itself is queried as $l$ (i.e.\ the current candidate $k\ne C$ is asked about $C$): since everyone follows $C$, the query ``does $k$ follow $C$?'' answers yes, so $C$ becomes the new candidate at that point. Either way, once $C$ has appeared as candidate or as $l$, it becomes (and remains) the candidate. Since every user appears as $l$ exactly once over the course of the sweep, $C$ is guaranteed to become the final candidate.
+
+\[
+\boxed{n-1\le n\text{ queries suffice}}
+\]
+\end{proof}
+
+\begin{example}[Simulating elastic robot collisions in a corridor]
+A corridor of length $L$ contains $n$ robots at distinct positions $x_1,\dots,x_n\in[0,L]$, each moving at unit speed in direction $+1$ or $-1$. On hitting a wall or another robot, a robot instantly reverses direction. After $t$ time units, (a) find the set of occupied positions (unordered, no repeats); (b) find each robot $i$'s own final position $y_i$. Give an efficient algorithm for both.
+\end{example}
+\begin{proof}[Solution]
+\textbf{The ghost-particle trick.} Since all robots move at the same unit speed, two robots colliding and bouncing apart is kinematically indistinguishable, in terms of the set of positions occupied over time, from two identical ``ghost'' particles passing straight through each other with their identities swapped. So for computing raw positions, each robot can be treated as an independent particle that only reflects off the two walls, ignoring the others entirely.
+
+\textbf{Single-particle wall reflection, in $O(1)$.} A particle starting at $x_i$ moving in direction $v_i=\pm1$ on the infinite line would be at $x_i+v_it$ at time $t$; the corridor motion (bouncing at $0$ and $L$) is obtained by folding this back into $[0,L]$ via the standard triangle-wave map: let $p=(x_i+v_it)\bmod 2L\in[0,2L)$, and the true position is $p$ if $p\le L$, or $2L-p$ if $p>L$. This models wall-bounces exactly and costs $O(1)$ per robot.
+
+\textbf{(a) The occupied set.} Compute the $n$ ghost-positions via the $O(1)$ formula above ($O(n)$ total), then sort and remove duplicates ($O(n\log n)$) to get the position set (some ghost-positions may coincide, e.g.\ from two robots meeting head-on).
+
+\[
+\boxed{O(n\log n)\text{ time for the position set}}
+\]
+
+\textbf{(b) Each robot's own position.} Since real robots bounce apart rather than crossing, their left-to-right \emph{order} along the corridor is preserved for all time — no real robot ever passes another. So: sort the $n$ ghost-positions at time $t$ ($O(n\log n)$), and assign them, in increasing order, to the robots sorted by their \emph{initial} positions $x_1,\dots,x_n$ (also $O(n\log n)$ to sort once, up front): the robot that started $k$-th from the left is at the $k$-th smallest ghost-position at time $t$.
+
+\[
+\boxed{O(n\log n)\text{ time for every robot's own final position}}
 \]
 \end{proof}
 
