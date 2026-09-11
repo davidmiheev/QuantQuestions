@@ -919,6 +919,40 @@ where $\Psi(N)=DND'$ is exactly the diagonal-case operator from part (a). So $T\
 (As a direct check: if $Av=\lambda v$ and $w^TB=\mu w^T$ for a row vector $w^T$, i.e.\ $w$ is an eigenvector of $B^T$ for $\mu$, then $M=vw^T$ satisfies $F(M)=A(vw^T)B=(Av)(w^TB)=\lambda\mu\,vw^T$ — an explicit rank-$1$ eigenvector for each of the $4$ eigenvalue products, matching the similarity argument.)
 \end{proof}
 
+\begin{example}[A constant column sum is always an eigenvalue]
+Let $A$ be a square matrix in which every column's entries sum to the same value $\lambda$. Prove $\lambda$ is an eigenvalue of $A$.
+\end{example}
+\begin{proof}[Solution]
+Let $\mathbf 1$ be the all-ones column vector. The $i$-th entry of $A^T\mathbf1$ is the sum of row $i$ of $A^T$, i.e.\ the sum of column $i$ of $A$, which is $\lambda$ by hypothesis, for every $i$. So $A^T\mathbf1=\lambda\mathbf1$: $\lambda$ is an eigenvalue of $A^T$ (with eigenvector $\mathbf1$).
+
+Since $A$ and $A^T$ have the same characteristic polynomial ($\det(A-xI)=\det\bigl((A-xI)^T\bigr)=\det(A^T-xI)$), they have exactly the same eigenvalues. Hence
+\[
+\boxed{\lambda\text{ is an eigenvalue of }A}.
+\]
+\end{proof}
+
+\begin{example}[Maximum determinant given a bound on the sum of squares of the entries]
+Find the maximum possible determinant of (a) a $2\times2$ and (b) a $3\times3$ real matrix, given that the sum of the squares of all its entries is at most $1$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{General bound via singular values.} For an $n\times n$ real matrix $M$ with singular values $\sigma_1,\dots,\sigma_n\ge0$, two standard facts: $|\det M|=\sigma_1\sigma_2\cdots\sigma_n$, and $\sum_i\sigma_i^2=\|M\|_F^2$ (the sum of squares of all entries of $M$, i.e.\ $\trace(M^TM)$). By AM–GM applied to $\sigma_1^2,\dots,\sigma_n^2$,
+\[
+\sigma_1^2\cdots\sigma_n^2\le\left(\frac{\sum_i\sigma_i^2}{n}\right)^n=\left(\frac{\|M\|_F^2}{n}\right)^n,
+\]
+so $|\det M|\le\left(\|M\|_F^2/n\right)^{n/2}$. Given $\|M\|_F^2\le1$, this gives $|\det M|\le n^{-n/2}$, with equality iff all $\sigma_i$ are equal (to $1/\sqrt n$, using the full budget $\|M\|_F=1$) — i.e.\ $M$ is $\tfrac1{\sqrt n}$ times an orthogonal matrix.
+
+\textbf{(a) $n=2$:} bound is $2^{-1}=\tfrac12$, achieved e.g.\ by $M=\tfrac1{\sqrt2}I_2=\begin{pmatrix}1/\sqrt2&0\\0&1/\sqrt2\end{pmatrix}$ (sum of squares $=\tfrac12+\tfrac12=1$, $\det=\tfrac12$).
+\[
+\boxed{\max\det=\tfrac12}
+\]
+
+\textbf{(b) $n=3$:} bound is $3^{-3/2}=\dfrac{1}{3\sqrt3}=\dfrac{\sqrt3}{9}$, achieved e.g.\ by $M=\tfrac1{\sqrt3}I_3$ (sum of squares $=3\cdot\tfrac13=1$, $\det=3^{-3/2}$).
+\[
+\boxed{\max\det=\dfrac{1}{3\sqrt3}=\dfrac{\sqrt3}{9}}
+\]
+(As a check, the general formula $n^{-n/2}$ reduces to part (a)'s $\tfrac12$ when $n=2$.)
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1571,6 +1605,26 @@ The harmonic sum satisfies $\sum_{k=1}^{n-1}\frac1k\le1+\ln(n-1)$, so
 as $n\to\infty$, since $\ln(n-1)=o(n-1)$. Hence
 \[
 \boxed{\lim_{n\to\infty}c_n=0}.
+\]
+\end{proof}
+
+\begin{example}[A bounded continuous function has near-periodic differences arbitrarily far out]
+Let $f$ be continuous and bounded on $(x_0,+\infty)$. Prove that for every real $T$, there is a sequence $x_n\to+\infty$ with $f(x_n+T)-f(x_n)\to0$.
+\end{example}
+\begin{proof}[Solution]
+The case $T=0$ is trivial ($f(x_n+T)-f(x_n)\equiv0$ for any sequence $x_n\to\infty$). For $T<0$, substituting $y=x+T$ turns the problem into the same statement with the positive shift $|T|$ instead (finding $x_n\to\infty$ with $f(x_n+T)-f(x_n)\to0$ is equivalent to finding $y_n=x_n+T\to\infty$ with $f(y_n+|T|)-f(y_n)\to0$). So assume $T>0$.
+
+Let $g(x)=f(x+T)-f(x)$, continuous on $(x_0,\infty)$. Suppose, for contradiction, that \emph{no} sequence $x_n\to\infty$ has $g(x_n)\to0$; then there exist $\varepsilon>0$ and $X>x_0$ with $|g(x)|\ge\varepsilon$ for all $x\ge X$. Since $g$ is continuous and never $0$ on $[X,\infty)$, by the Intermediate Value Theorem it cannot change sign there — so either $g(x)\ge\varepsilon$ for all $x\ge X$, or $g(x)\le-\varepsilon$ for all $x\ge X$. Take the first case (the second is identical with signs flipped).
+
+\textbf{Telescoping to a contradiction.} For any positive integer $N$,
+\[
+f(X+NT)-f(X)=\sum_{k=0}^{N-1}\Bigl[f\bigl(X+(k+1)T\bigr)-f(X+kT)\Bigr]=\sum_{k=0}^{N-1}g(X+kT)\ge N\varepsilon,
+\]
+since each term $X+kT\ge X$ (as $T>0,k\ge0$) so $g(X+kT)\ge\varepsilon$. So $f(X+NT)\ge f(X)+N\varepsilon\to+\infty$ as $N\to\infty$ — contradicting that $f$ is bounded. (The case $g\le-\varepsilon$ throughout gives $f(X+NT)\to-\infty$ instead, the same contradiction.)
+
+This contradiction shows the assumption was false:
+\[
+\boxed{\text{some sequence }x_n\to+\infty\text{ has }f(x_n+T)-f(x_n)\to0}.
 \]
 \end{proof}
 
@@ -2493,6 +2547,34 @@ as $\lambda\to0^+$, since $\ln\lambda\to-\infty$ while $\ln a$ stays fixed.
 \textbf{Combining.} Both pieces have finite limits, so the limit of the sum is the sum of the limits:
 \[
 \boxed{\lim_{\lambda\to0^+}\frac{1}{\ln\lambda}\int_\lambda^a\frac{\cos x}{x}\,dx=-1+0=-1}.
+\]
+\end{proof}
+
+\begin{example}[A symmetric high-power trigonometric integral]
+Compute
+\[
+\int_{-\pi/2}^{\pi/2}\frac{\sin^{2014}x}{\sin^{2014}x+\cos^{2014}x}\,dx.
+\]
+\end{example}
+\begin{proof}[Solution]
+\textbf{Reduce to $[0,\pi/2]$.} Since $2014$ is even, both $\sin^{2014}x$ and $\cos^{2014}x$ are even functions of $x$, so the integrand is even. Hence
+\[
+\int_{-\pi/2}^{\pi/2}\frac{\sin^{2014}x}{\sin^{2014}x+\cos^{2014}x}\,dx=2\int_0^{\pi/2}\frac{\sin^{2014}x}{\sin^{2014}x+\cos^{2014}x}\,dx=2I.
+\]
+
+\textbf{The reflection trick.} In $I=\int_0^{\pi/2}\frac{\sin^{2014}x}{\sin^{2014}x+\cos^{2014}x}\,dx$, substitute $x\to\frac\pi2-x$ (which swaps $\sin\leftrightarrow\cos$ and preserves the interval $[0,\pi/2]$):
+\[
+I=\int_0^{\pi/2}\frac{\cos^{2014}x}{\cos^{2014}x+\sin^{2014}x}\,dx.
+\]
+Adding this to the original expression for $I$:
+\[
+2I=\int_0^{\pi/2}\frac{\sin^{2014}x+\cos^{2014}x}{\sin^{2014}x+\cos^{2014}x}\,dx=\int_0^{\pi/2}1\,dx=\frac\pi2,
+\]
+so $I=\dfrac\pi4$.
+
+\textbf{Answer.} The original integral is
+\[
+\boxed{2I=\frac\pi2}.
 \]
 \end{proof}
 
@@ -3734,6 +3816,22 @@ If $H$ has no edges at all, every student knows everyone and we're done. Otherwi
 \]
 \end{proof}
 
+\begin{example}[Splitting people who each dislike exactly $3$ others into compatible groups]
+In a company of $51$ people, each person dislikes exactly $3$ others (not necessarily mutually). Split the company into the fewest possible groups $n$ such that no group contains a pair where one dislikes the other, in the \emph{worst case} over all such dislike configurations. Find this $n$.
+\end{example}
+\begin{proof}[Solution]
+Model dislikes as a directed graph $D$ on the $51$ people, with an arc $u\to v$ whenever $u$ dislikes $v$; every vertex has out-degree exactly $3$. A valid grouping is a proper coloring of the \emph{underlying undirected} conflict graph $G$ (an edge between $u,v$ whenever either dislikes the other), so we want the worst-case chromatic number of $G$ over all such $D$.
+
+\textbf{Upper bound: $7$ colors always suffice.} For any subset $S$ of vertices, the arcs of $D$ with \emph{both} endpoints in $S$ number at most $3|S|$ (each vertex contributes at most its own out-degree, $3$, to arcs staying inside $S$). Each undirected edge of the induced subgraph $G[S]$ corresponds to at least one such arc, so $G[S]$ has at most $3|S|$ edges, giving average degree at most $6$ in $G[S]$ — hence \emph{some} vertex of $G[S]$ has degree at most $6$. Since this holds for every subset $S$, $G$ is $6$-degenerate. A $6$-degenerate graph is always $7$-colorable: repeatedly remove a vertex of degree $\le6$ (recording the removal order), then color the vertices in reverse order — each vertex, when reinserted, has at most $6$ already-colored neighbors, leaving one of $7$ colors free.
+
+\textbf{Lower bound: $6$ colors do not always suffice.} The complete graph $K_7$ is $6$-regular (each vertex has even degree $6$), so it admits an Eulerian circuit, which can be used to orient every edge such that each vertex has in-degree $=$ out-degree $=3$ exactly (walk the circuit, orienting each edge in the direction traversed). Place $7$ of the $51$ people in this configuration (each disliking exactly the $3$ people their outgoing arcs point to), and let the remaining $44$ people dislike $3$ others arbitrarily among themselves (e.g.\ person $i$ dislikes people $i+1,i+2,i+3$ in a cyclic arrangement of the $44$), with no dislikes crossing between the two groups. Every out-degree is exactly $3$, as required. Since the $7$-person part is a complete graph $K_7$, it alone needs $7$ colors (every pair conflicts), so no coloring of the whole company can use fewer than $7$ colors.
+
+\textbf{Conclusion.} Combining both bounds,
+\[
+\boxed{n=7}.
+\]
+\end{proof}
+
 \subsection{Generating Functions and Linear Recurrences}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -4172,6 +4270,27 @@ Three points are chosen independently and uniformly at random on a circle. Find 
 \[
 \mathbb P(\text{center inside triangle})=1-\frac34=\boxed{\frac14}.
 \]
+\end{proof}
+
+\begin{example}[Probability of an obtuse triangle from a fixed segment and a random point]
+Points $A,B$ are fixed with $|AB|=2$. Let $C$ be chosen uniformly at random from the disk of radius $R$ centered at the midpoint $M$ of $AB$. Find the probability that triangle $ABC$ is obtuse.
+\end{example}
+\begin{proof}[Solution]
+Set coordinates $M=(0,0)$, $A=(-1,0)$, $B=(1,0)$, and $C=(x,y)$.
+
+\textbf{Characterizing each obtuse angle.} Angle $A$ (at vertex $A$) is $\ge90^\circ$ iff $(B-A)\cdot(C-A)\le0$: with $B-A=(2,0)$, $C-A=(x+1,y)$, this is $2(x+1)\le0$, i.e.\ $x\le-1$. Symmetrically, angle $B\ge90^\circ$ iff $x\ge1$. Angle $C\ge90^\circ$ iff $C$ lies on or inside the circle of radius $1$ centered at $M$ (Thales' theorem: $C$ sees $AB$ at a right angle exactly on that circle, and at an obtuse angle strictly inside it). These three regions — $\{x<-1\}$, $\{x>1\}$, and the open unit disk — are pairwise disjoint, and (ignoring the measure-zero boundaries) their union is exactly the set of $C$ making the triangle obtuse.
+
+\textbf{Case $R\le1$.} The entire disk of radius $R$ around $M$ lies within the closed unit disk, so (up to the measure-zero boundary) every $C$ gives an obtuse angle at $C$. Hence $\mathbb P(\text{obtuse})=1$.
+
+\textbf{Case $R>1$.} The unit disk is now entirely contained within the disk of radius $R$, contributing area $\pi$. Each of the two half-plane strips contributes a circular segment: the region $\{x^2+y^2\le R^2,\ x\le-1\}$ is the segment of the radius-$R$ disk cut off by the chord at distance $d=1$ from the center, with standard area $R^2\arccos(1/R)-\sqrt{R^2-1}$ (from the sector-minus-triangle formula, using $\cos\theta=d/R$). By symmetry the $x\ge1$ strip contributes the same area. So
+\[
+\text{obtuse area}=\pi+2\Bigl[R^2\arccos\tfrac1R-\sqrt{R^2-1}\Bigr],
+\]
+and dividing by the total disk area $\pi R^2$,
+\[
+\boxed{\mathbb P(\text{obtuse})=\begin{cases}1, & 0<R\le1,\\[4pt] \dfrac{\pi+2R^2\arccos(1/R)-2\sqrt{R^2-1}}{\pi R^2}, & R>1.\end{cases}}
+\]
+(Continuity check: as $R\to1^+$, $\arccos(1/R)\to0$ and $\sqrt{R^2-1}\to0$, so the formula $\to\pi/\pi=1$, matching the $R\le1$ case. As $R\to\infty$, the two strips have area growing only like $O(R)$ against the disk's $\Theta(R^2)$, so $\mathbb P(\text{obtuse})\to1$ as well — consistent with almost every far-away $C$ making a very obtuse angle at $A$ or $B$.)
 \end{proof}
 
 \subsection{Random Variables, Moments, and Common Distributions}
@@ -5629,6 +5748,47 @@ Now, conflicting with \emph{both} $a$ and $b$: since $a,b$ have different column
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
+\begin{example}[Guessing a number faster than the naive doubling bound against one lie]
+A number from $1$ to $n$ ($n>10$) must be guessed using yes/no questions, where the answerer may lie at most once. Design a strategy that guarantees success in strictly fewer than $2\lceil\log_2n\rceil+1$ questions.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Reduction to error-correcting codes.} Let $k=\lceil\log_2n\rceil$, so the target number's index has a $k$-bit binary representation $b_1,\dots,b_k$. Instead of the naive scheme (ask each bit, then ask all $k$ again to verify — $2k$ questions), encode the $k$-bit string using a binary code with \emph{minimum Hamming distance $3$}: a set of $n$ codewords of some length $q=k+r$ such that any two differ in at least $3$ positions. Ask, as yes/no questions, the $q$ bits of the target's codeword (each such question — ``does bit $i$ of the codeword of your secret number equal $1$?'' — is a legitimate subset-membership question about the number). With at most one lie, the received length-$q$ string differs from the true codeword in at most $1$ position; since any two codewords differ in $\ge3$ positions, the true codeword is the \emph{unique} codeword within Hamming distance $1$ of what was received (two codewords within distance $1$ of the same string would be within distance $2$ of each other, contradicting minimum distance $3$) — so nearest-codeword decoding always recovers the number correctly.
+
+\textbf{Building such a code (Hamming code).} Take $q=k+r$ where $r$ is the smallest integer with $2^r\ge q+1=k+r+1$ (the classical Hamming-code parameter relation). Index the $q$ coordinate positions by the nonzero vectors of $\mathbb F_2^r$ (there are $2^r-1\ge k+r=q$ of them, enough labels). Designate $r$ of the positions — those indexed by the $r$ standard basis vectors — as \emph{parity-check} bits, and the remaining $k$ positions as \emph{data} bits, holding $b_1,\dots,b_k$ directly. Set each parity-check bit at position $e_j$ to the XOR of all data bits whose index vector has a $1$ in coordinate $j$ (a legitimate yes/no question: ``is the XOR of these specific bits of your number's index equal to $1$?''). This is exactly the (shortened) binary Hamming code, whose minimum distance is $3$: no codeword has weight $1$ (a lone data-bit error would flip a parity computed from it, so it's inconsistent with weight $\le1$ being a valid codeword difference) or weight $2$ (two flipped positions with distinct nonzero index vectors sum to a nonzero vector, again violating consistency of the parity equations) — the standard argument for why the columns of the parity-check matrix, being all distinct and nonzero, forbid low-weight codewords.
+
+\textbf{Question count.} $q=k+r$ where $2^r\ge k+r+1$. Since $n>10$ gives $k=\lceil\log_2n\rceil\ge4$, and $r$ grows only logarithmically in $k$ (e.g.\ $k=4\Rightarrow r=3$ suffices, since $2^3=8\ge4+3+1=8$; larger $k$ needs even smaller $r/k$ ratio), we always have $r\le k$ once $k\ge4$, so
+\[
+q=k+r\le2k<2k+1=2\lceil\log_2n\rceil+1.
+\]
+\[
+\boxed{q=\lceil\log_2n\rceil+r\text{ questions suffice, strictly fewer than }2\lceil\log_2n\rceil+1}
+\]
+(with $r=O(\log\log n)$, so the true savings grow — the scheme beats the naive bound by an increasing margin as $n$ grows, though pinning down the information-theoretically \emph{optimal} question count for this classical Rényi–Ulam ``liar'' problem requires a more delicate adaptive argument beyond what's needed here).
+\end{proof}
+
+\begin{example}[Finding the $i$-th digit of a concatenation-recurrence sequence in $O(1)$ memory]
+Define $a_n$ (for $n\ge3$) by writing $a_{n-2}$ immediately after $a_{n-1}$ (decimal concatenation), starting from arbitrary naturals $a_1,a_2$. Given $n$ and $i$, design an algorithm to find the $i$-th digit of $a_n$ using $O(1)$ extra memory (a constant number of stored numbers), and analyze its time complexity.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Digit-length recursion.} Let $L_k$ be the number of digits of $a_k$. Since $a_k$ is $a_{k-1}$ followed by $a_{k-2}$, $L_k=L_{k-1}+L_{k-2}$ — a Fibonacci-type recursion, computable from the (given, known-length) $L_1,L_2$.
+
+\textbf{Locating the digit recursively.} The $i$-th digit of $a_k$ (for $k\ge3$) is: the $i$-th digit of $a_{k-1}$, if $i\le L_{k-1}$ (it falls within the first, $a_{k-1}$, part); otherwise the $(i-L_{k-1})$-th digit of $a_{k-2}$. Repeatedly applying this reduces $(k,i)$ down to a base case $k\in\{1,2\}$, where the answer is read directly off the given number $a_1$ or $a_2$.
+
+\textbf{Avoiding $O(n)$ memory.} Naively this recursion needs $L_{k-1}$ at every level, which would mean storing the whole array $L_1,\dots,L_n$ ($O(n)$ numbers) to avoid recomputation. Instead, maintain only the \emph{current pair} $(P,Q)=(L_{m-1},L_{m-2})$ for the current level $m$, and update it as $m$ decreases:
+\begin{itemize}
+\item Reducing from level $m$ to level $m-1$ needs the pair $(L_{m-2},L_{m-3})$. We already know $L_{m-2}=Q$, and $L_{m-3}=L_{m-1}-L_{m-2}=P-Q$ (rearranging the defining recursion) — so the new pair is $(Q,\,P-Q)$, computed with a single subtraction, no lookup needed.
+\item Reducing from level $m$ to level $m-2$ (the ``otherwise'' branch, which skips level $m-1$ entirely) is just \emph{two} applications of the same update.
+\end{itemize}
+So only the pair $(P,Q)$, the current level $m$, and the current index $i$ need to be stored — $O(1)$ numbers throughout (each of arbitrary size, per the usual convention for such problems, since $L_n$ itself grows exponentially in $n$).
+
+\textbf{Algorithm.} (1) Build the initial pair $(L_{n-1},L_{n-2})$ by iterating the Fibonacci-style recursion \emph{forward} from $(L_1,L_2)$ up to index $n$, keeping only the two most recent values at each step. (2) Walk the reduction \emph{backward} as described, updating $(P,Q)$ and $(m,i)$ at each step, until $m\in\{1,2\}$. (3) Return the $i$-th digit of the given $a_1$ or $a_2$.
+
+\textbf{Complexity.} Step (1) performs $O(n)$ additions; step (2) performs $O(n)$ subtractions (the level $m$ decreases by $1$ or $2$ each time, so at most $n$ iterations). Each individual arithmetic operation involves numbers with $\Theta(k)$ digits at level $k$ (Fibonacci-like growth), so
+\[
+\boxed{O(n)\text{ arithmetic operations }(O(n^2)\text{ bit operations}),\ O(1)\text{ stored numbers}}.
+\]
+\end{proof}
+
 \begin{itemize}
     \item Memorize formulas only after you understand where they come from.
     \item When a problem looks hard, first classify it: parity, conditioning, asymptotics, optimization, or linear structure.
