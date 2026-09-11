@@ -299,6 +299,27 @@ If $i>j$, then $i$ cannot divide the smaller positive integer $j$, so $a_{ij}=0$
 \]
 \end{proof}
 
+\begin{example}[Matrices whose inverse is also entrywise nonnegative]
+Describe all invertible real matrices $A$ such that every entry of both $A$ and $A^{-1}$ is nonnegative.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Claim: $A$ works if and only if $A=DP$ for a diagonal matrix $D$ with strictly positive diagonal entries and a permutation matrix $P$} — equivalently, $A$ has exactly one nonzero (necessarily positive) entry in each row and each column.
+
+\textbf{Necessity.} Write $B=A^{-1}\ge0$. From $AB=I$: for $i\ne j$, $\sum_kA_{ik}B_{kj}=0$, a sum of products of nonnegative numbers, so every term vanishes: $A_{ik}B_{kj}=0$ for all $k$ whenever $i\ne j$.
+
+Fix a row $i$ of $A$, and let $S_i=\{k:A_{ik}>0\}$ (nonempty, since row $i$ of $A$ can't be all zero — $A$ is invertible). For each $k\in S_i$: since $A_{ik}>0$, the vanishing condition forces $B_{kj}=0$ for \emph{every} $j\ne i$ — so row $k$ of $B$ can have a nonzero entry only in column $i$. Since $B$ is invertible, row $k$ of $B$ isn't all zero, so $B_{ki}>0$: row $k$ of $B$ is a positive multiple of the standard basis (row) vector $e_i^T$.
+
+Now suppose $|S_i|\ge2$, say $k_1,k_2\in S_i$ distinct. Then rows $k_1$ and $k_2$ of $B$ are \emph{both} positive multiples of $e_i^T$ — hence proportional to each other, contradicting that $B$ is invertible (its rows must be linearly independent). So $|S_i|=1$: every row of $A$ has exactly one positive entry, the rest zero.
+
+Since $A$ is invertible with exactly one positive entry per row, the map (row) $\mapsto$ (column of its nonzero entry) must be a bijection: if two rows shared a column, some other column would receive no nonzero entries from any row, making that column of $A$ all zero — contradicting invertibility. So this map is a permutation $\sigma$, i.e.\ $A=DP$ where $P$ is the permutation matrix of $\sigma$ and $D=\diag(A_{1,\sigma(1)},\dots,A_{n,\sigma(n)})$ has strictly positive diagonal entries.
+
+\textbf{Sufficiency.} If $A=DP$ with $D$ positive diagonal and $P$ a permutation matrix, then $A\ge0$ trivially (product of nonnegative matrices), and $A^{-1}=P^{-1}D^{-1}$; since $P^{-1}$ is again a permutation matrix and $D^{-1}$ is again a positive diagonal matrix, $A^{-1}$ has the same form and is therefore also entrywise nonnegative.
+
+\[
+\boxed{A,A^{-1}\ge0\iff A=DP\text{ for a positive diagonal }D\text{ and a permutation matrix }P}
+\]
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1638,6 +1659,31 @@ This contradiction shows the assumption was false:
 \]
 \end{proof}
 
+\begin{example}[Maximum possible sum of distances to nearest dyadic rationals]
+For a real number $a$ and integer $n\ge0$, let $a_n$ be the distance from $a$ to the nearest number of the form $m/2^n$ ($m\in\Z$). Find the largest possible value of $\sum_{n=0}^\infty a_n$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{A key inequality between consecutive terms.} Let $p$ be the level-$n$ point (a multiple of $2^{-n}$) nearest to $a$, so $|a-p|=a_n$. Since level-$n$ points are also level-$(n+1)$ points, $a_{n+1}\le a_n$. Moreover the level-$(n+1)$ point one step beyond $p$, in the direction of $a$, is at distance exactly $2^{-(n+1)}$ from $p$ — and since $a_n\le2^{-(n+1)}$ (the nearest level-$n$ point is always within half the level-$n$ spacing), $a$ lies between $p$ and that new point, at distance $2^{-(n+1)}-a_n$ from it. So $a_{n+1}\le2^{-(n+1)}-a_n$ as well, giving
+\[
+a_n+a_{n+1}\le2^{-(n+1)}\qquad\text{for every }n\ge0.
+\]
+
+\textbf{Summing over even indices.} Pairing consecutive terms and applying this bound at each even index,
+\[
+\sum_{n=0}^\infty a_n=\sum_{j=0}^\infty(a_{2j}+a_{2j+1})\le\sum_{j=0}^\infty2^{-(2j+1)}=\frac12\sum_{j=0}^\infty4^{-j}=\frac12\cdot\frac{4}{3}=\frac23.
+\]
+
+\textbf{Achieving $\frac23$.} Take $a=\frac13$. Its binary expansion is purely periodic, $\frac13=0.\overline{01}_2$, and direct computation gives $a_0=\frac13$ (nearest integer is $0$), $a_1=\frac16$ (nearest multiple of $\frac12$ is $\frac12$), $a_2=\frac1{12}$ (nearest multiple of $\frac14$ is $\frac14$), and in general $a_n=\dfrac1{3\cdot2^n}$ (each step exactly halves the previous distance, since the binary digits alternate). So
+\[
+\sum_{n=0}^\infty a_n=\sum_{n=0}^\infty\frac1{3\cdot2^n}=\frac13\cdot2=\frac23,
+\]
+matching the upper bound exactly.
+
+\[
+\boxed{\max\sum_{n=0}^\infty a_n=\frac23,\text{ attained at }a=\tfrac13\text{ (or }a=\tfrac23\text{, or any translate by an integer)}}
+\]
+\end{proof}
+
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
 \textbf{Useful identities.}
 \begin{itemize}
@@ -2601,6 +2647,31 @@ so $I=\dfrac\pi4$.
 \textbf{Answer.} The original integral is
 \[
 \boxed{2I=\frac\pi2}.
+\]
+\end{proof}
+
+\begin{example}[Sum of two integrals related by an inverse function]
+Compute
+\[
+\int_{\sqrt{\pi/6}}^{\sqrt{\pi/3}}\sin(x^2)\,dx+\int_{1/2}^{\sqrt3/2}\sqrt{\arcsin x}\,dx.
+\]
+\end{example}
+\begin{proof}[Solution]
+\textbf{Recognizing an inverse-function pair.} Let $g(x)=\sin(x^2)$ for $x\in\bigl[0,\sqrt{\pi/2}\,\bigr]$, where $g$ increases from $0$ to $1$ (since $x^2$ increases from $0$ to $\pi/2$ and $\sin$ increases on $[0,\pi/2]$). Solving $y=\sin(x^2)$ for $x$: $x^2=\arcsin y$, so $x=\sqrt{\arcsin y}$ — i.e.\ $g^{-1}(y)=\sqrt{\arcsin y}$, exactly the integrand of the second integral. So the two integrals are $\int_a^bg(x)\,dx$ and $\int_c^dg^{-1}(y)\,dy$ with $a=\sqrt{\pi/6}$, $b=\sqrt{\pi/3}$, and — checking the bounds line up — $g(a)=\sin(\pi/6)=\tfrac12=c$, $g(b)=\sin(\pi/3)=\tfrac{\sqrt3}2=d$. So the bounds are exactly matched: $c=g(a)$, $d=g(b)$.
+
+\textbf{The area identity.} For an increasing differentiable $g$ with $g(a)=c$, $g(b)=d$,
+\[
+\int_a^bg(x)\,dx+\int_c^dg^{-1}(y)\,dy=bd-ac.
+\]
+Proof: integrate the first integral by parts, $\int_a^bg(x)\,dx=\bigl[xg(x)\bigr]_a^b-\int_a^bxg'(x)\,dx=bd-ac-\int_a^bxg'(x)\,dx$; and substituting $y=g(x)$ in the second integral gives $\int_c^dg^{-1}(y)\,dy=\int_a^bx g'(x)\,dx$ (since $g^{-1}(g(x))=x$ and $dy=g'(x)dx$). Adding cancels the $\int xg'(x)dx$ terms, leaving $bd-ac$.
+
+\textbf{Applying the identity.} With $a=\sqrt{\pi/6}$, $b=\sqrt{\pi/3}$, $c=\tfrac12$, $d=\tfrac{\sqrt3}2$:
+\[
+bd=\sqrt{\frac\pi3}\cdot\frac{\sqrt3}2=\frac{\sqrt\pi}2,\qquad ac=\sqrt{\frac\pi6}\cdot\frac12=\frac{\sqrt\pi}{2\sqrt6}=\frac{\sqrt{6\pi}}{12}.
+\]
+So
+\[
+\boxed{bd-ac=\frac{\sqrt\pi}2-\frac{\sqrt{6\pi}}{12}=\frac{\sqrt\pi\,(6-\sqrt6)}{12}}\approx0.5245.
 \]
 \end{proof}
 
@@ -5481,6 +5552,29 @@ A robot starts on an infinite chessboard and, at each step, moves to one of its 
 (the value is the same for $n=2m$ and $n=2m+1$; e.g.\ $n=0,1\mapsto1$, $n=2,3\mapsto\tfrac32$, $n=4,5\mapsto\tfrac{15}8$, growing like $\sqrt{2n/\pi}$ for large $n$ by the de Moivre–Laplace approximation to the central binomial coefficient).
 \end{proof}
 
+\begin{example}[Gambler's ruin: probability of ruin from a given starting capital]
+A gambler plays independent, identical rounds, winning \$1 with probability $p$ and losing \$1 with probability $q=1-p$ each round. The gambler stops (as a winner) upon reaching capital $N$, or is ruined upon reaching $0$. Find the probability of eventual ruin, as a function of the starting capital $K$ ($0\le K\le N$).
+\end{example}
+\begin{proof}[Solution]
+Let $h(k)=\mathbb P(\text{ruin}\mid\text{start at }k)$. First-step analysis gives, for $0<k<N$,
+\[
+h(k)=p\,h(k+1)+q\,h(k-1),
+\]
+with boundary conditions $h(0)=1$ (already ruined) and $h(N)=0$ (already a winner).
+
+\textbf{Case $p\ne q$.} The recursion $p\,h(k+1)-h(k)+q\,h(k-1)=0$ has characteristic equation $p x^2-x+q=0$, factoring as $(x-1)(px-q)=0$ (since $p+q=1$), with roots $x=1$ and $x=q/p$. So the general solution is $h(k)=A+Br^k$ with $r=q/p\ (\ne1)$. Imposing $h(0)=A+B=1$ and $h(N)=A+Br^N=0$ gives $B(r^N-1)=-1$, so $B=\dfrac1{1-r^N}$ and $A=1-B=\dfrac{-r^N}{1-r^N}$. Hence
+\[
+h(k)=\frac{r^k-r^N}{1-r^N}.
+\]
+
+\textbf{Case $p=q=\tfrac12$.} Now $r=1$ and the above is degenerate; the recursion becomes $h(k+1)-2h(k)+h(k-1)=0$, with general solution $h(k)=A+Bk$ (linear). Boundary conditions $h(0)=A=1$ and $h(N)=1+BN=0$ give $B=-1/N$, so $h(k)=1-k/N$.
+
+\[
+\boxed{\mathbb P(\text{ruin}\mid K)=\begin{cases}\dfrac{(q/p)^K-(q/p)^N}{1-(q/p)^N}, & p\ne q,\\[10pt] 1-\dfrac KN, & p=q=\tfrac12.\end{cases}}
+\]
+(Consistency check: as $p\to\tfrac12$ in the first formula, writing $r=1+\epsilon$ for small $\epsilon$ and Taylor-expanding recovers $1-K/N$ in the limit, matching the second case.)
+\end{proof}
+
 \section{Algorithm Design}
 Quant interviews frequently include short algorithmic problems that reward recognizing a classical pattern — a monotonic stack, a sliding window, a divide-and-conquer trick — over brute force.
 
@@ -5915,5 +6009,35 @@ A corridor of length $L$ contains $n$ robots at distinct positions $x_1,\dots,x_
     \item In an interview, write down the state variables explicitly. A correct state definition is usually half of the solution.
     \item For revision, cover the solutions and try to reproduce them from the definitions and formulas alone.
 \end{itemize}
+
+\begin{example}[Maximum subarray sum in $O(n)$ time and $O(1)$ extra memory]
+Given an array of $n$ (possibly negative) numbers, design an algorithm to find the maximum possible sum of a contiguous subarray, using $O(n)$ time and $O(1)$ extra memory.
+\end{example}
+\begin{proof}[Solution]
+This is Kadane's algorithm. Maintain two running values: $\mathrm{cur}$, the maximum sum of a subarray \emph{ending exactly at} the current index, and $\mathrm{best}$, the maximum seen over all indices so far.
+
+\textbf{Recursion for $\mathrm{cur}$.} A subarray ending at index $i$ either consists of just $a[i]$ alone, or extends some subarray ending at $i-1$ by one more element. So the best sum ending at $i$ is $\mathrm{cur}_i=\max(a[i],\,\mathrm{cur}_{i-1}+a[i])$ — extend the previous best run if it's still helping (i.e.\ $\mathrm{cur}_{i-1}>0$), otherwise restart fresh at $a[i]$.
+
+\textbf{Algorithm.} Initialize $\mathrm{cur}=\mathrm{best}=a[1]$. For $i=2,\dots,n$: set $\mathrm{cur}\leftarrow\max(a[i],\mathrm{cur}+a[i])$, then $\mathrm{best}\leftarrow\max(\mathrm{best},\mathrm{cur})$.
+
+\textbf{Correctness.} By induction, $\mathrm{cur}$ after processing index $i$ equals the true maximum sum of a subarray ending exactly at $i$ (base case $i=1$ trivial; the recursion above is exactly right for extending). Since every subarray ends at some index, the overall maximum subarray sum is $\max_i(\text{best sum ending at }i)$, which is exactly what $\mathrm{best}$ tracks.
+
+\[
+\boxed{O(n)\text{ time},\ O(1)\text{ extra memory}}
+\]
+\end{proof}
+
+\begin{example}[Can $20$ weighings order $10$ coins of different weights?]
+There are $10$ coins of distinct weights, and a balance that, given any two coins, reports which is heavier. Can the full order of all $10$ coins by weight always be determined using at most $20$ weighings?
+\end{example}
+\begin{proof}[Solution]
+\textbf{No.} Any correct comparison-based algorithm for determining a total order can be modeled as a binary decision tree: each internal node is one weighing (two possible outcomes), and each leaf corresponds to a single determined ordering (permutation) of the $10$ coins. Since the algorithm must be able to correctly report \emph{any} of the $10!$ possible true weight-orderings, and two different true orderings that produce the exact same sequence of weighing outcomes could never be told apart, every one of the $10!$ orderings must correspond to at least one distinct leaf of the tree.
+
+A binary tree of depth $d$ has at most $2^d$ leaves, so a correct algorithm needs depth $d$ with $2^d\ge10!=3{,}628{,}800$. Since $2^{21}=2{,}097{,}152<10!$ and $2^{22}=4{,}194{,}304\ge10!$, the minimum possible depth is $d=22$. This means some sequence of true weights forces the algorithm down a root-to-leaf path of length $22$ — i.e.\ in the worst case, at least $22$ weighings are required.
+
+\[
+\boxed{\text{No: }20\text{ weighings are not always enough — the worst case needs at least }22}
+\]
+\end{proof}
 
 \end{document}
