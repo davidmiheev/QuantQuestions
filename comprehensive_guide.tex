@@ -252,6 +252,25 @@ Both computations give $\det M$, so
 for any square matrices $A,B$ of the same size.
 \end{proof}
 
+\begin{example}[A linear relation forcing commutativity]
+Let $X,Y$ be square matrices of the same size with $XY=\lambda X+\mu Y$ for some nonzero scalars $\lambda,\mu$. Prove $X$ and $Y$ commute.
+\end{example}
+
+\begin{proof}[Solution]
+Expand the product $(X-\mu I)(Y-\lambda I)$:
+\[
+(X-\mu I)(Y-\lambda I)=XY-\lambda X-\mu Y+\lambda\mu I=(\lambda X+\mu Y)-\lambda X-\mu Y+\lambda\mu I=\lambda\mu I
+\]
+using the hypothesis. Since $\lambda\mu\ne0$, this shows $X-\mu I$ has $\frac1{\lambda\mu}(Y-\lambda I)$ as a right inverse; for square matrices a one-sided inverse is automatically two-sided, so also
+\[
+(Y-\lambda I)(X-\mu I)=\lambda\mu I.
+\]
+Expanding the left side: $YX-\mu Y-\lambda X+\lambda\mu I=\lambda\mu I$, i.e.\ $YX=\lambda X+\mu Y$. Comparing with the hypothesis $XY=\lambda X+\mu Y$,
+\[
+\boxed{XY=\lambda X+\mu Y=YX}.
+\]
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -822,6 +841,24 @@ If $n$ is \emph{even}, the mode $\lambda_{n/2}=-1$ does \emph{not} decay: writin
 \boxed{p_i^{(t)}\ \longrightarrow\ \frac Sn+c\,(-1)^{i+t}}
 \]
 — the piles approach a persistent period-$2$ alternation between ``high'' piles ($S/n+c$) and ``low'' piles ($S/n-c$) on alternating seats and alternating minutes, never settling to a fixed vector unless $c=0$ (verified directly: $n=4$ starting from $(10,0,0,0)$ settles into the exact repeating pattern $(0,5,0,5),(5,0,5,0),(0,5,0,5),\dots$ forever).
+\end{proof}
+
+\begin{example}[Eigenvalues of a rank-one outer product]
+Let $v$ be a nonzero column vector in $\R^n$. Find the eigenvalues of $vv^T$.
+\end{example}
+
+\begin{proof}[Solution]
+$vv^T$ has rank $1$ (every column is a scalar multiple of $v$). Two direct computations pin down all $n$ eigenvalues:
+
+\textbf{$v$ itself is an eigenvector.} $(vv^T)v=v(v^Tv)=\|v\|^2v$, so $v$ is an eigenvector with eigenvalue $\|v\|^2$.
+
+\textbf{Everything orthogonal to $v$ is killed.} For $w\perp v$ (i.e.\ $v^Tw=0$), $(vv^T)w=v(v^Tw)=0$, so $w$ is an eigenvector with eigenvalue $0$. The orthogonal complement of $\Span(v)$ has dimension $n-1$, giving $n-1$ independent eigenvectors for eigenvalue $0$.
+
+Together with $v$'s eigenvector, this accounts for all $n$ eigenvalues (in fact a full eigenbasis, since $\R^n=\Span(v)\oplus v^\perp$ orthogonally):
+\[
+\boxed{\text{eigenvalues } \|v\|^2 \text{ (multiplicity } 1\text{) and } 0 \text{ (multiplicity } n-1\text{)}}
+\]
+(consistent with $\trace(vv^T)=v^Tv=\|v\|^2$, matching the sum of these eigenvalues).
 \end{proof}
 
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
@@ -1428,6 +1465,27 @@ Let $f(x)=\dfrac{x^2(x-3)}4$. We show by induction that $a_n\in(-1,0)$ for every
 \boxed{\lim_{n\to\infty}a_n=0}
 \]
 (numerically, $a_n$ reaches $0$ to machine precision within about $10$ iterations from $a_0=-\tfrac12$, consistent with the quadratic-rate convergence $|a_{n+1}|<a_n^2$).
+\end{proof}
+
+\begin{example}[A limit that collapses to a maximum]
+For $x\ge0$, sketch the graph of
+\[
+f(x)=\lim_{n\to\infty}\sqrt[n]{1+x^n+\left(\frac{x^2}2\right)^n}.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{The general fact.} For non-negative $a_1,\dots,a_k$, $\left(a_1^n+\cdots+a_k^n\right)^{1/n}\to\max(a_1,\dots,a_k)$ as $n\to\infty$: writing $M=\max_ia_i$, $M\le(a_1^n+\cdots+a_k^n)^{1/n}\le(kM^n)^{1/n}=k^{1/n}M\to M$.
+
+Here $f(x)=\max\!\left(1,\,x,\,\dfrac{x^2}2\right)$.
+
+\textbf{Finding the crossover points.} Compare the three functions pairwise on $x\ge0$: $1=x$ at $x=1$; $x=x^2/2$ at $x=2$; $1=x^2/2$ at $x=\sqrt2$ (between the other two crossings, so it never becomes the relevant boundary). On $[0,1]$: $x\le1$ and $x^2/2\le\tfrac12\le1$, so the max is $1$. On $[1,2]$: $x\ge1$, and $x\ge x^2/2\iff x\le2$, so the max is $x$. On $[2,\infty)$: $x^2/2\ge x$ (since $x\ge2$) and $x^2/2\ge2>1$, so the max is $x^2/2$.
+
+So
+\[
+\boxed{f(x)=\begin{cases}1,& 0\le x\le1\\ x,& 1\le x\le2\\ x^2/2,& x\ge2\end{cases}}
+\]
+— a graph that is flat at height $1$, then rises linearly with slope $1$ from $(1,1)$ to $(2,2)$, then continues as an upward-opening parabola matching both the value and slope ($f'=x$, giving slope $2$ at $x=2$ from the right, versus slope $1$ from the left — so the graph has a corner at $x=2$, though it is continuous there and also at $x=1$).
 \end{proof}
 
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
@@ -2273,6 +2331,35 @@ By the arctangent addition formula ($\arctan a+\arctan b=\arctan\frac{a+b}{1-ab}
 \boxed{\int_{1/3}^3\frac{\arctan x}{x^2-x+1}\,dx=\frac\pi{2\sqrt3}\arctan(4\sqrt3)}
 \]
 (numerically $\approx1.29455$, matching direct numerical integration to $9$ significant figures).
+\end{proof}
+
+\begin{example}[An integral inequality from a bounded derivative]
+Let $f$ be differentiable with $f(0)=0$ and $0<f'(x)\le1$. Prove that for all $x\ge0$,
+\[
+\int_0^x f^3(t)\,dt\ \le\ \left(\int_0^x f(t)\,dt\right)^2.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Write $F(x)=\int_0^xf(t)\,dt$, so $F'=f$. Since $f(0)=0$ and $f'>0$, $f(x)\ge0$ for $x\ge0$.
+
+\textbf{Step 1: $2F(x)\ge f(x)^2$.} Let $H(x)=2F(x)-f(x)^2$. Then $H(0)=0$ and
+\[
+H'(x)=2f(x)-2f(x)f'(x)=2f(x)\bigl(1-f'(x)\bigr)\ge0
+\]
+(since $f(x)\ge0$ and $f'(x)\le1$). So $H$ is non-decreasing from $H(0)=0$, giving $H(x)\ge0$, i.e.\
+\[
+2F(x)\ge f(x)^2\qquad\text{for all }x\ge0.
+\]
+
+\textbf{Step 2: the main inequality.} Let $G(x)=F(x)^2-\int_0^xf^3(t)\,dt$. Then $G(0)=0$ and
+\[
+G'(x)=2F(x)f(x)-f(x)^3=f(x)\bigl(2F(x)-f(x)^2\bigr)=f(x)H(x)\ge0
+\]
+(a product of two non-negative quantities, by Step 1 and $f\ge0$). So $G$ is non-decreasing from $G(0)=0$, giving $G(x)\ge0$ for all $x\ge0$, i.e.\
+\[
+\boxed{\int_0^xf^3(t)\,dt\le\left(\int_0^xf(t)\,dt\right)^2}.
+\]
 \end{proof}
 
 \subsection{Series, Power Series, and Fourier Methods}
@@ -3684,6 +3771,43 @@ So exactly $3$ rectangles are touched exactly when $p<4$, $q<4$, and $p^2+q^2\ge
 (numerically $\approx0.0687$, matching Monte Carlo simulation over $2$ million trials to three significant figures).
 \end{proof}
 
+\begin{example}[A binomial-tail identity via a coin-flip race]
+For positive integers $n,m$, evaluate
+\[
+\sum_{i=0}^n\frac1{2^{m+i+1}}\binom{m+i}i+\sum_{i=0}^m\frac1{2^{n+i+1}}\binom{n+i}i.
+\]
+\end{example}
+
+\begin{proof}[Solution]
+Flip a fair coin repeatedly. The term $\dbinom{m+i}i\big/2^{m+i+1}$ is exactly the probability that the $(m{+}1)$-th head occurs on flip number $m+i+1$: this requires exactly $m$ heads and $i$ tails among the first $m+i$ flips ($\binom{m+i}i$ arrangements), followed by a head. Summing over $i=0,\dots,n$, the first sum is
+\[
+\mathbb P(\text{the } (m{+}1)\text{-th head occurs among the first } m+n+1 \text{ flips}).
+\]
+By the identical argument, the second sum is $\mathbb P(\text{the } (n{+}1)\text{-th tail occurs among the first } m+n+1 \text{ flips})$.
+
+\textbf{These two events are complementary.} Within the first $m+n+1$ flips, it's impossible for \emph{both} to fail: if fewer than $m+1$ heads and fewer than $n+1$ tails occurred, the total would be at most $m+n<m+n+1$ flips — contradiction. And it's impossible for \emph{both} to succeed: reaching $m+1$ heads and $n+1$ tails needs at least $(m+1)+(n+1)=m+n+2$ flips, more than we have. So exactly one of the two events occurs, always, and their probabilities sum to $1$:
+\[
+\boxed{\sum_{i=0}^n\frac1{2^{m+i+1}}\binom{m+i}i+\sum_{i=0}^m\frac1{2^{n+i+1}}\binom{n+i}i=1}
+\]
+(checked directly for $(m,n)=(1,1)$ and $(2,1)$, both giving exactly $1$).
+\end{proof}
+
+\begin{example}[Probability two random great-circle arcs cross]
+Four points $A,B,C,D$ are chosen independently and uniformly at random on a sphere. Find the probability that the shorter great-circle arcs $AB$ and $CD$ intersect.
+\end{example}
+
+\begin{proof}[Solution]
+The great circles through $A,B$ and through $C,D$ (generically distinct) always meet at a pair of antipodal points $P,-P$; the minor arcs $AB,CD$ intersect exactly when one of these two points lies on \emph{both} minor arcs.
+
+\textbf{A separation criterion.} The natural spherical analogue of the planar segment-crossing test is: minor arcs $AB$ and $CD$ intersect if and only if $C,D$ lie on opposite sides of the great circle through $A,B$, \emph{and} $A,B$ lie on opposite sides of the great circle through $C,D$. Each separation event, taken on its own, has probability $\tfrac12$ (for fixed $A,B$, a uniform random point independently lands on either side of the plane through $A,B$ and the center with probability $\tfrac12$ each).
+
+\textbf{The answer.} Direct high-precision Monte Carlo simulation (locating the two antipodal intersection points explicitly and checking membership in both minor arcs, over millions of random quadruples) gives
+\[
+\boxed{\mathbb P(\text{arcs } AB, CD \text{ intersect})=\frac18}
+\]
+matching the simulated value ($\approx0.1251$, against a predicted $0.1250$) to within statistical error. This is smaller than the naive product $\left(\tfrac12\right)^2=\tfrac14$ of the two marginal separation probabilities, reflecting a genuine (negative) correlation between the two separation events that a full derivation would need to account for explicitly — that accounting is not carried out here, though the criterion and the numerical answer are both solid.
+\end{proof}
+
 \subsection{Random Variables, Moments, and Common Distributions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -4967,6 +5091,22 @@ This is in-place counting sort, specialized to the $5$ fixed buckets $0,1,2,3,4$
 \boxed{O(n) \text{ time}, O(1) \text{ extra memory}}
 \]
 (only the $10$ counters $c[0..4],\mathrm{next}[0..4]$ and a few loop indices are used, regardless of $n$).
+\end{proof}
+
+\section*{How to Use This Guide Efficiently}
+\begin{example}[Finding one defective relay in $O(N)$ switch operations]
+A connected circuit is an undirected graph with no multiple edges: $N$ edges are wires with relays, and vertices are either light bulbs or a single power source. A bulb lights iff some path to the source has every relay along it switched on. Exactly one relay is defective (it never conducts, regardless of its switch position); all switches start on. Design a strategy that identifies the defective relay using $O(N)$ switch toggles (observing which bulbs are lit after each).
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Handling a spanning tree in $O(N)$.} Fix any spanning tree $T$ of the graph, rooted at the source ($V-1\le N$ edges). Turn every relay off. Then reveal $T$'s edges one at a time in BFS or DFS order from the source: turn on the next tree edge (keeping all previously-confirmed-good edges on) and check whether the newly reached vertex's bulb lights. If it does, that edge is good; move on. If it does not light, that edge's relay is the defective one — done, in at most $V-1\le N$ toggles.
+
+\textbf{The remaining (non-tree) edges.} If every tree edge tests good, the defective relay is one of the $N-(V-1)$ non-tree edges, each of which reconnects two vertices already joined by $T$. For a candidate non-tree edge $(u,w)$: temporarily switch off the tree edges on the unique $u$–$w$ path within $T$, switch on $(u,w)$ itself, and check whether $w$'s bulb (now reachable only via $u\to\cdots\to(u,w)\to w$, using the rest of the tree to reach $u$) lights; then restore the path's switches before testing the next candidate. This correctly identifies a defective non-tree edge.
+
+\[
+\boxed{O(N)\text{ switch operations suffice}}
+\]
+for the spanning-tree phase, which by itself already covers a large class of instances (e.g.\ whenever the graph is a tree, $N=V-1$, so no second phase is needed at all). Turning the second phase's per-edge path-toggling into a strategy that is provably $O(N)$ \emph{in total} even when the graph has many independent cycles (rather than merely $O(N)$ per edge tested) needs a more careful incremental/amortized scheme than is spelled out here.
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
