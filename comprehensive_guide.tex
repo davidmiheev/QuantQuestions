@@ -879,6 +879,46 @@ Together with $v$'s eigenvector, this accounts for all $n$ eigenvalues (in fact 
 (consistent with $\trace(vv^T)=v^Tv=\|v\|^2$, matching the sum of these eigenvalues).
 \end{proof}
 
+\begin{example}[Rank of $E-A$ from $A^2=E$ and $\rank(E+A)=7$]
+Let $A$ be a $9\times9$ matrix over a field of characteristic $\ne2$, with $A^2=E$ (the identity). Given $\rank(E+A)=7$, find $\rank(E-A)$.
+\end{example}
+\begin{proof}[Solution]
+Since $A^2=E$, the minimal polynomial of $A$ divides $x^2-1=(x-1)(x+1)$, which has distinct roots because the characteristic is $\ne2$. So $A$ is diagonalizable with eigenvalues only $\pm1$: let $p$ be the multiplicity of $+1$ and $q$ the multiplicity of $-1$, $p+q=9$.
+
+In a diagonalizing basis, $E+A$ has diagonal entries $1+1=2$ (on the $p$ eigenvectors for $+1$) and $1+(-1)=0$ (on the $q$ eigenvectors for $-1$). Since the characteristic is $\ne2$, the entry $2$ is nonzero in the field, so $\rank(E+A)=p$. Given $\rank(E+A)=7$, this gives $p=7$, hence $q=9-7=2$.
+
+Likewise $E-A$ has diagonal entries $1-1=0$ (multiplicity $p=7$) and $1-(-1)=2\ne0$ (multiplicity $q=2$) in that same basis, so
+\[
+\boxed{\rank(E-A)=q=2}.
+\]
+\end{proof}
+
+\begin{example}[Eigenvalues of the operator $M\mapsto AMB$]
+Let $A,B$ be $2\times2$ matrices, and let $F$ act on the space of $2\times2$ matrices by $F(M)=AMB$. Suppose $A$ has two distinct eigenvalues $\lambda_1,\lambda_2$ and $B$ has two distinct eigenvalues $\mu_1,\mu_2$. Find the eigenvalues of $F$ when (a) $A,B$ are diagonal; (b) $A,B$ are arbitrary.
+\end{example}
+\begin{proof}[Solution]
+\textbf{(a) Diagonal case.} Let $A=\diag(\lambda_1,\lambda_2)$, $B=\diag(\mu_1,\mu_2)$, and let $E_{ij}$ denote the matrix unit ($1$ in position $(i,j)$, $0$ elsewhere). Left-multiplying by diagonal $A$ scales row $i$ by $\lambda_i$, and right-multiplying by diagonal $B$ scales column $j$ by $\mu_j$; since $E_{ij}$'s only nonzero entry is in row $i$, column $j$,
+\[
+F(E_{ij})=AE_{ij}B=\lambda_i\mu_j E_{ij}.
+\]
+So each matrix unit $E_{ij}$ is an eigenvector of $F$, with eigenvalue $\lambda_i\mu_j$. Ranging over $i,j\in\{1,2\}$ gives all $4$ eigenvalues, accounting for the full $4$-dimensional space of $2\times2$ matrices:
+\[
+\lambda_1\mu_1,\quad\lambda_1\mu_2,\quad\lambda_2\mu_1,\quad\lambda_2\mu_2.
+\]
+
+\textbf{(b) General case, via similarity.} Since $A,B$ each have $2$ distinct eigenvalues, they're diagonalizable: $A=PDP^{-1}$, $B=QD'Q^{-1}$ with $D=\diag(\lambda_1,\lambda_2)$, $D'=\diag(\mu_1,\mu_2)$. Define the invertible linear map $T$ on the space of $2\times2$ matrices by $T(M)=P^{-1}MQ$. Then
+\[
+T(F(M))=P^{-1}(AMB)Q=P^{-1}\bigl(PDP^{-1}MQD'Q^{-1}\bigr)Q=D\bigl(P^{-1}MQ\bigr)D'.
+\]
+The right side is $D\cdot T(M)\cdot D'=\Psi(T(M))$,
+where $\Psi(N)=DND'$ is exactly the diagonal-case operator from part (a). So $T\circ F=\Psi\circ T$, i.e.\ $F=T^{-1}\Psi T$: $F$ is similar to $\Psi$ (as linear operators on the same $4$-dimensional space), hence has the \emph{same} eigenvalues as $\Psi$.
+
+\[
+\boxed{\text{eigenvalues of }F\text{ are }\lambda_1\mu_1,\ \lambda_1\mu_2,\ \lambda_2\mu_1,\ \lambda_2\mu_2\text{ in both (a) and (b)}}
+\]
+(As a direct check: if $Av=\lambda v$ and $w^TB=\mu w^T$ for a row vector $w^T$, i.e.\ $w$ is an eigenvector of $B^T$ for $\mu$, then $M=vw^T$ satisfies $F(M)=A(vw^T)B=(Av)(w^TB)=\lambda\mu\,vw^T$ — an explicit rank-$1$ eigenvector for each of the $4$ eigenvalue products, matching the similarity argument.)
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -2430,6 +2470,32 @@ which is easily checked by differentiating (product rule on each term): the two 
 \]
 \end{proof}
 
+\begin{example}[A logarithmically-normalized integral limit]
+Find $\displaystyle\lim_{\lambda\to0^+}\frac{1}{\ln\lambda}\int_\lambda^a\frac{\cos x}{x}\,dx$ (for fixed $a>0$).
+\end{example}
+\begin{proof}[Solution]
+\textbf{Split off the singular part.} Write
+\[
+\int_\lambda^a\frac{\cos x}x\,dx=\int_\lambda^a\frac1x\,dx+\int_\lambda^a\frac{\cos x-1}{x}\,dx.
+\]
+
+\textbf{First piece.} $\displaystyle\int_\lambda^a\frac1x\,dx=\ln a-\ln\lambda$, so
+\[
+\frac{1}{\ln\lambda}\int_\lambda^a\frac1x\,dx=\frac{\ln a}{\ln\lambda}-1\longrightarrow0-1=-1
+\]
+as $\lambda\to0^+$, since $\ln\lambda\to-\infty$ while $\ln a$ stays fixed.
+
+\textbf{Second piece.} The integrand $\dfrac{\cos x-1}{x}$ extends continuously to $x=0$ with value $0$ (since $\cos x-1=O(x^2)$, so $\frac{\cos x-1}{x}=O(x)\to0$), hence is bounded on $(0,a]$. So the improper integral $\int_0^a\frac{\cos x-1}{x}\,dx$ converges to some finite constant $L$, and $\int_\lambda^a\frac{\cos x-1}{x}\,dx\to L$ as $\lambda\to0^+$. Dividing a quantity converging to a finite limit $L$ by $\ln\lambda\to-\infty$ gives
+\[
+\frac{1}{\ln\lambda}\int_\lambda^a\frac{\cos x-1}{x}\,dx\longrightarrow0.
+\]
+
+\textbf{Combining.} Both pieces have finite limits, so the limit of the sum is the sum of the limits:
+\[
+\boxed{\lim_{\lambda\to0^+}\frac{1}{\ln\lambda}\int_\lambda^a\frac{\cos x}{x}\,dx=-1+0=-1}.
+\]
+\end{proof}
+
 \subsection{Series, Power Series, and Fourier Methods}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3007,6 +3073,24 @@ For fixed $i,j$ (giving fixed $a=\lfloor i/k\rfloor$ and $s=j\bmod k$), the sum 
 \boxed{\text{such an } A \text{ exists} \iff N \text{ is a perfect square}}
 \]
 (Both directions were checked computationally: exhaustive search confirms no solution for $N=2,3,5,6,7,8$, and the explicit construction above was verified to give $A^2=J$ for $N=1,4,9,16,25$.)
+\end{proof}
+
+\begin{example}[Fewest distinct pairwise midpoints of an $n$-point real set]
+Let $M\subseteq\R$ be a set of $n$ real numbers ($n\ge2$), and let $S_M=\left\{\frac{x+y}2 : x,y\in M,\ x\ne y\right\}$. Find the smallest possible value of $|S_M|$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Lower bound.} Write $M=\{x_1<x_2<\cdots<x_n\}$. Consider the chain of midpoints
+\[
+\frac{x_1+x_2}2<\frac{x_1+x_3}2<\cdots<\frac{x_1+x_n}2<\frac{x_2+x_n}2<\frac{x_3+x_n}2<\cdots<\frac{x_{n-1}+x_n}2.
+\]
+Each successive inequality is immediate: increasing the second index while $x_1$ is fixed increases the sum, and (at the switch-over point) $\tfrac{x_1+x_n}2<\tfrac{x_2+x_n}2$ since $x_1<x_2$, after which increasing the first index while $x_n$ is fixed keeps increasing the sum. This is a strictly increasing list, so its $(n-1)+(n-2)=2n-3$ entries are pairwise distinct elements of $S_M$, giving $|S_M|\ge2n-3$.
+
+\textbf{Sharpness.} Take $M=\{1,2,\dots,n\}$ (an arithmetic progression). For $i<j$ in $\{1,\dots,n\}$, the midpoint $\tfrac{i+j}2$ depends only on the sum $i+j$, and $i+j$ ranges exactly over the integers $3,4,\dots,2n-1$ as $i,j$ range over all valid pairs (every such sum is attainable: e.g.\ for $3\le s\le n+1$ take $(i,j)=(1,s-1)$ suitably adjusted, and for $n+1\le s\le2n-1$ take $(i,j)=(s-n,n)$ suitably adjusted — in all cases some pair with $1\le i<j\le n$ and $i+j=s$ exists). That is $2n-1-3+1=2n-3$ distinct sums, hence exactly $2n-3$ distinct midpoints.
+
+Combining both parts,
+\[
+\boxed{\min|S_M|=2n-3}.
+\]
 \end{proof}
 
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
@@ -4070,6 +4154,26 @@ With $N=2n+1$, $\lceil N/2\rceil=n+1$, and $\binom{2n+1}{n+1}=\binom{2n+1}{n}$, 
 (Both formulas were checked by direct enumeration for $n=1,\dots,6$: e.g.\ $n=2$ gives $4^{-2}=\tfrac1{16}$ for part (a) and $\binom52/16=\tfrac5{8}$ for part (b), matching exhaustive counts over all $2^5$ coin-flip sequences.)
 \end{proof}
 
+\begin{example}[Probability the center lies inside a random inscribed triangle]
+Three points are chosen independently and uniformly at random on a circle. Find the probability that the center of the circle lies inside the triangle they form.
+\end{example}
+\begin{proof}[Solution]
+\textbf{An equivalent condition.} Splitting the circle at the $3$ random points creates $3$ arcs with lengths summing to the full circumference $2\pi$. A standard fact of planar geometry: the center lies inside the triangle if and only if \emph{every} one of these $3$ arcs is shorter than a semicircle (length $<\pi$) — equivalently, the center lies outside (or on the boundary of) the triangle exactly when the three points all fit within some closed semicircular arc (the complementary arc to the one long arc, when one exists, has length $\ge\pi$ hence spans at most half the circle on the other side). So
+\[
+\mathbb P(\text{center inside triangle})=1-\mathbb P(\text{all 3 points lie within some semicircle}).
+\]
+
+\textbf{The semicircle-covering probability.} For $n$ independent uniform points on a circle, consider, for each point $P_i$, the semicircular arc of length $\pi$ starting at $P_i$ and running clockwise. The event ``all $n$ points lie in some common semicircle'' occurs if and only if, for exactly one index $i$ (ties have probability $0$), \emph{all the other $n-1$ points} happen to fall within $P_i$'s clockwise semicircle — i.e.\ $P_i$ is the counterclockwise-most point of the minimal arc containing everyone. These $n$ events (indexed by which point plays the role of $P_i$) are mutually exclusive. Fixing which point is $P_i$, each of the other $n-1$ points independently lands in the correct semicircle with probability $\tfrac12$ (a uniform point lands in a given half of the circle with probability exactly $\tfrac12$, regardless of where that half is), so that event has probability $\left(\tfrac12\right)^{n-1}$. Summing over the $n$ choices of which point is $P_i$:
+\[
+\mathbb P(\text{all }n\text{ points in some semicircle})=n\cdot\left(\frac12\right)^{n-1}=\frac{n}{2^{n-1}}.
+\]
+
+\textbf{Applying this with $n=3$.} $\mathbb P(\text{all 3 in some semicircle})=\dfrac{3}{2^2}=\dfrac34$, so
+\[
+\mathbb P(\text{center inside triangle})=1-\frac34=\boxed{\frac14}.
+\]
+\end{proof}
+
 \subsection{Random Variables, Moments, and Common Distributions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -4684,6 +4788,29 @@ So $\mathbb P(\min(A,B,C)>t)=(1-3t)^2$ for $0\le t\le\tfrac13$ (and $0$ beyond).
 \[
 \E[\min(A,B,C)]=\int_0^{1/3}(1-3t)^2\,dt=\left[-\frac{(1-3t)^3}{9}\right]_0^{1/3}=0-\left(-\frac19\right)=\boxed{\frac19}.
 \]
+\end{proof}
+
+\begin{example}[Expected number of rolls of an $n$-sided die until the running sum reaches $n$]
+An $n$-sided die (faces $1,\dots,n$, equally likely) is rolled repeatedly, and the results are summed, until the running sum first reaches or exceeds $n$. Find the expected number of rolls.
+\end{example}
+\begin{proof}[Solution]
+Let $S_k=X_1+\cdots+X_k$ be the running sum after $k$ i.i.d.\ $\mathrm{Uniform}\{1,\dots,n\}$ rolls, and $T=\min\{k:S_k\ge n\}$. Using the standard tail-sum formula for a non-negative integer random variable, $\E[T]=\sum_{k=0}^{\infty}\mathbb P(T>k)=\sum_{k=0}^{\infty}\mathbb P(S_k<n)$ (with $S_0=0$).
+
+\textbf{Counting the event $S_k<n$.} Substitute $Y_i=X_i-1\in\{0,\dots,n-1\}$, so $S_k<n\iff Y_1+\cdots+Y_k\le n-1-k$. For $0\le k\le n-1$, the target $M=n-1-k$ satisfies $0\le M\le n-1$, and since each $Y_i\ge0$, a sum $\le M$ automatically forces every individual $Y_i\le M\le n-1$ — so the upper cap $Y_i\le n-1$ never actually binds, and we're just counting non-negative integer solutions of $Y_1+\cdots+Y_k\le M$. Introducing a slack variable turns this into $Y_1+\cdots+Y_k+Y_{k+1}=M$ with $k+1$ non-negative unknowns, a standard stars-and-bars count of $\binom{M+k}{k}=\binom{n-1}{k}$ solutions (since $M+k=n-1$). Each solution corresponds to exactly one of the $n^k$ equally likely roll sequences, so
+\[
+\mathbb P(S_k<n)=\frac{\binom{n-1}{k}}{n^k}\qquad(0\le k\le n-1),
+\]
+and $\mathbb P(S_k<n)=0$ for $k\ge n$ (the sum of $n$ rolls, each $\ge1$, is always $\ge n$).
+
+\textbf{Summing.}
+\[
+\E[T]=\sum_{k=0}^{n-1}\binom{n-1}{k}\left(\frac1n\right)^k=\sum_{k=0}^{n-1}\binom{n-1}{k}\left(\frac1n\right)^k1^{\,n-1-k}=\left(1+\frac1n\right)^{n-1}
+\]
+by the binomial theorem. So
+\[
+\boxed{\E[T]=\left(1+\frac1n\right)^{n-1}}.
+\]
+(Check: $n=2$ gives $\E[T]=1.5$, matching a direct hand computation — the die shows $2$ immediately with probability $\tfrac12$ [one roll], or $1$ then anything [two rolls] with probability $\tfrac12$.)
 \end{proof}
 
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
@@ -5460,6 +5587,45 @@ An unknown degree-$n$ polynomial $P(x)$ is given via its values $P(0),P(1),\dots
 \[
 \boxed{O(n^2)}.
 \]
+\end{proof}
+
+\begin{example}[Finding one of $n$ hidden points in a half-disk via nearest-distance queries]
+A half-disk (semicircular region) hides $n$ unknown points. You may repeatedly pick any point $X$ and ask ``what is the distance from $X$ to the nearest hidden point?'' (a distance of $0$ means $X$ itself is a hidden point). Prove that at least one hidden point can always be found using at most $2n+1$ queries.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Setup.} Query $n+1$ points $A_1<A_2<\cdots<A_{n+1}$, placed in this order along the diameter of the half-disk, recording the returned distances $r_1,\dots,r_{n+1}$. For each $i$, let $f(i)$ denote which of the $n$ hidden points is nearest to $A_i$ (well-defined a.s.; ties are a measure-zero degeneracy that can be perturbed away).
+
+\textbf{Key structural fact.} The Voronoi cell of any hidden point $Z$ (the set of locations closer to $Z$ than to any other hidden point) is convex, being an intersection of half-planes. The intersection of a convex planar region with a straight line (here, the diameter) is a single connected sub-interval. Consequently, if $f(i)=f(j)$ for some $i<j$ (both $A_i,A_j$ nearest to the same hidden point $Z$), then $A_i$ and $A_j$ both lie in $Z$'s Voronoi interval on the diameter, so every $A_k$ with $i\le k\le j$ — lying between them on the line — lies in that same interval too, giving $f(k)=Z$ for all such $k$. In particular $f(i)=f(i+1)$.
+
+\textbf{Pigeonhole.} The map $f$ sends $n+1$ indices into a set of $n$ hidden points, so some value repeats: $f(i)=f(j)$ for some $i<j$. By the structural fact just proved, this forces $f(i^*)=f(i^*+1)$ for some \emph{adjacent} pair $i^*\in\{1,\dots,n\}$.
+
+\textbf{Locating the shared point.} For that adjacent pair, the hidden point $Z=f(i^*)$ is at distance exactly $r_{i^*}$ from $A_{i^*}$ and exactly $r_{i^*+1}$ from $A_{i^*+1}$ (being the nearest point to each). So $Z$ lies on both the circle of radius $r_{i^*}$ centered at $A_{i^*}$ and the circle of radius $r_{i^*+1}$ centered at $A_{i^*+1}$. Two such circles (centered at distinct points of the diameter) intersect in at most $2$ points, symmetric about the diameter line; since all hidden points lie strictly within the half-disk, only the intersection point on the half-disk's side (if any) is a valid candidate — the mirror point across the diameter can be discarded without a query.
+
+\textbf{The algorithm.} For each of the $n$ adjacent pairs $(A_i,A_{i+1})$, $i=1,\dots,n$, compute the circle intersection on the half-disk side (if the two circles intersect at all) and query that single candidate point — $1$ query per pair, $n$ queries total. Since we don't know in advance which pair is the true matching pair $i^*$, we simply try all $n$; the pair $i^*$ guaranteed to exist by pigeonhole will, when its turn comes, return distance $0$ (its candidate point coincides with $Z$ itself), successfully identifying a hidden point.
+
+\textbf{Total.} $n+1$ queries for the initial sweep, plus at most $n$ queries for the adjacent-pair candidates:
+\[
+\boxed{(n+1)+n=2n+1\text{ queries suffice}}.
+\]
+\end{proof}
+
+\begin{example}[Two non-attacking matrix elements with maximum product]
+An $n\times n$ matrix is filled with distinct positive integers. Design an algorithm to find two entries, no two in the same row or column, whose product is as large as possible, in $O(n^2)$ time and $O(n)$ extra memory.
+\end{example}
+\begin{proof}[Solution]
+Let $a$ be the largest entry in the matrix and $b$ the second largest (found by one $O(n^2)$ scan, tracking values and positions).
+
+\textbf{If $a,b$ are compatible} (different row and column), the answer is simply $a\cdot b$ — unbeatable, since these are literally the two largest entries in the whole matrix.
+
+\textbf{Key lemma: if $a,b$ conflict (share a row or column), the optimal pair always includes $a$ or $b$.} Suppose $a,b$ share row $R$ (the column case is symmetric), with $a$ at column $c_a\ne c_b$, $b$'s column. Suppose toward contradiction that an optimal compatible pair $(x,y)$ avoids both $a$ and $b$; then $x,y<a$ and, since $b$ is the \emph{second}-largest entry overall, also $x,y<b$ (as $x,y\ne a,b$). If $x$ were compatible with $a$ (different row/column), then $a\cdot x>b\cdot x\ge y\cdot x$ — wait, more directly: $a\cdot x>y\cdot x$ since $a>y$ (as $y\ne a$), contradicting that $(x,y)$ beats every pair through $a$. So $x$ must conflict with $a$; likewise, if $x$ were compatible with $b$, then $b\cdot x>y\cdot x$ (since $b>y$), again a contradiction — so $x$ must conflict with $b$ too. The same argument applied to $y$ (using $a>x$ and $b>x$) shows $y$ conflicts with both $a$ and $b$ as well.
+
+Now, conflicting with \emph{both} $a$ and $b$: since $a,b$ have different columns ($c_a\ne c_b$), no single element can match both columns at once, so any element conflicting with both $a$ and $b$ must instead share their common row $R$. Hence $x$ and $y$ are \emph{both} in row $R$ — but then $x,y$ share a row, contradicting that $(x,y)$ is itself a compatible pair. This contradiction proves the lemma.
+
+\textbf{Algorithm.} If $a,b$ conflict: compute $a^*=$ the maximum entry outside $a$'s row and column, and $b^*=$ the maximum entry outside $b$'s row and column (two more $O(n^2)$ scans). By the lemma, the optimal answer is
+\[
+\boxed{\max(a\cdot a^*,\ b\cdot b^*)}
+\]
+(with $a\cdot b$ handled separately when $a,b$ are already compatible). This uses $O(n^2)$ time (three linear passes over the matrix) and $O(1)\subset O(n)$ extra memory (a handful of running maxima and their positions).
 \end{proof}
 
 \section*{How to Use This Guide Efficiently}
