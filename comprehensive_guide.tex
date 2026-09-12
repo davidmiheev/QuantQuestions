@@ -591,6 +591,29 @@ so the same argument gives $\rank B\le\rank A$. Combining,
 \]
 \end{proof}
 
+\begin{example}[Dimension of polynomials with vanishing circular averages at every radius]
+In the space of real polynomials in $x,y$ of degree $\le2013$, let $V$ be the subspace of $f$ such that $\oint_{\{x^2+y^2=R^2\}}f(x,y)\,ds=0$ for \emph{every} $R>0$. Find $\dim V$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Setting up the constraint per monomial.} Write $f=\sum a_{nm}x^ny^m$. On the circle of radius $R$, $x=R\cos\varphi$, $y=R\sin\varphi$, $ds=R\,d\varphi$, so
+\[
+\oint f\,ds=\sum_{n,m}a_{nm}R^{n+m+1}\underbrace{\int_0^{2\pi}\cos^n\varphi\sin^m\varphi\,d\varphi}_{=:c_{nm}}.
+\]
+Requiring this to vanish for \emph{every} $R>0$ forces the coefficient of each power of $R$ to vanish separately: for each total degree $s=0,\dots,2013$,
+\[
+\sum_{n+m=s}a_{nm}c_{nm}=0.
+\]
+
+\textbf{When is $c_{nm}\ne0$?} Two symmetries kill most terms. Shifting $\varphi\to\varphi+\pi$ (which fixes the integral, being over a full period) sends $\cos^n\varphi\sin^m\varphi\to(-1)^{n+m}\cos^n\varphi\sin^m\varphi$, so $c_{nm}=(-1)^{n+m}c_{nm}$, giving $c_{nm}=0$ whenever $n+m$ is odd. Shifting $\varphi\to\varphi+\pi/2$ sends $\cos^n\varphi\sin^m\varphi\to(-1)^n\sin^n\varphi\cos^m\varphi$, so (using $c_{nm}=c_{mn}$, from the substitution $\varphi\to\pi/2-\varphi$) $c_{nm}=(-1)^nc_{mn}=(-1)^nc_{nm}$, giving $c_{nm}=0$ whenever $n$ is odd. Combining: $c_{nm}=0$ unless \emph{both} $n,m$ are even — and when both are even, the integrand is $\ge0$ and not identically $0$, so $c_{nm}>0$ strictly.
+
+\textbf{Counting free coefficients versus constraints.} If $s$ is odd, every pair $(n,m)$ with $n+m=s$ has exactly one of $n,m$ odd, so $c_{nm}=0$ for all of them: the degree-$s$ constraint is vacuous ($0=0$), and all $s+1$ coefficients at that degree are free. If $s$ is even, the pairs with $n+m=s$ split into ``both even'' (contributing genuinely, $\lfloor s/2\rfloor+1$ such pairs: $(0,s),(2,s-2),\dots,(s,0)$) and ``both odd'' (contributing $c_{nm}=0$, hence unconstrained). So at even degree $s$, exactly \emph{one} nontrivial linear constraint arises (a strictly positive combination of the ``both even'' coefficients equaling $0$), cutting the dimension at that degree by exactly $1$.
+
+\textbf{Assembling the count.} The total number of monomials of degree $\le2013$ is $\binom{2015}2=\dfrac{2014\cdot2015}2=2{,}029{,}105$. The number of constraints is the number of even $s\in\{0,\dots,2013\}$, namely $1007$ (namely $s=0,2,\dots,2012$). So
+\[
+\dim V=2{,}029{,}105-1007=\boxed{2{,}028{,}098}.
+\]
+\end{proof}
+
 \subsection{Eigenvalues, Jordan Form, and Singular Value Decomposition}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1063,6 +1086,22 @@ A linear operator on an $n$-dimensional space has $n+1$ eigenvectors $v_1,\dots,
 \boxed{\text{exactly the scalar matrices }\lambda I}
 \]
 (Conversely, any $\lambda I$ works: every nonzero vector is an eigenvector, so e.g.\ the $n$ standard basis vectors together with $(1,1,\dots,1)^T$ give $n+1$ eigenvectors, any $n$ of which are independent.)
+\end{proof}
+
+\begin{example}[Determinant of a rank-one perturbation of a scalar matrix]
+Let $M$ be the $n\times n$ matrix with $m_{ij}=a_ia_j$ for $i\ne j$ and $m_{ii}=a_i^2+k$. Find $\det M$.
+\end{example}
+\begin{proof}[Solution]
+Write $u=(a_1,\dots,a_n)^T$, so $M=uu^T+kI$ (the off-diagonal entries match $uu^T$ directly, and the diagonal entries $a_i^2+k$ match $(uu^T)_{ii}+k=a_i^2+k$).
+
+By the matrix determinant lemma, $\det(kI+uu^T)=k^n\det\bigl(I+\tfrac1k uu^T\bigr)=k^n\bigl(1+\tfrac1k u^Tu\bigr)$ (valid for $k\ne0$; the $k=0$ case follows by continuity or direct computation), using $\det(I+ab^T)=1+b^Ta$ with $a=b=u/\sqrt k$-type scaling made precise by pulling out $k^n$ first. Simplifying,
+\[
+\det M=k^n+k^{n-1}u^Tu=k^{n-1}(k+u^Tu).
+\]
+Since $u^Tu=\sum_{i=1}^na_i^2$,
+\[
+\boxed{\det M=k^{n-1}\left(k+\sum_{i=1}^na_i^2\right)}.
+\]
 \end{proof}
 
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
@@ -1790,6 +1829,30 @@ Hence
 \]
 \end{proof}
 
+\begin{example}[A recurrence converging to $\ln 2$]
+The sequence $(x_n)_{n\ge0}$ satisfies $x_0=0$, $x_1=1$, and $x_{n+1}=\dfrac{x_n+nx_{n-1}}{n+1}$. Show $(x_n)$ converges and find its limit.
+\end{example}
+\begin{proof}[Solution]
+\textbf{The successive differences.} Let $d_n=x_n-x_{n-1}$ for $n\ge1$, so $d_1=1$. From the recursion,
+\[
+x_{n+1}-x_n=\frac{x_n+nx_{n-1}}{n+1}-x_n=\frac{n(x_{n-1}-x_n)}{n+1}=-\frac n{n+1}\,d_n,
+\]
+i.e.\ $d_{n+1}=-\dfrac n{n+1}d_n$. By induction, $d_n=\dfrac{(-1)^{n-1}}n$ (check: $d_1=1$; and $d_{n+1}=-\frac n{n+1}\cdot\frac{(-1)^{n-1}}n=\frac{(-1)^n}{n+1}$, matching the formula at $n+1$).
+
+\textbf{Summing the telescoping series.} Since $x_0=0$,
+\[
+x_n=\sum_{k=1}^n d_k=\sum_{k=1}^n\frac{(-1)^{k-1}}k,
+\]
+the $n$-th partial sum of the alternating harmonic series. This series converges (alternating series test: terms $1/k\downarrow0$), to the classical value
+\[
+\sum_{k=1}^\infty\frac{(-1)^{k-1}}k=\ln2
+\]
+(the $x=1$ case of the Taylor series $\ln(1+x)=\sum_{k=1}^\infty\frac{(-1)^{k-1}}kx^k$, valid up to and including $x=1$ by Abel's theorem). So
+\[
+\boxed{\lim_{n\to\infty}x_n=\ln2}.
+\]
+\end{proof}
+
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
 \textbf{Useful identities.}
 \begin{itemize}
@@ -2243,6 +2306,21 @@ Let $f:\R^2\to\R$ be bounded and smooth, and suppose the average of $f$ over eve
 \boxed{f \text{ is constant}}
 \]
 in every case, with the attained-maximum argument above already illustrating why: the mean-value-at-radius-$1$ property is rigid enough to propagate any extremal value across the whole plane.
+\end{proof}
+
+\begin{example}[The shortest interval capturing a fixed probability mass has equal endpoint densities]
+Let $f$ be a positive continuous function on $\R$ with $\int_{-\infty}^\infty f(x)\,dx=1$, and fix $\alpha\in(0,1)$. Among all intervals $[a,b]$ with $\int_a^bf(x)\,dx=\alpha$, let $[a,b]$ be one of minimal length. Show $f(a)=f(b)$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Setting up a constrained family.} Since $f>0$, for $a$ near the given left endpoint there is a unique nearby $b(a)$ with $\int_a^{b(a)}f(x)\,dx=\alpha$ (the integral is a strictly increasing function of $b$, hence invertible), defining a smooth one-parameter family of valid intervals through the given minimizer. Differentiating the constraint with respect to $a$ (Leibniz rule):
+\[
+f(b(a))\,b'(a)-f(a)=0\quad\Longrightarrow\quad b'(a)=\frac{f(a)}{f(b(a))}.
+\]
+
+\textbf{First-order condition at the minimum.} The length is $L(a)=b(a)-a$. Since our interval minimizes length among this constrained family, $a$ is a critical point of $L$: $L'(a)=b'(a)-1=0$, i.e.\ $b'(a)=1$. Combined with the formula above,
+\[
+\frac{f(a)}{f(b(a))}=1\quad\Longrightarrow\quad\boxed{f(a)=f(b)}.
+\]
 \end{proof}
 
 \subsection{Vector Fields and Vector Calculus}
@@ -3512,6 +3590,22 @@ Summing $(\#\text{odd }o)\times\lceil m(o)/2\rceil$ across all eight rows:
 \]
 \end{proof}
 
+\begin{example}[Two of $100$ subsets must have a small symmetric difference]
+Given $100$ subsets of $\{0,1,\dots,9\}$, prove that some two of them have symmetric difference of size at most $2$.
+\end{example}
+\begin{proof}[Solution]
+Identify each subset with its indicator vector in $\{0,1\}^{10}$; symmetric difference size is exactly Hamming distance. Suppose, toward contradiction, all $\binom{100}2$ pairs among the $100$ chosen vectors have Hamming distance $\ge3$.
+
+\textbf{Disjoint Hamming balls.} For each chosen vector $v$, let $B(v)$ be the Hamming ball of radius $1$ around it (i.e.\ $v$ together with its $10$ neighbors differing in exactly one coordinate), so $|B(v)|=1+10=11$. If two chosen vectors $v\ne w$ had $B(v)\cap B(w)\ne\varnothing$, some point would be within distance $1$ of both, giving $d(v,w)\le1+1=2$ by the triangle inequality — contradicting our assumption that all pairwise distances are $\ge3$. So the $100$ balls $B(v)$ are pairwise disjoint.
+
+\textbf{Counting contradiction.} These $100$ disjoint balls occupy at least $100\times11=1100$ points of $\{0,1\}^{10}$ — but $|\{0,1\}^{10}|=2^{10}=1024<1100$. Contradiction.
+
+So the assumption fails:
+\[
+\boxed{\text{some two of the }100\text{ subsets have symmetric difference}\le2}
+\]
+\end{proof}
+
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -4310,6 +4404,29 @@ Hence
 
 \section{Probability Theory and Statistics}
 This is the most frequently tested area in quant interviews. You are expected to move comfortably between combinatorics, conditional probability, expectation, convergence, and recursion.
+
+\begin{example}[An axis-aligned rectangle with random diagonal endpoints stays inside the disk]
+Let $P$ be uniform on the unit circle and $Q$ uniform on the unit disk (independently). Let $R$ be the axis-aligned rectangle with diagonal $PQ$. Find $\mathbb P(R\subseteq\text{unit disk})$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Reduce to the corners.} The unit disk is convex, and a rectangle equals the convex hull of its $4$ corners, so $R\subseteq\text{disk}\iff$ all $4$ corners lie in the disk. Two corners are $P,Q$ themselves (already in the disk by hypothesis); the other two are $(P_x,Q_y)$ and $(Q_x,P_y)$.
+
+\textbf{Translating the corner conditions.} Since $P_x^2+P_y^2=1$: the corner $(P_x,Q_y)$ lies in the disk iff $P_x^2+Q_y^2\le1$, i.e.\ $Q_y^2\le P_y^2$, i.e.\ $|Q_y|\le|P_y|$. Symmetrically, $(Q_x,P_y)\in$ disk iff $|Q_x|\le|P_x|$. So, given $P$, the rectangle stays inside the disk iff $Q$ lands in the axis-aligned rectangle $\{|Q_x|\le|P_x|,\,|Q_y|\le|P_y|\}$, which has area $4|P_x P_y|$.
+
+\textbf{Averaging over $P$.} Given $P$ at angle $\varphi$ (uniform on $[0,2\pi)$), $|P_xP_y|=|\cos\varphi\sin\varphi|=\tfrac12|\sin2\varphi|$, so
+\[
+\mathbb P(R\subseteq\text{disk}\mid\varphi)=\frac{4\cdot\tfrac12|\sin2\varphi|}{\pi}=\frac{2|\sin2\varphi|}\pi.
+\]
+Averaging over $\varphi$:
+\[
+\mathbb P(R\subseteq\text{disk})=\frac1{2\pi}\int_0^{2\pi}\frac{2|\sin2\varphi|}\pi\,d\varphi=\frac1{\pi^2}\int_0^{2\pi}|\sin2\varphi|\,d\varphi.
+\]
+Substituting $u=2\varphi$: $\int_0^{2\pi}|\sin2\varphi|\,d\varphi=\tfrac12\int_0^{4\pi}|\sin u|\,du=\tfrac12\cdot4\cdot\int_0^\pi\sin u\,du=\tfrac12\cdot4\cdot2=4$ (using that $|\sin u|$ has period $\pi$ with integral $2$ over each period, and $[0,4\pi]$ spans $4$ periods).
+
+\[
+\boxed{\mathbb P(R\subseteq\text{disk})=\frac4{\pi^2}}
+\]
+\end{proof}
 
 \subsection{Probability Spaces, Conditioning, and Bernoulli Schemes}
 \textbf{Definitions and formulas.}
@@ -6336,6 +6453,23 @@ In every off-diagonal case the adversary's answer is consistent with \emph{any} 
 
 \[
 \boxed{\text{at least }n\text{ comparisons are always necessary}}
+\]
+\end{proof}
+
+\begin{example}[Zeroing all bad rows and columns of a bit matrix in $O(1)$ extra memory]
+An $n\times n$ matrix of $0/1$ bits is given (one bit of storage per entry). Call a row or column \emph{bad} if it contains at least one $0$. Design an algorithm that zeroes out every bad row and column, using $O(1)$ extra memory, and analyze its running time.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Step 1: record the fate of row $1$ and column $1$.} Scan row $1$ and column $1$ ($O(n)$ time) and store, in $2$ extra bits, whether each was originally bad (contained a $0$) or good (all $1$'s).
+
+\textbf{Step 2: use row $1$/column $1$ as bad-markers for everything else.} For each $i,j=2,\dots,n$: if $a_{ij}=0$, set $a_{i1}\leftarrow0$ and $a_{1j}\leftarrow0$. After this pass ($O(n^2)$ time, no extra memory), $a_{i1}=0$ exactly when row $i$ (for $i\ge2$) is bad, and $a_{1j}=0$ exactly when column $j$ (for $j\ge2$) is bad — row $1$ and column $1$ now double as a lookup table for everyone else's status.
+
+\textbf{Step 3: apply the markers.} For each $i,j=2,\dots,n$: if $a_{i1}=0$ or $a_{1j}=0$, set $a_{ij}\leftarrow0$. This correctly zeroes every bad row and column, for every index $\ge2$ ($O(n^2)$ time).
+
+\textbf{Step 4: fix up row $1$/column $1$ themselves.} Using the $2$ bits saved in Step 1, if row $1$ was originally bad, zero it out now; likewise for column $1$ ($O(n)$ time).
+
+\[
+\boxed{O(n^2)\text{ time},\ O(1)\text{ extra memory}}
 \]
 \end{proof}
 
