@@ -1517,6 +1517,25 @@ So the same $q$ answers are consistent with both a positive-definite matrix ($M_
 \]
 \end{proof}
 
+\begin{example}[The pairwise-intersection-size matrix is positive semidefinite]
+Let $A_1,\dots,A_n$ be finite sets, and $a_{ij}=|A_i\cap A_j|$. Prove the matrix $(a_{ij})$ is positive semidefinite.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Write the matrix as a sum of outer products.} For each element $x$ in $A_1\cup\cdots\cup A_n$, let $v_x\in\R^n$ be its indicator vector: $(v_x)_i=1$ if $x\in A_i$, else $0$. Then
+\[
+a_{ij}=|A_i\cap A_j|=\sum_x[x\in A_i][x\in A_j]=\sum_x(v_x)_i(v_x)_j,
+\]
+so the whole matrix is $\displaystyle(a_{ij})=\sum_xv_xv_x^T$.
+
+\textbf{Each term, and the sum, is PSD.} For any vector $y\in\R^n$ and any $x$, $y^T(v_xv_x^T)y=(v_x^Ty)^2\ge0$, so each $v_xv_x^T$ is positive semidefinite. A sum of positive semidefinite matrices is positive semidefinite (the defining quadratic-form inequality adds termwise):
+\[
+y^T\Bigl(\sum_xv_xv_x^T\Bigr)y=\sum_x(v_x^Ty)^2\ge0\quad\text{for every }y.
+\]
+\[
+\boxed{(a_{ij})\text{ is positive semidefinite}}
+\]
+\end{proof}
+
 \section{Calculus and Real Analysis}
 Interview analysis questions often look innocent but test whether you can move between definitions, expansions, and clean arguments. The core techniques are asymptotics, derivatives, optimization, integrals, and series.
 
@@ -1924,6 +1943,26 @@ using $x_{n+1}-x_n=-\tfrac12(x_n-x_{n-1})$ from above — so $I_n$ is exactly th
 \textbf{Extracting the limit.} Since $x_{n+1}\to L$ and $x_n\to L$, also $I_n=x_{n+1}+\tfrac12x_n\to L+\tfrac12L=\tfrac32L$. But $I_n\equiv b+\tfrac a2$ for all $n$, so
 \[
 \frac32L=b+\frac a2\quad\Longrightarrow\quad\boxed{L=\frac{a+2b}3}.
+\]
+\end{proof}
+
+\begin{example}[An uncountable set of positive reals has a countable subset with infinite sum]
+Let $M$ be a set of positive real numbers with the cardinality of the continuum. Show $M$ has a countably infinite subset whose sum is infinite.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Cover $M$ by a countable union.} Every $x\in M$ satisfies $x\ge\frac1n$ for some positive integer $n$, so
+\[
+M=\bigcup_{n=1}^\infty\Bigl(M\cap[\tfrac1n,\infty)\Bigr).
+\]
+
+\textbf{Some piece is uncountable.} If every set $M\cap[\frac1n,\infty)$ were countable, their union $M$ — a countable union of countable sets — would be countable, contradicting $|M|=\mathfrak c$. So some $A_N:=M\cap[\frac1N,\infty)$ is uncountable, in particular infinite.
+
+\textbf{Extract a countable subset.} Pick any countably infinite subset $\{y_1,y_2,\dots\}\subseteq A_N$ (possible since $A_N$ is infinite). Every $y_k\ge\frac1N$, so
+\[
+\sum_{k=1}^\infty y_k\ge\sum_{k=1}^\infty\frac1N=\infty.
+\]
+\[
+\boxed{\{y_1,y_2,\dots\}\subseteq M\text{ is countably infinite with }\sum_ky_k=\infty}
 \]
 \end{proof}
 
@@ -3721,6 +3760,25 @@ Identify each subset with its indicator vector in $\{0,1\}^{10}$; symmetric diff
 So the assumption fails:
 \[
 \boxed{\text{some two of the }100\text{ subsets have symmetric difference}\le2}
+\]
+\end{proof}
+
+\begin{example}[Sum over all subsets of the product of reciprocals]
+For each nonempty subset $S\subseteq\{1,2,\dots,n\}$, multiply together the reciprocals of its elements. Find the sum of these $2^n-1$ products.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Relate to a product.} Expanding $\displaystyle\prod_{i=1}^n\left(1+\frac1i\right)$ by distributing over each factor gives exactly one term for every subset $S\subseteq\{1,\dots,n\}$ (choosing, for each $i$, either the ``$1$'' or the ``$1/i$''): the term for $S$ is $\prod_{i\in S}\frac1i$, and the term for $S=\varnothing$ is $1$. So
+\[
+\sum_{\varnothing\ne S\subseteq\{1,\dots,n\}}\ \prod_{i\in S}\frac1i=\prod_{i=1}^n\left(1+\frac1i\right)-1.
+\]
+
+\textbf{The product telescopes.} $1+\dfrac1i=\dfrac{i+1}i$, so
+\[
+\prod_{i=1}^n\frac{i+1}i=\frac21\cdot\frac32\cdot\frac43\cdots\frac{n+1}n=n+1.
+\]
+
+\[
+\boxed{\sum_{\varnothing\ne S\subseteq\{1,\dots,n\}}\ \prod_{i\in S}\frac1i=(n+1)-1=n}
 \]
 \end{proof}
 
@@ -6691,6 +6749,30 @@ exactly $10$ steps to reach windows of size $1$ in each group.
 
 \[
 \boxed{10\text{ halving rounds}+1\text{ final comparison}=11\text{ weighings}}
+\]
+\end{proof}
+
+\begin{example}[Checking whether an array is a permutation of $1,\dots,n$ in $O(1)$ extra memory]
+Given an array $A[0..n-1]$ of $n$ integers, design an algorithm using $O(n)$ time and $O(1)$ extra memory to determine whether $A$ is a permutation of $1,\dots,n$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Key idea.} If $A$ \emph{is} such a permutation, then $i\mapsto A[i]-1$ is a well-defined bijection of $\{0,\dots,n-1\}$ to itself, decomposing into disjoint cycles covering every index. We verify this directly, using the sign of each entry as a $1$-bit ``visited'' marker (values are positive integers, so this doesn't destroy the needed information).
+
+\textbf{Algorithm.} For each $i=0,\dots,n-1$ with $A[i]>0$ (not yet visited), trace the chain starting at $i$: repeatedly, at the current index $j$, let $t=A[j]-1$; negate $A[j]$ (mark visited); then:
+\begin{itemize}
+\item if $t\notin\{0,\dots,n-1\}$, \textbf{reject} ($A[j]\notin\{1,\dots,n\}$, so $A$ can't be a permutation);
+\item else if $A[t]>0$ (unvisited), move to $j=t$ and continue the chain;
+\item else if $t=i$ (the chain closed exactly back to its start), this cycle is confirmed valid — move on to the next unvisited starting index;
+\item else ($A[t]\le0$ but $t\ne i$: colliding with an already-visited index from a different chain, or revisiting mid-chain without closing at $i$), \textbf{reject}.
+\end{itemize}
+If every starting index is eventually processed without a rejection, $A$ is a permutation.
+
+\textbf{Correctness.} A rejection fires exactly when some entry is out of range, or when the functional graph $i\mapsto A[i]-1$ fails to be injective (two chains collide) or fails to close every element into a cycle containing its own start — precisely the failure modes of $A$ not being a bijection on $\{0,\dots,n-1\}$ after the $-1$ shift, i.e.\ of $A$ not being a permutation of $1,\dots,n$. Conversely, if $A$ truly is such a permutation, the cycles of the permutation are disjoint by definition, so every chain closes cleanly back to its own start without collision.
+
+\textbf{Complexity.} Each index is negated (visited) exactly once across the whole run; once negated, any further chain that reaches it terminates in $O(1)$. So total work is $O(n)$, using only the loop variables $i,j,t$ as extra storage.
+
+\[
+\boxed{O(n)\text{ time},\ O(1)\text{ extra memory}}
 \]
 \end{proof}
 
