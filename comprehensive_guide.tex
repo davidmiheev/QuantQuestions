@@ -1481,6 +1481,42 @@ Combining both, $A$ is diagonal with every diagonal entry equal to $\lambda$:
 \]
 \end{proof}
 
+\begin{example}[A polynomial that's everywhere positive is a sum of two squares]
+Let $P$ be a real polynomial that is strictly positive for every real $x$. Show $P$ can be written as a sum of squares of real polynomials — in fact, as a sum of exactly two squares.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Factoring into positive-definite quadratics.} Since $P(x)>0$ for all real $x$, $P$ has no real roots. Its complex roots come in conjugate pairs $x_i,\overline{x_i}$ (real coefficients), so
+\[
+P(x)=c\prod_i(x-x_i)(x-\overline{x_i})=c\prod_i(x^2+b_ix+c_i)
+\]
+for real $b_i,c_i$ (and $c>0$, the leading coefficient, matching positivity as $x\to\infty$). Completing the square in each factor, $x^2+b_ix+c_i=(x+b_i/2)^2+q_i$ with $q_i=c_i-b_i^2/4$; each $q_i>0$ (else this factor would have a real root, contradicting $P>0$). Write $q_i=y_i^2$ for real $y_i$. So $P$ is $c$ times a product of terms each of the form (linear polynomial)$^2$ + (real constant)$^2$ — a product of sums of two squares.
+
+\textbf{Products of two-square sums stay two-square sums.} The Brahmagupta–Fibonacci identity states $(A^2+B^2)(C^2+D^2)=(AC-BD)^2+(AD+BC)^2$ for any real numbers (or, as here, real polynomials) $A,B,C,D$ — checked directly by expanding both sides. So by induction on the number of quadratic factors, the entire product $\prod_i\bigl[(x+b_i/2)^2+y_i^2\bigr]$ is itself a sum of exactly two squares of real polynomials, say $U(x)^2+V(x)^2$.
+
+\textbf{Absorbing the constant $c$.} Since $c>0$, write $c=(\sqrt c)^2$, and note $c(U^2+V^2)=(\sqrt cU)^2+(\sqrt cV)^2$ — still a sum of two squares.
+
+\[
+\boxed{P(x)=\bigl(\sqrt c\,U(x)\bigr)^2+\bigl(\sqrt c\,V(x)\bigr)^2}
+\]
+\end{proof}
+
+\begin{example}[Determining positive-definiteness of an unknown quadratic form]
+An unknown quadratic form $Q$ on $\R^n$ can be probed by queries of the form ``what is $Q(v)$?'' for any chosen $v$. Find the minimum number of queries needed to determine whether $Q$ is positive definite.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Upper bound: $\binom{n+1}2=\frac{n(n+1)}2$ queries suffice.} A symmetric bilinear form's matrix has $\binom{n+1}2$ independent entries $a_{ij}$ ($i\le j$). Querying $Q(e_i)=a_{ii}$ for each $i$ ($n$ queries) and $Q(e_i+e_j)=a_{ii}+2a_{ij}+a_{jj}$ for each $i<j$ ($\binom n2$ queries) determines every $a_{ii}$ directly and then every $a_{ij}$ by subtraction — recovering $Q$ completely, after which positive-definiteness is decided outright (e.g.\ via eigenvalues or leading principal minors).
+
+\textbf{Lower bound: fewer never suffices.} Each query $Q(v)=v^TMv$ (for the unknown symmetric matrix $M$) is a linear functional of the $\binom{n+1}2$ entries of $M$. Suppose an algorithm (queries possibly chosen adaptively) uses $q<\binom{n+1}2$ queries when the true form is $M_0=I$ (the identity, which is positive definite, so $Q(v)=\|v\|^2$ — a valid, consistent way for the adversary to have answered all $q$ queries). The $q$ linear equations obtained cut out an affine subspace $S$ of consistent matrices with $\dim S\ge\binom{n+1}2-q\ge1$, and $I\in S$.
+
+Pick any nonzero direction $D$ with $I+tD\in S$ for all real $t$ (possible since $\dim S\ge1$). Choose an eigenvector $v_0$ of $D$ with eigenvalue $\mu\ne0$ (exists since $D\ne0$ is symmetric, hence diagonalizable with a nonzero eigenvalue). Then $v_0^T(I+tD)v_0=\|v_0\|^2+t\mu\|v_0\|^2\to-\infty$ as $t\to-\mathrm{sign}(\mu)\cdot\infty$, so for some finite $t^*$, $M_{t^*}:=I+t^*D$ has $v_0^TM_{t^*}v_0<0$ — i.e.\ $M_{t^*}$ is \emph{not} positive definite, yet $M_{t^*}\in S$ remains fully consistent with all $q$ query answers (by construction of $S$).
+
+So the same $q$ answers are consistent with both a positive-definite matrix ($M_0=I$) and a non-positive-definite one ($M_{t^*}$) — no algorithm using fewer than $\binom{n+1}2$ queries can correctly distinguish these cases.
+
+\[
+\boxed{\dfrac{n(n+1)}2\text{ queries, and this is optimal}}
+\]
+\end{proof}
+
 \section{Calculus and Real Analysis}
 Interview analysis questions often look innocent but test whether you can move between definitions, expansions, and clean arguments. The core techniques are asymptotics, derivatives, optimization, integrals, and series.
 
@@ -2926,6 +2962,29 @@ Checking $\tfrac{m(m+1)}2\bmod2$ for $m=1,\dots,10$: $1,3,6,10,15,21,28,36,45,55
 
 \[
 \boxed{I_m\ne0\text{ for }m=3,4,7,8\text{ (and }I_m=0\text{ for the other }m\in[1,10])}
+\]
+\end{proof}
+
+\begin{example}[$\int_0^{2\pi}\sin^8x\,dx$ via a reduction formula]
+Compute $\displaystyle\int_0^{2\pi}\sin^8x\,dx$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{A reduction formula over the full period.} Let $I_n=\int_0^{2\pi}\sin^nx\,dx$. Integrating by parts ($u=\sin^{n-1}x$, $dv=\sin x\,dx=-d(\cos x)$),
+\[
+I_n=\Bigl[-\sin^{n-1}x\cos x\Bigr]_0^{2\pi}+(n-1)\int_0^{2\pi}\cos^2x\sin^{n-2}x\,dx=(n-1)\int_0^{2\pi}(1-\sin^2x)\sin^{n-2}x\,dx,
+\]
+the boundary term vanishing since $\sin0=\sin2\pi=0$. So $I_n=(n-1)I_{n-2}-(n-1)I_n$, giving
+\[
+I_n=\frac{n-1}nI_{n-2}.
+\]
+
+\textbf{Iterating from $I_0=2\pi$.}
+\[
+I_2=\frac12I_0=\pi,\quad I_4=\frac34I_2=\frac{3\pi}4,\quad I_6=\frac56I_4=\frac{5\pi}8,\quad I_8=\frac78I_6=\frac{35\pi}{64}.
+\]
+
+\[
+\boxed{\int_0^{2\pi}\sin^8x\,dx=\frac{35\pi}{64}}
 \]
 \end{proof}
 
@@ -5545,6 +5604,45 @@ Since $\ln\tfrac12=-\ln2$,
 \]
 \end{proof}
 
+\begin{example}[Maximum possible variance on the unit interval]
+What is the largest possible variance of a random variable $X$ taking values in $[0,1]$?
+\end{example}
+\begin{proof}[Solution]
+Since $0\le X\le1$, we have $X^2\le X$ pointwise, so $\E[X^2]\le\E[X]$. Writing $\mu=\E[X]\in[0,1]$,
+\[
+\Var(X)=\E[X^2]-\mu^2\le\mu-\mu^2=\mu(1-\mu).
+\]
+By AM–GM (or completing the square), $\mu(1-\mu)\le\tfrac14$ for $\mu\in[0,1]$, with equality at $\mu=\tfrac12$. So $\Var(X)\le\tfrac14$ always.
+
+\textbf{Achieving equality.} Equality in $X^2\le X$ requires $X\in\{0,1\}$ almost surely, and equality in $\mu(1-\mu)\le\frac14$ requires $\mu=\frac12$ — i.e.\ $X\sim\mathrm{Bernoulli}(\tfrac12)$, which indeed has variance $\tfrac12\cdot\tfrac12=\tfrac14$.
+
+\[
+\boxed{\max\Var(X)=\frac14}
+\]
+\end{proof}
+
+\begin{example}[Probability that $k$ given elements of a random permutation share a cycle]
+For a uniformly random permutation of $\{1,\dots,n\}$, fix $k$ elements ($2\le k\le n$). Show they all lie in the same cycle with probability exactly $\tfrac1k$.
+\end{example}
+\begin{proof}[Solution]
+WLOG relabel so the fixed elements are $1,\dots,k$ (relabeling preserves uniformity). Let $L$ be the length of the cycle containing element $1$.
+
+\textbf{Two standard facts.} (i) $L$ is uniform on $\{1,\dots,n\}$: the number of permutations with $L=l$ is $\binom{n-1}{l-1}(l-1)!(n-l)!=(n-1)!$ (choose the other $l-1$ cycle-mates, arrange all $l$ into one cycle, permute the rest freely), independent of $l$, so $\mathbb P(L=l)=(n-1)!/n!=1/n$. (ii) Given $L=l$, the other $l-1$ members of the cycle form a uniformly random $(l-1)$-subset of the remaining $n-1$ elements (each such subset arises from exactly $(l-1)!(n-l)!$ permutations, the same count for every subset).
+
+\textbf{Computing the probability.} We want $2,\dots,k$ (a fixed $(k-1)$-set) to be among the $L-1$ other cycle members. Conditioning on $L=l$ (only possible for $l\ge k$), this probability is $\binom{n-k}{l-k}/\binom{n-1}{l-1}$ (choosing the remaining $l-k$ cycle-mates from the $n-k$ non-target elements). So
+\[
+\mathbb P=\sum_{l=k}^n\frac1n\cdot\frac{\binom{n-k}{l-k}}{\binom{n-1}{l-1}}=\frac{(n-k)!}{n\,(n-1)!}\sum_{l=k}^n\frac{(l-1)!}{(l-k)!}.
+\]
+Since $\dfrac{(l-1)!}{(l-k)!}=(k-1)!\binom{l-1}{k-1}$, and the hockey-stick identity gives $\sum_{l=k}^n\binom{l-1}{k-1}=\binom nk$,
+\[
+\mathbb P=\frac{(n-k)!}{n(n-1)!}\cdot(k-1)!\binom nk=\frac{(n-k)!(k-1)!}{n(n-1)!}\cdot\frac{n!}{k!(n-k)!}=\frac{(k-1)!}{k!}\cdot\frac{n!}{n(n-1)!}=\frac1k\cdot1.
+\]
+\[
+\boxed{\mathbb P(1,\dots,k\text{ share a cycle})=\frac1k}
+\]
+(Consistent with the $k=2$ case worked out earlier via the explicit cycle-length distribution, which also gave probability exactly $\tfrac12$.)
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -6570,6 +6668,29 @@ using $h[j]\le h[k']$ (again, $h[j]$ is the global minimum). So every running su
 \textbf{Complexity.} Computing all prefix sums $h[0],\dots,h[n]$ and locating their minimum is a single linear scan.
 \[
 \boxed{O(n)\text{ time}}
+\]
+\end{proof}
+
+\begin{example}[Finding the combined median of two sorted groups in $11$ weighings]
+There are $2012$ weights of distinct masses, split into two groups of $1006$, each internally sorted by mass (but the relative order between groups unknown). Using only pairwise weighings (comparisons), find the $1006$th-lightest weight overall in at most $11$ weighings.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Goal, restated.} We want the median (lower of the two central ranks, here exactly rank $1006$ out of $2012$) of the union of two sorted lists $A[1..1006]$, $B[1..1006]$.
+
+\textbf{Invariant.} Maintain candidate windows $A'\subseteq A$, $B'\subseteq B$ of equal current size $s$ (starting at $s=1006$), with the guarantee that the target is exactly the $s$-th smallest element of $A'\cup B'$ (initially true by hypothesis, since $s=1006$ is exactly the target rank over the full $2s=2012$ elements).
+
+\textbf{One round.} Compare the middle elements $A'[m]$ and $B'[m]$, $m=\lceil s/2\rceil$. Say $A'[m]\le B'[m]$ (the other case is symmetric). Then: every element of $B'$ from $B'[m]$ up to $B'[s]$ (there are $s-m+1\ge\lceil s/2\rceil$ of them) has at least $m$ elements of $A'$ and $m$ elements of $B'$ below or equal to it, i.e.\ rank $\ge s+1$ within $A'\cup B'$ when $s$ is odd (and $\ge s$, requiring a tie-break, when $s$ is even) — either way these can be discarded from the top of $B'$ as definitely not the target. Discard the same number, $\lfloor s/2\rfloor$, from the bottom of $A'$ (symmetric argument: they have enough elements above them to be definitely below the target rank), decreasing the target rank by exactly $\lfloor s/2\rfloor$ to match the shrunken universe. Both windows shrink from $s$ to $s-\lfloor s/2\rfloor=\lceil s/2\rceil$, and the invariant (target = new window size) is preserved. This uses exactly $1$ comparison per round.
+
+\textbf{Counting rounds.} Starting from $s=1006$ and applying $s\mapsto\lceil s/2\rceil$:
+\[
+1006\to503\to252\to126\to63\to32\to16\to8\to4\to2\to1,
+\]
+exactly $10$ steps to reach windows of size $1$ in each group.
+
+\textbf{Final step.} With $s=1$, the invariant says the target is the smaller of the two remaining single weights — one final ($11$th) comparison identifies it.
+
+\[
+\boxed{10\text{ halving rounds}+1\text{ final comparison}=11\text{ weighings}}
 \]
 \end{proof}
 
