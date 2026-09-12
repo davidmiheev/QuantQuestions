@@ -1124,6 +1124,28 @@ Since $u^Tu=\sum_{i=1}^na_i^2$,
 \]
 \end{proof}
 
+\begin{example}[An integer matrix has no non-integer rational eigenvalues]
+Show that an $n\times n$ matrix with integer entries cannot have a rational eigenvalue that isn't an integer.
+\end{example}
+\begin{proof}[Solution]
+The characteristic polynomial $p(x)=\det(xI-A)=x^n+a_{n-1}x^{n-1}+\cdots+a_0$ is monic with integer coefficients $a_i$ (each is, up to sign, a sum of products of entries of $A$).
+
+Suppose $\lambda=p/m$ is a rational eigenvalue, written in lowest terms ($\gcd(p,m)=1$, $m>0$). Substituting into $p(\lambda)=0$ and multiplying through by $m^n$:
+\[
+p^n+a_{n-1}p^{n-1}m+a_{n-2}p^{n-2}m^2+\cdots+a_0m^n=0,
+\]
+so
+\[
+p^n=-m\bigl(a_{n-1}p^{n-1}+a_{n-2}p^{n-2}m+\cdots+a_0m^{n-1}\bigr),
+\]
+an integer multiple of $m$: $m\mid p^n$. But $\gcd(p,m)=1$ implies $\gcd(p^n,m)=1$ as well, so $m\mid p^n$ forces $m=1$.
+
+Hence $\lambda=p/1=p$ is an integer:
+\[
+\boxed{\text{every rational eigenvalue of an integer matrix is itself an integer}}.
+\]
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3027,6 +3049,22 @@ I_2=\frac12I_0=\pi,\quad I_4=\frac34I_2=\frac{3\pi}4,\quad I_6=\frac56I_4=\frac{
 \]
 \end{proof}
 
+\begin{example}[An antiderivative via the substitution $t=\sqrt{1+e^x}$]
+Compute $\displaystyle\int\frac{dx}{\sqrt{1+e^x}}$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Substitution.} Let $t=\sqrt{1+e^x}$, so $t^2=1+e^x$, $e^x=t^2-1$, $x=\ln(t^2-1)$, and $dx=\dfrac{2t}{t^2-1}\,dt$. Then
+\[
+\int\frac{dx}{\sqrt{1+e^x}}=\int\frac1t\cdot\frac{2t}{t^2-1}\,dt=\int\frac{2\,dt}{t^2-1}=\int\left(\frac1{t-1}-\frac1{t+1}\right)dt=\ln\left|\frac{t-1}{t+1}\right|+C.
+\]
+
+\textbf{Back-substituting.} Since $t=\sqrt{1+e^x}>1$ always (as $e^x>0$), both $t-1>0$ and $t+1>0$, so the absolute values can be dropped:
+\[
+\boxed{\int\frac{dx}{\sqrt{1+e^x}}=\ln\left(\frac{\sqrt{1+e^x}-1}{\sqrt{1+e^x}+1}\right)+C}.
+\]
+(Check: differentiating, with $t=\sqrt{1+e^x}$ and $dt/dx=e^x/(2t)$, gives $\bigl[\tfrac1{t-1}-\tfrac1{t+1}\bigr]\cdot\tfrac{e^x}{2t}=\tfrac2{t^2-1}\cdot\tfrac{e^x}{2t}=\tfrac{e^x}{t\cdot e^x}=\tfrac1t=\tfrac1{\sqrt{1+e^x}}$, recovering the original integrand.)
+\end{proof}
+
 \subsection{Series, Power Series, and Fourier Methods}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3392,6 +3430,20 @@ using $\varphi(0)=0$ (the series has no constant term).
 \textbf{Answer.}
 \[
 \int_0^1\varphi(x)\varphi'(x)\,dx=\frac{2^2}2=\boxed{2}.
+\]
+\end{proof}
+
+\begin{example}[A high-order derivative of an even function at $0$]
+Let $f(x)=\dfrac{x^2+17}{x^4-5x^2+4}$. Find $f^{(319)}(0)$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{$f$ is even.} Both the numerator $x^2+17$ and denominator $x^4-5x^2+4$ depend on $x$ only through $x^2$, so $f(-x)=f(x)$; and $f$ is smooth at $0$ since the denominator's roots are at $x^2=1,4$ (i.e.\ $x=\pm1,\pm2$), none at $0$.
+
+\textbf{Even functions have no odd-order Taylor terms.} Write $f(x)=\sum_{k=0}^\infty c_kx^k$ near $0$, with $c_k=f^{(k)}(0)/k!$. Since $f(x)=f(-x)$ for all $x$ near $0$, comparing Taylor coefficients gives $c_k=(-1)^kc_k$ for every $k$ — forcing $c_k=0$ whenever $k$ is odd. Hence $f^{(k)}(0)=0$ for every odd $k$.
+
+Since $319$ is odd,
+\[
+\boxed{f^{(319)}(0)=0}.
 \]
 \end{proof}
 
@@ -3903,6 +3955,30 @@ So $(x,y,z)$ with $0\le x<y<z$ satisfies $\binom x1+\binom y2+\binom z3=n$, as r
 \boxed{\text{such } x,y,z \text{ always exist (constructed greedily, from the top binomial coefficient down)}}
 \]
 (verified by direct computation of this construction for every $n=0,\dots,29$).
+\end{proof}
+
+\begin{example}[Counting lattice paths to $(n,2n,3n)$]
+Starting at $(0,0,0)$, each step increases exactly one coordinate by $1$. How many distinct paths reach $(n,2n,3n)$?
+\end{example}
+\begin{proof}[Solution]
+Any such path has exactly $6n$ steps total, of which $n$ increase the first coordinate, $2n$ the second, and $3n$ the third (to reach the target exactly). A path is fully determined by choosing, among the $6n$ step-positions, which $n$ are ``$x$-steps,'' which $2n$ are ``$y$-steps,'' and which $3n$ are ``$z$-steps'' — a partition of $6n$ labeled positions into blocks of sizes $n,2n,3n$. This is the multinomial coefficient
+\[
+\boxed{\binom{6n}{n,\,2n,\,3n}=\frac{(6n)!}{n!\,(2n)!\,(3n)!}}.
+\]
+\end{proof}
+
+\begin{example}[Number of permutations commuting with a given permutation]
+How many permutations of $\{1,\dots,6\}$ commute with $(123)(456)$? More generally, if $\sigma\in S_n$ has $m_i$ cycles of length $n_i$ for each distinct cycle length $n_i$ ($i=1,\dots,k$), how many permutations commute with $\sigma$?
+\end{example}
+\begin{proof}[Solution]
+\textbf{General centralizer count.} A permutation $\tau$ commutes with $\sigma$ iff $\tau\sigma\tau^{-1}=\sigma$, iff $\tau$ maps each cycle of $\sigma$ to a cycle of $\sigma$ of the \emph{same length}. If $C=(c_1,\dots,c_l)$ is an $l$-cycle of $\sigma$ (meaning $\sigma(c_j)=c_{j+1\bmod l}$) and $\tau(C)$ must be some $l$-cycle $D=(d_1,\dots,d_l)$ of $\sigma$, then $\tau\sigma=\sigma\tau$ forces $\tau(c_{j+1})=\sigma(\tau(c_j))$ for all $j$ — so once $\tau(c_1)$ is chosen to be any one of the $l$ elements of $D$ (an ``alignment'' or rotation), the rest of $\tau$ on $C$ is forced.
+
+So specifying $\tau$ amounts to, independently for each distinct cycle length $n_i$: (a) choosing a bijection among the $m_i$ cycles of that length (which one maps to which — $m_i!$ ways), and (b) choosing an independent rotation alignment for each of the $m_i$ cycles ($n_i$ choices each, so $n_i^{m_i}$ ways). Multiplying over all lengths,
+\[
+\boxed{\#\{\tau:\tau\sigma=\sigma\tau\}=\prod_{i=1}^km_i!\,n_i^{m_i}}.
+\]
+
+\textbf{Applying this to $\sigma=(123)(456)$.} Here there is one cycle length, $n_1=3$, occurring $m_1=2$ times, so the count is $2!\cdot3^2=2\cdot9=\boxed{18}$.
 \end{proof}
 
 \subsection{Graphs, Trees, Planarity, and Tournaments}
@@ -5699,6 +5775,23 @@ Since $\dfrac{(l-1)!}{(l-k)!}=(k-1)!\binom{l-1}{k-1}$, and the hockey-stick iden
 \boxed{\mathbb P(1,\dots,k\text{ share a cycle})=\frac1k}
 \]
 (Consistent with the $k=2$ case worked out earlier via the explicit cycle-length distribution, which also gave probability exactly $\tfrac12$.)
+\end{proof}
+
+\begin{example}[Expected area of a sub-triangle from a random interior point]
+Equilateral triangle $ABC$ has area $1$. A point $M$ is chosen uniformly at random inside it. Find $\E[\text{area of }ABM]$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{An exact decomposition.} For any point $M$ strictly inside $ABC$, joining $M$ to all three vertices splits $ABC$ into three non-overlapping sub-triangles that exactly tile it:
+\[
+S_{ABM}+S_{BCM}+S_{CAM}=S_{ABC}=1.
+\]
+
+\textbf{Symmetry.} Rotating the whole picture by $120^\circ$ about the centroid (a symmetry of the equilateral triangle) sends $A\to B\to C\to A$ and sends $M$ to a new point $M'$ that is \emph{also} uniformly distributed on the triangle (rotation preserves the uniform measure). This rotation carries triangle $ABM$ to triangle $BCM'$, so $\E[S_{ABM}]=\E[S_{BCM'}]=\E[S_{BCM}]$ (as $M'$ has the same distribution as $M$). Likewise $\E[S_{BCM}]=\E[S_{CAM}]$. So all three expectations are equal.
+
+\textbf{Conclusion.} Taking expectations in the exact decomposition, $3\,\E[S_{ABM}]=\E[1]=1$, so
+\[
+\boxed{\E[S_{ABM}]=\frac13}.
+\]
 \end{proof}
 
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
