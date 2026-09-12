@@ -361,6 +361,26 @@ so columns $1,2,3$ of $A$ are linearly independent, giving $\rank A\ge3$. Combin
 \]
 \end{proof}
 
+\begin{example}[Does $\rank(AB)=\rank(BA)$ always hold?]
+Is it true that $\rank(AB)=\rank(BA)$ for all square matrices $A,B$ of the same size?
+\end{example}
+\begin{proof}[Solution]
+\textbf{No.} Take
+\[
+A=\begin{pmatrix}0&1\\0&0\end{pmatrix},\qquad B=\begin{pmatrix}1&0\\0&0\end{pmatrix}.
+\]
+Then
+\[
+AB=\begin{pmatrix}0&1\\0&0\end{pmatrix}\begin{pmatrix}1&0\\0&0\end{pmatrix}=\begin{pmatrix}0&0\\0&0\end{pmatrix},\qquad
+BA=\begin{pmatrix}1&0\\0&0\end{pmatrix}\begin{pmatrix}0&1\\0&0\end{pmatrix}=\begin{pmatrix}0&1\\0&0\end{pmatrix}.
+\]
+So $\rank(AB)=0$ while $\rank(BA)=1$:
+\[
+\boxed{\rank(AB)\ne\rank(BA)\text{ in general}}.
+\]
+(They do always agree when $A$ or $B$ is invertible, since then $BA$ and $AB$ are similar — e.g.\ $BA=A^{-1}(AB)A$ — and similar matrices have equal rank; this example shows invertibility can't be dropped.)
+\end{proof}
+
 \subsection{Vector Spaces and Linear Maps}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -1853,6 +1873,24 @@ the $n$-th partial sum of the alternating harmonic series. This series converges
 \]
 \end{proof}
 
+\begin{example}[Limit of an averaging recurrence via a conserved quantity]
+The sequence $(x_n)$ satisfies $x_1=a$, $x_2=b$, and $x_{n+1}=\tfrac12(x_n+x_{n-1})$. Find $\lim_{n\to\infty}x_n$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Convergence.} Let $\delta_n=x_{n+1}-x_n$. Then $\delta_n=\tfrac12(x_n+x_{n-1})-x_n=-\tfrac12(x_n-x_{n-1})=-\tfrac12\delta_{n-1}$, so $|\delta_n|=\bigl(\tfrac12\bigr)^{n-1}|\delta_1|\to0$ geometrically, and $\sum_n|\delta_n|<\infty$. Hence $(x_n)$ is Cauchy (its increments are absolutely summable), so it converges to some limit $L$.
+
+\textbf{A conserved combination.} Consider $I_n=x_{n+1}+\tfrac12x_n$. Then
+\[
+I_n-I_{n-1}=\Bigl(x_{n+1}+\tfrac12x_n\Bigr)-\Bigl(x_n+\tfrac12x_{n-1}\Bigr)=\bigl(x_{n+1}-x_n\bigr)-\tfrac12\bigl(x_n-x_{n-1}\bigr)+\bigl(x_n-x_n\bigr)=0,
+\]
+using $x_{n+1}-x_n=-\tfrac12(x_n-x_{n-1})$ from above — so $I_n$ is exactly the same constant for every $n$, equal to its initial value $I_1=x_2+\tfrac12x_1=b+\tfrac a2$.
+
+\textbf{Extracting the limit.} Since $x_{n+1}\to L$ and $x_n\to L$, also $I_n=x_{n+1}+\tfrac12x_n\to L+\tfrac12L=\tfrac32L$. But $I_n\equiv b+\tfrac a2$ for all $n$, so
+\[
+\frac32L=b+\frac a2\quad\Longrightarrow\quad\boxed{L=\frac{a+2b}3}.
+\]
+\end{proof}
+
 \subsection{Trigonometric and Hyperbolic Identities for Reference}
 \textbf{Useful identities.}
 \begin{itemize}
@@ -3235,6 +3273,27 @@ Solving, $S=1+2T$.
 \textbf{Answer.}
 \[
 S=1+2\left(\ln2-\frac12\right)=\boxed{2\ln2}.
+\]
+\end{proof}
+
+\begin{example}[An integral of a power series times its own derivative]
+Let $\varphi(x)=\displaystyle\sum_{k=1}^\infty\frac{x^k}{2^{2\lfloor\log_2k\rfloor}}$ (with $\lfloor\cdot\rfloor$ the floor function). Find $\displaystyle\int_0^1\varphi(x)\varphi'(x)\,dx$.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Reduce to boundary values.} Since $\varphi\varphi'=\tfrac12(\varphi^2)'$,
+\[
+\int_0^1\varphi(x)\varphi'(x)\,dx=\frac{\varphi(1)^2-\varphi(0)^2}2=\frac{\varphi(1)^2}2,
+\]
+using $\varphi(0)=0$ (the series has no constant term).
+
+\textbf{Evaluating $\varphi(1)$.} Group the sum by the value $s=\lfloor\log_2k\rfloor$: this equals $s$ for exactly $k\in\{2^s,2^s+1,\dots,2^{s+1}-1\}$, a block of $2^s$ consecutive integers, each contributing $4^{-s}$ to the sum. So
+\[
+\varphi(1)=\sum_{s=0}^\infty2^s\cdot4^{-s}=\sum_{s=0}^\infty\left(\frac12\right)^s=\frac1{1-\frac12}=2.
+\]
+
+\textbf{Answer.}
+\[
+\int_0^1\varphi(x)\varphi'(x)\,dx=\frac{2^2}2=\boxed{2}.
 \]
 \end{proof}
 
@@ -4806,6 +4865,25 @@ Moreover, membership of \emph{different} elements $i$ in a uniformly random subs
 \[
 \boxed{\mathbb P(A_1\cap\cdots\cap A_k=\varnothing)=\left(1-\frac1{2^k}\right)^{n}}.
 \]
+\end{proof}
+
+\begin{example}[Who has more heads: $n$ flips versus $n+1$ flips?]
+Two people flip a fair coin: the first flips it $n$ times, the second $n+1$ times, independently. Find the probability that the second person gets more heads than the first.
+\end{example}
+\begin{proof}[Solution]
+Let $O$ be the first person's heads count (out of $n$ flips) and $R$ the second's (out of $n+1$ flips). We want $\mathbb P(R>O)$.
+
+\textbf{A reduction to a single symmetric variable.} Since $O,R$ are integers, $R>O\iff R\ge O+1\iff R+(n-O)\ge n+1\iff R+(n-O)>n$. Now $n-O$ is the first person's number of \emph{tails} among their $n$ flips — also $\mathrm{Binomial}(n,\tfrac12)$ by the symmetry of a fair coin, and independent of $R$ (it depends only on the first person's flips). So $Y:=R+(n-O)$ is the sum of $(n+1)+n=2n+1$ independent fair-coin indicators (the second person's heads-indicators, together with the first person's tails-indicators): $Y\sim\mathrm{Binomial}(2n+1,\tfrac12)$.
+
+\textbf{Symmetry of $Y$.} Complementing all $2n+1$ underlying coin flips (heads$\leftrightarrow$tails) sends $Y\mapsto(2n+1)-Y$ while preserving the probability of each outcome, so $Y$ and $2n+1-Y$ have the same distribution. Since $2n+1$ is odd, the events $\{Y\le n\}$ and $\{Y\ge n+1\}$ partition the sample space (no possible tie at a non-integer midpoint), and applying the symmetry $Y\leftrightarrow2n+1-Y$ swaps these two events. Hence they have equal probability, and since they partition the whole space,
+\[
+\mathbb P(Y>n)=\mathbb P(Y\ge n+1)=\frac12.
+\]
+Since $R>O\iff Y>n$,
+\[
+\boxed{\mathbb P(R>O)=\frac12}
+\]
+— independent of $n$.
 \end{proof}
 
 \subsection{Random Variables, Moments, and Common Distributions}
@@ -6470,6 +6548,28 @@ An $n\times n$ matrix of $0/1$ bits is given (one bit of storage per entry). Cal
 
 \[
 \boxed{O(n^2)\text{ time},\ O(1)\text{ extra memory}}
+\]
+\end{proof}
+
+\begin{example}[Finding a valid starting gas station on a circular route]
+A circular track has gas stations at known positions, each stocked with a known amount of fuel; a car with known, constant fuel consumption starts with an empty tank. Design an $O(n)$-time algorithm that finds a starting station from which the car can complete the entire loop (refueling at each station reached), or determines none exists.
+\end{example}
+\begin{proof}[Solution]
+\textbf{Setup.} Number the stations $1,\dots,n$ in track order, and let $g[i]$ be the net fuel change from refueling at station $i$ and then driving to station $i+1$ (fuel gained minus fuel consumed over that leg). Starting at station $s$, the tank level after visiting station $i$ (going around, wrapping indices mod $n$) is a running sum of $g$-values starting from $s$; the route is completable from $s$ iff every such running sum (partial sum of $g$, cyclically starting at $s$) stays $\ge0$.
+
+\textbf{No solution if the total is negative.} Let $\mathrm{Total}=\sum_{i=1}^ng[i]$. If $\mathrm{Total}<0$, the tank's level after a full loop from any start is $\mathrm{Total}<0$, so completing the loop (which requires every partial sum $\ge0$, in particular the full-loop sum) is impossible from any starting station.
+
+\textbf{Otherwise, start right after the minimum prefix sum.} Assume $\mathrm{Total}\ge0$. Let $h[k]=\sum_{i=1}^kg[i]$ (with $h[0]=0$), and let $j\in\{0,\dots,n\}$ minimize $h[j]$. Claim: starting at station $j+1$ (indices mod $n$) works.
+
+Re-index so station $1$ is the old station $j+1$; write $h'[k]$ for the running sum under this new indexing. For $k\le n-j$ (before wrapping past the old end of the array), $h'[k]=h[j+k]-h[j]\ge0$ since $h[j]$ is the global minimum of $h$, so $h[j+k]\ge h[j]$. For $k>n-j$ (after wrapping around), writing $k'=k-(n-j)\in\{1,\dots,j\}$,
+\[
+h'[k]=\bigl(\mathrm{Total}-h[j]\bigr)+h[k']\ge\bigl(\mathrm{Total}-h[k']\bigr)+h[k']=\mathrm{Total}\ge0,
+\]
+using $h[j]\le h[k']$ (again, $h[j]$ is the global minimum). So every running sum under the new indexing is $\ge0$: the route is completable starting at station $j+1$.
+
+\textbf{Complexity.} Computing all prefix sums $h[0],\dots,h[n]$ and locating their minimum is a single linear scan.
+\[
+\boxed{O(n)\text{ time}}
 \]
 \end{proof}
 
