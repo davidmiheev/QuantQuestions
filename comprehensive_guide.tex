@@ -1146,6 +1146,21 @@ Hence $\lambda=p/1=p$ is an integer:
 \]
 \end{proof}
 
+\begin{example}[The nonzero eigenvalue of a rank-one matrix $xx^T$ with $x=(1,2,\dots,n)^T$]
+Let $A_n=x_nx_n^T$ with $x_n=(1,2,\dots,n)^T$. It has a single nonzero eigenvalue $\lambda_n$. Find $k$ such that $\lambda_n/n^k$ converges to a finite nonzero limit.
+\end{example}
+
+\begin{proof}[Solution]
+$A_n$ has rank one, so $0$ is an eigenvalue of multiplicity $n-1$, and the remaining eigenvalue equals the trace, $\operatorname{tr}(xx^T)=x^Tx$. (Directly: $A_nx_n=x_n(x_n^Tx_n)$, so $x_n$ is an eigenvector with eigenvalue $x_n^Tx_n$.) Therefore
+\[
+\lambda_n=\sum_{j=1}^nj^2=\frac{n(n+1)(2n+1)}6\sim\frac{n^3}3 .
+\]
+Hence $\lambda_n/n^3\to\tfrac13$, so
+\[
+\boxed{k=3}.
+\]
+\end{proof}
+
 \subsection{Bilinear Forms, Euclidean Spaces, and Hermitian Structure}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3945,6 +3960,110 @@ and neither $1979$ nor $1980$ is a perfect square, so each contributes exactly o
 \]
 \end{proof}
 
+\begin{example}[Pirates dividing $100$ coins]
+Five pirates, ranked by seniority, must split $100$ coins. The most senior pirate proposes a split; all pirates (including the proposer) vote, and if at least half of the votes are in favour the split is carried out; otherwise the proposer is thrown overboard and the next most senior pirate proposes. Each pirate prefers, in order: survival, then more coins, then (if otherwise indifferent) seeing the proposer thrown overboard. How many coins does the most senior pirate keep with an optimal proposal?
+\end{example}
+
+\begin{proof}[Solution]
+Number the pirates $1,\dots,5$ with $5$ the most senior, and solve by backward induction. Write each outcome as $(p_1,\dots,p_k)$.
+\begin{itemize}
+    \item $k=1$: pirate $1$ keeps $100$.
+    \item $k=2$: the proposer $2$ needs at least $1$ of $2$ votes, his own, so he keeps all: $(0,100)$.
+    \item $k=3$: pirate $3$ needs $2$ votes. Pirate $1$ would get $0$ if $3$ is thrown overboard, so one coin buys his vote: $(1,0,99)$.
+    \item $k=4$: pirate $4$ needs $2$ votes. In the $k=3$ game pirate $2$ gets $0$, so one coin buys him: $(0,1,0,99)$.
+    \item $k=5$: pirate $5$ needs $3$ votes, so two coins buy the two pirates who would get $0$ in the $k=4$ game, namely $1$ and $3$: $(1,0,1,0,98)$.
+\end{itemize}
+Each bought pirate gets strictly more than his alternative, so he votes yes, and any cheaper offer fails. The senior pirate keeps
+\[
+\boxed{98\text{ coins}}.
+\]
+\end{proof}
+
+\begin{example}[Counting to $50$: who says $50$ wins]
+Two players alternately add an integer from $1$ to $10$ to a running total starting from $0$; whoever says $50$ wins. You move first. What number should you say first?
+\end{example}
+
+\begin{proof}[Solution]
+Work backwards. A player who says $39$ wins: the opponent must then say one of $40,\dots,49$, and you reach $50$. Likewise, whoever says $28$ can force $39$, and so on; the winning totals to say are $50,39,28,17,6$, all $\equiv 6\pmod{11}$. Say
+\[
+\boxed{6}
+\]
+first; afterwards, whenever the opponent adds $a\in\{1,\dots,10\}$, add $11-a$, which lands you on $17,28,39,50$ in turn.
+\end{proof}
+
+\begin{example}[A birthday determined by three Diophantine clues]
+A man was $x^2+y^2$ years old in the year $x^4+y^4$, $2m$ years old in the year $2m^2$, and $3n$ years old in the year $3n^4$, for positive integers $x,y,m,n$, all these years falling in the nineteenth or twentieth century ($1801$--$2000$). Find $xymn$.
+\end{example}
+
+\begin{proof}[Solution]
+Each clue gives the birth year as (year) $-$ (age), and these must agree:
+\[
+B=x^4+y^4-(x^2+y^2)=2m^2-2m=3n^4-3n .
+\]
+\textbf{$n$:} $1801\le3n^4\le2000$ forces $600<n^4\le666$, so $n=5$ (as $5^4=625$): year $1875$, age $15$, hence $B=1860$.
+
+\textbf{$m$:} $1801\le2m^2\le2000$ gives $m^2\in[901,1000]$, so $m=31$: year $1922$, age $62$, and $B=1860$ again, consistent.
+
+\textbf{$x,y$:} take $x\le y$. Since $7^4=2401>2000$ and $5^4+5^4=1250<1801$, we need $y=6$ ($1296$), and then $x^4\in[505,704]$ forces $x=5$ ($625$). Then $x^4+y^4=1921$, the age is $25+36=61$, and $B=1860$ \checkmark.
+
+So $\{x,y\}=\{5,6\}$, $m=31$, $n=5$ and
+\[
+xymn=5\cdot6\cdot31\cdot5=\boxed{4650}.
+\]
+\end{proof}
+
+\begin{example}[Dollars and cents switched after spending half]
+A man spends half his money. Afterwards he has as many cents as he originally had dollars, and as many dollars as half his original number of cents. How much did he start with?
+\end{example}
+
+\begin{proof}[Solution]
+Let the original amount be $D$ dollars and $C$ cents ($0\le C\le99$), i.e.\ $100D+C$ cents. After spending half, he has $\tfrac C2$ dollars and $D$ cents, i.e.\ $50C+D$ cents, which must equal half the original:
+\[
+50C+D=\frac{100D+C}2\ \Longleftrightarrow\ 100C+2D=100D+C\ \Longleftrightarrow\ 99C=98D .
+\]
+Since $\gcd(98,99)=1$, $D=99t$, $C=98t$, and $C\le99$ forces $t=1$: $D=99$, $C=98$. He started with
+\[
+\boxed{\$99.98},
+\]
+and has $\$49.99$ left (49 dollars $=C/2$, 99 cents $=D$).
+\end{proof}
+
+\begin{example}[Two numbers made only of ones with $xy=x+y$]
+Find two real numbers whose decimal expansions use only the digit $1$ and satisfy $xy=x+y$. What is $xy$?
+\end{example}
+
+\begin{proof}[Solution]
+Rewrite $xy-x-y=0$ as
+\[
+(x-1)(y-1)=1 .
+\]
+If $x<1$ then $x-1<0$, so $y-1<0$ and $(1-x)(1-y)=1$ with both factors in $(0,1)$, impossible; hence $x,y>1$. The smallest number $>1$ with only ones is $1.1$, giving $x-1=0.1$ and $y-1=10$, i.e.\ $y=11$, which is also made of ones. Thus $(x,y)=(1.1,\,11)$ and
+\[
+xy=x+y=\boxed{12.1}.
+\]
+(A computer search over all finite expansions with up to three integer and five fractional digits finds only this pair.)
+\end{proof}
+
+\begin{example}[Seven counting warm-ups]
+(a) The six faces of a cube receive six distinct colours at random. What is the probability that red, green and blue meet at a corner? (b) Seven people of distinct ages sit randomly at a round table; what is the probability they sit in age order (either direction)? (c) Eight points lie on a circle, all $28$ chords are drawn, and four chords are chosen at random; what is the probability they form a convex quadrilateral? (d) In how many ways can $5$ boys and $5$ girls sit in a row with no two neighbours of the same gender? (e) How many sequences $x_0=0,x_1,\dots,x_{10}$ with $|x_i-x_{i-1}|=1$ have $x_{10}=4$? (f) How many integers in $1,\dots,10000$ contain the digit $0$? (g) What is the sum of all digits of the integers $1,\dots,1\,000\,000$?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} Three faces share a corner iff they are pairwise adjacent. Given red, green must be one of the $4$ faces adjacent to it (out of $5$); then blue must be adjacent to both, which leaves $2$ of the remaining $4$ faces. So $P=\tfrac45\cdot\tfrac24=\boxed{\tfrac25}$.
+
+\textbf{(b)} There are $(7-1)!=720$ circular arrangements and $2$ of them are in age order (clockwise or counter-clockwise): $\boxed{\tfrac1{360}}$.
+
+\textbf{(c)} A quadrilateral is determined by its four vertices, and the four chords joining consecutive vertices on the circle are its sides. So exactly $\binom84=70$ of the $\binom{28}4=20475$ four-chord sets work: $\boxed{\tfrac{70}{20475}=\tfrac2{585}}$.
+
+\textbf{(d)} The genders must alternate, so there are $2$ patterns (BGBG\dots\ or GBGB\dots), and then $5!$ orders for each gender: $2\cdot5!\cdot5!=\boxed{28800}$.
+
+\textbf{(e)} With $u$ up-steps, $u-(10-u)=4$ gives $u=7$, so there are $\binom{10}7=\boxed{120}$ sequences.
+
+\textbf{(f)} Integers $\le9999$ with no zero digit: $9+9^2+9^3+9^4=7380$. So $9999-7380=2619$ of $1,\dots,9999$ contain a zero, plus $10000$ itself: $\boxed{2620}$.
+
+\textbf{(g)} Pad $0,1,\dots,999999$ to six digits; in each position every digit $0$--$9$ appears $10^5$ times, so the total is $6\cdot10^5\cdot45=27\,000\,000$. Adding $1\,000\,000$ contributes $1$ (and $0$ contributes nothing): $\boxed{27\,000\,001}$.
+\end{proof}
+
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -4090,6 +4209,64 @@ So specifying $\tau$ amounts to, independently for each distinct cycle length $n
 \]
 
 \textbf{Applying this to $\sigma=(123)(456)$.} Here there is one cycle length, $n_1=3$, occurring $m_1=2$ times, so the count is $2!\cdot3^2=2\cdot9=\boxed{18}$.
+\end{proof}
+
+\begin{example}[Each of four bridge players receives exactly one ace]
+A $52$-card deck is dealt $13$ cards to each of four players. What is the probability that every player gets exactly one ace?
+\end{example}
+
+\begin{proof}[Solution]
+Look only at where the four aces land among the $52$ positions of the deal; each position belongs to one player, $13$ positions per player. There are $52\cdot51\cdot50\cdot49$ equally likely ordered placements of the four distinct aces. In a favourable placement each player holds one ace: assign the aces to the players in $4!$ ways and pick the position inside each hand in $13$ ways:
+\[
+P=\frac{4!\cdot13^4}{52\cdot51\cdot50\cdot49}=\boxed{\frac{2197}{20825}\approx0.1055}.
+\]
+\end{proof}
+
+\begin{example}[Most likely position of the fifth king in ten shuffled decks]
+Ten decks are shuffled together ($520$ cards, $40$ kings) and cards are turned over until the fifth king appears. Which total number of cards turned over has the highest probability?
+\end{example}
+
+\begin{proof}[Solution]
+The fifth king is at position $n$ iff exactly $4$ of the first $n-1$ cards are kings, card $n$ is a king, and the other $35$ kings lie among the last $520-n$ cards:
+\[
+P(n)=\frac{\binom{n-1}4\binom{520-n}{35}}{\binom{520}{40}}.
+\]
+The ratio of consecutive terms is
+\[
+\frac{P(n+1)}{P(n)}=\frac{n}{n-4}\cdot\frac{485-n}{520-n}.
+\]
+This exceeds $1$ iff $n(485-n)>(n-4)(520-n)$, i.e.\ $485n>524n-2080$, i.e.\ $n<\tfrac{2080}{39}=53.33$. So $P$ increases up to $n=54$ and decreases afterwards:
+\[
+\boxed{\text{mode}=54}.
+\]
+(The \emph{mean} position is $5\cdot521/41\approx63.5$, which is why the question insists on the mode. A direct numerical maximization agrees.)
+\end{proof}
+
+\begin{example}[How many perfect shuffles restore a deck of $52$?]
+A perfect shuffle splits the deck of $52$ into two halves of $26$ and interleaves them so that the first half occupies the even positions and the second half the odd positions (positions numbered $1,\dots,52$). What is the minimum number of shuffles that returns the deck to its original order?
+\end{example}
+
+\begin{proof}[Solution]
+The card in position $i\le26$ moves to $2i$, and the card in position $i\ge27$ moves to $2(i-26)-1=2i-53$. In both cases the new position is
+\[
+i\mapsto 2i \pmod{53}\qquad(\text{representatives }1,\dots,52).
+\]
+After $k$ shuffles position $i$ goes to $2^ki\bmod 53$, so the deck is restored iff $2^k\equiv1\pmod{53}$, and the answer is the multiplicative order of $2$ mod the prime $53$. This order divides $52=4\cdot13$. Now $2^{26}\equiv\left(\tfrac2{53}\right)=-1$ because $53\equiv5\pmod 8$ (so $2$ is a non-residue), hence the order does not divide $26$; and $2^4=16\ne1$. The only divisor of $52$ that does not divide $26$ is $4$ times a divisor of $13$, namely $4$ or $52$, and $2^4\ne1$. So the order is
+\[
+\boxed{52}.
+\]
+(If instead the first half occupied the odd positions, i.e.\ the top card stays on top, the map is $i\mapsto2i\pmod{51}$ on positions $0,\dots,50$ plus a fixed last card, and the order of $2$ mod $51$ is $8$ since $2^8=256=5\cdot51+1$.)
+\end{proof}
+
+\begin{example}[Lining up for a picture with the two tallest in the middle]
+Ten students of distinct heights stand in a row so that the two tallest are in the middle two places and the heights strictly decrease from the middle outwards on both sides. How many lineups are there?
+\end{example}
+
+\begin{proof}[Solution]
+The two tallest students occupy positions $5$ and $6$ in either order: $2$ ways. Each of the other $8$ students goes to the left or the right side, $4$ on each. Once the sides are chosen, the order on each side is forced (heights decrease outwards), so only the choice of which $4$ of the $8$ go left matters:
+\[
+2\binom84=\boxed{140}.
+\]
 \end{proof}
 
 \subsection{Graphs, Trees, Planarity, and Tournaments}
@@ -4765,6 +4942,21 @@ Hence
 (Check: $n=0$ gives $2/2=1=a_0$ ✓; $n=1$ gives $2/2=1$, matching $a_1=a_0/(1+0\cdot a_0)=1$ ✓.)
 \end{proof}
 
+\begin{example}[Tails only in consecutive pairs]
+A fair coin is tossed $10$ times. What is the probability that every maximal block of tails has even length (so tails occur only in consecutive pairs; e.g.\ TTHH and TTTT are allowed, HTHH and TTTH are not)?
+\end{example}
+
+\begin{proof}[Solution]
+A sequence is valid iff it can be cut into blocks $H$ (length $1$) and $TT$ (length $2$); this cutting is unique, since each maximal run of tails splits into consecutive pairs. So valid sequences of length $n$ correspond to tilings of a strip of length $n$ by squares and dominoes, and their number $a_n$ satisfies
+\[
+a_n=a_{n-1}+a_{n-2},\qquad a_0=1,\ a_1=1,
+\]
+the Fibonacci numbers: $a_2=2,a_3=3,a_4=5,a_5=8,a_6=13,a_7=21,a_8=34,a_9=55,a_{10}=89$. Therefore
+\[
+\boxed{\frac{89}{2^{10}}=\frac{89}{1024}\approx0.0869}.
+\]
+\end{proof}
+
 \section{Probability Theory and Statistics}
 This is the most frequently tested area in quant interviews. You are expected to move comfortably between combinatorics, conditional probability, expectation, convergence, and recursion.
 
@@ -5211,7 +5403,7 @@ This exceeds $1$ iff $366k-k^2>365k-365$, i.e.\ iff $k^2-k-365<0$. The positive 
 \end{proof}
 
 \begin{example}[Probability that the top two seeds meet in the final]
-A $128$-player single-elimination tournament is drawn uniformly at random, and the higher-rated player always wins. What is the probability that the two best players meet in the final?
+A knockout tournament has $128$ players placed uniformly at random in the draw, and the higher-rated player always wins. What is the probability that the two best players meet in the final?
 \end{example}
 
 \begin{proof}[Solution]
@@ -5247,6 +5439,118 @@ A uniformly random subset includes each element independently with probability $
 \boxed{\mathbb P(A\subseteq B)=\left(\frac34\right)^n}\qquad\Bigl(n=5:\ \tfrac{243}{1024}\Bigr).
 \]
 Equivalently, there are $3^n$ pairs $(A,B)$ with $A\subseteq B$ out of $4^n$.
+\end{proof}
+
+\begin{example}[At least one white and one green marble left after the last black]
+A bag holds $200$ black, $400$ white and $600$ green marbles, drawn one at a time without replacement until empty. What is the probability that, right after the last black marble is drawn, at least one white and at least one green marble remain?
+\end{example}
+
+\begin{proof}[Solution]
+The event is that the last black marble comes before both the last white and the last green marble. Condition on the colour of the very last marble of the whole sequence.
+\begin{itemize}
+    \item It is black with probability $\tfrac{200}{1200}=\tfrac16$: then the event fails.
+    \item It is white with probability $\tfrac13$: the last white is automatically after the last black, and we need the last black before the last green. Among the black and green marbles alone (in uniformly random order, independent of where the white ones are), the last one is green with probability $\tfrac{600}{800}=\tfrac34$.
+    \item It is green with probability $\tfrac12$: symmetrically we need the last of the black and white marbles to be white, probability $\tfrac{400}{600}=\tfrac23$.
+\end{itemize}
+Hence
+\[
+P=\tfrac13\cdot\tfrac34+\tfrac12\cdot\tfrac23=\tfrac14+\tfrac13=\boxed{\tfrac7{12}}.
+\]
+(A simulation with a scaled-down bag confirms the same recipe.)
+\end{proof}
+
+\begin{example}[Rolling a die as many times as it took to get the first head]
+A fair coin is flipped until the first head, which occurs on flip $N$. Then a fair die is rolled $N$ times. What is the probability that at least one $1$ is rolled?
+\end{example}
+
+\begin{proof}[Solution]
+Condition on $N$: $\mathbb P(\text{no }1\mid N=n)=(5/6)^n$ and $\mathbb P(N=n)=2^{-n}$. So
+\[
+\mathbb P(\text{no }1)=\sum_{n\ge1}\Bigl(\tfrac{5}{12}\Bigr)^n=\frac{5/12}{1-5/12}=\frac57,
+\]
+and the requested probability is
+\[
+\boxed{1-\tfrac57=\tfrac27}.
+\]
+\end{proof}
+
+\begin{example}[Repeatedly removing the tails: does the game end in all heads?]
+Flip $25$ fair coins, remove all the tails, and repeat with the remaining coins. The game stops when no coins are left, or when a round shows only heads. What is the probability that it stops with all heads?
+\end{example}
+
+\begin{proof}[Solution]
+Let $p_n$ be the probability that the game started with $n$ coins ends in all heads. One round leaves $k$ heads with probability $\binom nk/2^n$: $k=n$ (all heads) ends the game in success, $k=0$ ends it in failure, and otherwise the game restarts with $k$ coins. Thus
+\[
+p_n=\frac1{2^n}\Bigl(1+\sum_{k=1}^{n-1}\binom nkp_k\Bigr),\qquad p_1=\tfrac12 .
+\]
+Claim: $p_n=\tfrac12$ for all $n\ge1$. This holds for $n=1$, and if $p_k=\tfrac12$ for $k<n$, then
+\[
+p_n=\frac1{2^n}\Bigl(1+\tfrac12\bigl(2^n-2\bigr)\Bigr)=\frac1{2^n}\cdot2^{n-1}=\tfrac12 .
+\]
+Therefore the answer does not depend on the number of coins:
+\[
+\boxed{\tfrac12}.
+\]
+\end{proof}
+
+\begin{example}[Parity of the sum of products of paired draws]
+The numbers $1,\dots,6$ are arranged in random order $a_1,\dots,a_6$. Find the probability that $a_1a_2+a_3a_4+a_5a_6$ is odd.
+\end{example}
+
+\begin{proof}[Solution]
+A product is odd iff both factors are odd. The three odd numbers $1,3,5$ are distributed among the three pairs. If some pair holds two odd numbers, then the third odd number sits in a pair with an even number, so exactly one product is odd and the sum is odd. If no pair holds two odd numbers, then every pair is mixed (one odd, one even), all three products are even, and the sum is even. So we need
+\[
+P(\text{some pair is odd--odd})=1-P(\text{every pair is mixed}).
+\]
+Every pair mixed: choose which member of each pair is odd ($2^3$) and place the odd and even numbers in the chosen slots ($3!\cdot3!$): $8\cdot36=288$ of $720$ arrangements, i.e.\ $\tfrac25$. Hence
+\[
+P=1-\tfrac25=\boxed{\tfrac35}.
+\]
+\end{proof}
+
+\begin{example}[Which urn to draw from after seeing a $\$1$ chip]
+Two urns look identical. Urn $1$ holds $4$ one-dollar and $6$ ten-dollar chips; urn $2$ holds $3$ one-dollar and $7$ ten-dollar chips. You pick an urn at random and draw a chip, which is a $\$1$ chip. You now draw a second chip (the chip is not replaced) either from the same urn or from the other urn, and receive its value. What is your best expected payout? (The condensed statement of this problem was reconstructed in this form.)
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Posterior.} $\mathbb P(\text{urn }1\mid\$1)=\dfrac{\frac12\cdot\frac4{10}}{\frac12\cdot\frac4{10}+\frac12\cdot\frac3{10}}=\tfrac47$, and urn $2$ has posterior $\tfrac37$.
+
+\textbf{Same urn.} If it is urn $1$, it now holds $3$ ones and $6$ tens: mean $\tfrac{3+60}9=7$. If it is urn $2$, it holds $2$ ones and $7$ tens: mean $\tfrac{2+70}9=8$. Expected payout $\tfrac47\cdot7+\tfrac37\cdot8=\tfrac{52}7\approx7.43$.
+
+\textbf{Other urn.} If the first chip came from urn $1$, the other urn is urn $2$ with mean $\tfrac{3+70}{10}=7.3$; if from urn $2$, the other is urn $1$ with mean $6.4$. Expected payout $\tfrac47\cdot7.3+\tfrac37\cdot6.4=\tfrac{48.4}7\approx6.91$.
+
+So the best choice is to stay with the same urn:
+\[
+\boxed{\tfrac{52}{7}\approx\$7.43}.
+\]
+(If the first chip were replaced, the comparison would reverse: staying would give $\tfrac{47.5}7\approx6.79$ versus $6.91$ for switching, so the wording of the replacement rule matters.)
+\end{proof}
+
+\begin{example}[Exactly one win before going broke]
+A game costs $10$ to play, wins with probability $0.1$ and pays $80$ on a win; you start with $30$ and keep playing while you can afford it. What is the probability of exactly one win before you can no longer play? Give the answer to the nearest thousandth.
+\end{example}
+
+\begin{proof}[Solution]
+Measure money in units of $10$: a play costs $1$, a win pays back $8$ (net $+7$), so you start with $3$ units. Suppose the single win occurs on play $j$. Before it there are $j-1$ losses (probability $0.9^{j-1}$), the win has probability $0.1$ and leaves $3-(j-1)-1+8=11-j$ units, and then every one of those $11-j$ plays must lose (so that there is no second win): probability $0.9^{11-j}$. The three factors multiply to
+\[
+0.9^{j-1}\cdot0.1\cdot0.9^{11-j}=0.1\cdot0.9^{10},
+\]
+which does not depend on $j$! Since $j$ can be $1,2$ or $3$,
+\[
+P=3\cdot0.1\cdot0.9^{10}=0.3\cdot0.9^{10}\approx\boxed{0.105}.
+\]
+\end{proof}
+
+\begin{example}[Quick Bayes: unfair coin, cheater, unknown baby]
+(a) One coin of $100$ is two-headed, the other $99$ are fair; a randomly chosen coin shows ten heads in ten flips. What is the probability that it is the two-headed coin? (b) A multiple-choice question has $5$ options; Gabe knows the answer with probability $0.6$ and otherwise guesses at random. Given that his answer is correct, what is the probability that he knew it? (c) A room has $2$ boys and $3$ girls; a baby of unknown sex (equally likely) is added, then a random baby is picked and is a boy. What is the probability that the added baby is a boy?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} $\dfrac{\frac1{100}\cdot1}{\frac1{100}+\frac{99}{100}2^{-10}}=\dfrac{1024}{1024+99}=\boxed{\tfrac{1024}{1123}\approx0.912}$.
+
+\textbf{(b)} $\dfrac{0.6\cdot1}{0.6+0.4\cdot0.2}=\dfrac{0.6}{0.68}=\boxed{\tfrac{15}{17}}$.
+
+\textbf{(c)} If the added baby is a boy, the picked baby is a boy with probability $\tfrac36$; if a girl, $\tfrac26$. So $\dfrac{\frac12\cdot\frac36}{\frac12\cdot\frac36+\frac12\cdot\frac26}=\boxed{\tfrac35}$.
 \end{proof}
 
 \subsection{Random Variables, Moments, and Common Distributions}
@@ -6046,7 +6350,7 @@ Three aces and three jacks are shuffled and turned over one at a time. Before ea
 \begin{proof}[Solution]
 Optimal play guesses the rank that is more numerous among the cards not yet seen: the next card is uniform among the remaining cards, so that guess is correct with probability $\max(a,b)/(a+b)$, where $a,b$ are the remaining counts of aces and jacks. The key observation is that the \emph{sequence of remaining counts does not depend on the strategy} (guesses do not affect the shuffle), so by linearity we can add up the expected success probabilities.
 
-With $r$ cards remaining ($r=6,5,\dots,1$), the remaining multiset is a uniformly random $r$-subset of the six cards, so $a\sim\mathrm{Hypergeometric}$ and the expected gain on that turn is $\E[\max(a,b)]/r$:
+With $r$ cards remaining ($r=6,5,\dots,1$), the remaining multiset is a uniformly random $r$-subset of the six cards, so the counts $(a,b)$ are hypergeometric and the expected gain on that turn is $\E[\max(a,b)]/r$:
 \[
 \begin{array}{c|cccccc}
 r&6&5&4&3&2&1\\\hline
@@ -6059,6 +6363,168 @@ Summing the last row,
 \tfrac12+\tfrac35+\tfrac35+\tfrac7{10}+\tfrac7{10}+1=\boxed{\tfrac{41}{10}=\$4.10}.
 \]
 (A direct dynamic program $f(a,b)=\frac{\max(a,b)+a f(a-1,b)+b f(a,b-1)}{a+b}$ gives the same value.)
+\end{proof}
+
+\begin{example}[Three players race to their first head: $T<G<P$]
+Three players flip fair coins independently, each until their first head; they flip $T$, $G$, $P$ times respectively. Find $\mathbb P(T<G<P)$.
+\end{example}
+
+\begin{proof}[Solution]
+$T,G,P$ are i.i.d.\ geometric with $\mathbb P(X=k)=2^{-k}$, $k\ge1$. Sum over $a=T<b=G<c=P$, from the inside out:
+\[
+\sum_{c>b}2^{-c}=2^{-b},\qquad \sum_{b>a}2^{-b}\cdot2^{-b}=\sum_{b\ge a+1}4^{-b}=\frac{4^{-a}}{3},\qquad\sum_{a\ge1}2^{-a}\cdot\frac{4^{-a}}3=\frac13\sum_{a\ge1}8^{-a}=\frac13\cdot\frac17 .
+\]
+Thus
+\[
+\mathbb P(T<G<P)=\boxed{\tfrac1{21}}.
+\]
+(Check by symmetry: all three distinct has probability $6/21=2/7$, and ties account for the remaining $5/7$.)
+\end{proof}
+
+\begin{example}[Third Bakugan before second Beyblade]
+Two machines work independently and without pauses: one finishes Bakugan toys, the other Beyblade toys, with i.i.d.\ $\mathrm{Exp}(1)$ build times. What is the probability that the third Bakugan is finished before the second Beyblade?
+\end{example}
+
+\begin{proof}[Solution]
+Completions form two independent rate-$1$ Poisson processes. Merging them, each completion event is a Bakugan or a Beyblade with probability $\tfrac12$ each, independently of the past (competing exponentials). The third Bakugan precedes the second Beyblade iff, among the first $3+2-1=4$ merged events, at least $3$ are Bakugan (equivalently, at most one Beyblade appears):
+\[
+\mathbb P=\frac{\binom43+\binom44}{2^4}=\boxed{\tfrac5{16}}.
+\]
+\end{proof}
+
+\begin{example}[Expected number of strict local maxima in a random line-up]
+The numbers $1,\dots,14$ are placed in a line in uniformly random order. What is the expected number of strict local maxima (entries larger than all their neighbours)?
+\end{example}
+
+\begin{proof}[Solution]
+Use indicators. An interior position has two neighbours, and it is a local maximum iff its entry is the largest of the three, which has probability $\tfrac13$ by symmetry. An end position has one neighbour and is a local maximum with probability $\tfrac12$. With $12$ interior and $2$ end positions,
+\[
+\E=12\cdot\tfrac13+2\cdot\tfrac12=\boxed{5}.
+\]
+\end{proof}
+
+\begin{example}[Smallest card in the box that holds card $100$]
+Cards $1,\dots,100$ are dealt one by one into two boxes, each card independently into either box with probability $\tfrac12$. The expected smallest card in the box containing card $100$ has the form $a(1-a^{-b})$; find $ab$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $M$ be the minimum of the box holding card $100$. For $k\le100$, $M\ge k$ iff cards $1,\dots,k-1$ all lie in the other box, which has probability $2^{-(k-1)}$. So
+\[
+\E[M]=\sum_{k=1}^{100}\mathbb P(M\ge k)=\sum_{k=1}^{100}2^{-(k-1)}=2\bigl(1-2^{-100}\bigr).
+\]
+This is $a(1-a^{-b})$ with $a=2$, $b=100$, so
+\[
+\boxed{ab=200}.
+\]
+\end{proof}
+
+\begin{example}[The minimum plus the maximum of $n$ uniforms exceeds $1$]
+Let $U_1,\dots,U_n$ be i.i.d.\ $\mathrm{Uniform}(0,1)$, with $U=\min U_i$ and $V=\max U_i$. Find $\mathbb P(U+V>1)$.
+\end{example}
+
+\begin{proof}[Solution]
+The map $U_i\mapsto1-U_i$ preserves the joint law and sends the minimum $U$ to $1-V$ and the maximum $V$ to $1-U$. Hence $(U,V)\overset{d}{=}(1-V,1-U)$ and $U+V\overset d=2-(U+V)$. So $U+V$ is symmetric about $1$, and since it has a continuous distribution,
+\[
+\mathbb P(U+V>1)=\boxed{\tfrac12}
+\]
+for every $n$ (for $n=1$ this is trivially $\mathbb P(2U_1>1)$).
+\end{proof}
+
+\begin{example}[A random digit string with a random number of ones]
+Choose $k\in\{0,1,\dots,8\}$ uniformly, then choose uniformly at random an $8$-digit number consisting of exactly $k$ ones and $8-k$ nines. Find $\E[X]$.
+\end{example}
+
+\begin{proof}[Solution]
+Given $k$, each position holds a $1$ with probability $k/8$ (by symmetry among positions), so unconditionally each position holds a $1$ with probability $\E[k]/8=\tfrac48=\tfrac12$. Hence each digit has mean $\tfrac12\cdot1+\tfrac12\cdot9=5$, and by linearity over the place values,
+\[
+\E[X]=5\cdot11\,111\,111=\boxed{55\,555\,555}.
+\]
+\end{proof}
+
+\begin{example}[A conditional average is not the unconditional average]
+Steve repeatedly picks one of three paths uniformly at random: path A returns him to the start after $2$ days, path B returns him after $4$ days, path C leads out after $8$ days. Let $N$ be the number of picks until he gets out and $T$ the total time. Find the limit as $n\to\infty$ of the ratio of $\E[T\mid N=n]$ to the expected sum of $n$ independent path times.
+\end{example}
+
+\begin{proof}[Solution]
+The unconditional mean of one pick is $\tfrac{2+4+8}3=\tfrac{14}3$, so the denominator is $\tfrac{14n}3$.
+
+Given $N=n$, the first $n-1$ picks were A or B (equally likely, mean $3$) and the last was C ($8$ days):
+\[
+\E[T\mid N=n]=3(n-1)+8=3n+5 .
+\]
+The ratio is $\dfrac{3n+5}{14n/3}\to\boxed{\tfrac9{14}}$. It is less than $1$ because conditioning on a long stay selects histories containing no long path. (Consistency with Wald: $\E T=\E N\cdot\tfrac{14}3=3\cdot\tfrac{14}3=14$.)
+\end{proof}
+
+\begin{example}[German tank problem: unbiased estimate of the largest serial number]
+Tanks are numbered $1,\dots,N$ with $N$ unknown. A sample of $k=6$ serial numbers (drawn without replacement) is $38,17,59,42,97,120$. Give the standard frequentist (unbiased) estimate of $N$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $M$ be the sample maximum. The $N-k$ unsampled serial numbers are split by the $k$ sampled ones into $k+1$ gaps (below the smallest, between consecutive ones, above the largest). By symmetry each gap has the same expected size $\tfrac{N-k}{k+1}$. The maximum equals $k$ plus the unsampled numbers below it, i.e.\ $k$ gaps' worth:
+\[
+\E[M]=k+k\cdot\frac{N-k}{k+1}=\frac{k(N+1)}{k+1}.
+\]
+Solving, $\hat N=M\cdot\frac{k+1}{k}-1=M+\frac Mk-1$ is unbiased (it is the minimum-variance unbiased estimator). With $M=120$, $k=6$:
+\[
+\hat N=120+20-1=\boxed{139}.
+\]
+\end{proof}
+
+\begin{example}[Optimal stopping threshold when a ten wipes you out]
+You roll a fair ten-sided die repeatedly. Each roll of $1$--$9$ adds its value to your total; a roll of $10$ resets your total to $0$ and ends the game. You may stop at any time and keep your total. At which total $k$ should you stop?
+\end{example}
+
+\begin{proof}[Solution]
+Holding $s$, one more roll changes your expected fortune by
+\[
+\tfrac1{10}(1+2+\dots+9)-\tfrac1{10}\,s=4.5-0.1s ,
+\]
+which is positive iff $s<45$. The gain is decreasing in $s$, so once continuing stops being favourable it never becomes favourable again (the one-step look-ahead rule is optimal for this monotone problem). Therefore roll while $s<45$ and stop once you hold at least
+\[
+\boxed{k=45}
+\]
+(at exactly $45$ you are indifferent, so $k=46$ is equally good). A simulation gives expected winnings of about $17.7$ for thresholds $45$ and $46$, versus $17.4$ for $40$.
+\end{proof}
+
+\begin{example}[Four quick expectations by symmetry]
+(a) Expected number of cards turned over from a shuffled $52$-card deck until the first ace appears. (b) A $10\times10\times10$ cube is painted on the outside and cut into $1000$ unit cubes; one is chosen at random. Expected number of red (painted) faces? (c) Roll a die and then roll until the result is at least as large as the first roll; expected number of further rolls. (d) Roll a die with result $k$, then roll a fair $(6+k)$-sided die; expected value of the second roll.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} The four aces cut the $48$ non-aces into $5$ gaps of equal expected size $\tfrac{48}5$, so the first ace is at position $\tfrac{48}5+1=\boxed{\tfrac{53}5=10.6}$.
+
+\textbf{(b)} The surface of the big cube has $6\cdot100=600$ unit squares, each a painted face of exactly one unit cube. By linearity, the expected number of painted faces on a random unit cube is the total divided by the number of cubes: $\tfrac{600}{1000}=\boxed{0.6}$.
+
+\textbf{(c)} If the first roll is $v$, each later roll succeeds with probability $\tfrac{7-v}6$, so the expected number of further rolls is $\tfrac6{7-v}$. Averaging over $v$:
+\[
+\frac16\sum_{v=1}^6\frac6{7-v}=H_6=\boxed{\tfrac{49}{20}=2.45}.
+\]
+
+\textbf{(d)} Given $k$, the second roll has mean $\tfrac{(6+k)+1}2=\tfrac{7+k}2$. Averaging over $\E k=3.5$: $\tfrac{7+3.5}2=\boxed{5.25}$.
+\end{proof}
+
+\begin{example}[Four continuous-probability short answers]
+(a) $A,B$ are i.i.d.\ $\mathrm{Exp}(1)$; an ellipse has semi-axes $A,B$ and a circle has diameter $A$. What is the probability that the circle has the larger area? (b) A coin's heads probability $t$ has density $2t$ on $(0,1)$; a coin is drawn and tossed $6$ times. What is the probability of six heads? (c) You draw $\mathrm{Uniform}(0,1)$, may redraw once, and are paid the last number. What is your best expected payout? (d) A painting's value $V$ is $\mathrm{Uniform}(0,100\,000)$; you win it if your bid exceeds $V$ and can resell it at $1.5V$. What bid maximizes profit?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} The circle's area is $\pi A^2/4$ and the ellipse's is $\pi AB$. The circle is larger iff $B<A/4$:
+\[
+\mathbb P(B<A/4)=\E\bigl[1-e^{-A/4}\bigr]=1-\frac1{1+1/4}=\boxed{\tfrac15}.
+\]
+
+\textbf{(b)} $\E[t^6]=\int_0^12t\cdot t^6\,dt=\tfrac28=\boxed{\tfrac14}$.
+
+\textbf{(c)} Redraw iff the first number is below $\tfrac12$ (the expected value of a redraw). Then
+\[
+\E=\tfrac12\cdot\tfrac34+\tfrac12\cdot\tfrac12=\boxed{\tfrac58}.
+\]
+
+\textbf{(d)} For a bid $b$, profit is $1.5V-b$ when $V<b$, and given a win $V$ is uniform on $(0,b)$ with mean $b/2$, so
+\[
+\E[\text{profit}]=\frac{b}{100\,000}\Bigl(1.5\cdot\frac b2-b\Bigr)=-\frac{b^2}{400\,000}<0\quad(b>0).
+\]
+Winning is always bad news about the value (the winner's curse), so the best bid is $\boxed{0}$.
 \end{proof}
 
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
@@ -6607,6 +7073,59 @@ So $\tfrac25E=\tfrac{7+8}5=3$ and
 \boxed{E=\tfrac{15}2=7.5\text{ miles}}.
 \]
 (Equivalently, by Wald: expected number of attempts is $\tfrac52$, each of mean length $\tfrac{2+5+1+3+4}5=3$, giving $\tfrac52\cdot3$.)
+\end{proof}
+
+\begin{example}[A random walk returning to the origin before leaving a square]
+An ant starts at the origin of the integer lattice and performs a simple random walk (each step to one of the $4$ neighbours with probability $\tfrac14$). What is the probability that it returns to the origin before reaching the boundary of the square with corners $(\pm2,\pm2)$?
+\end{example}
+
+\begin{proof}[Solution]
+After the first step the ant is at a neighbour of the origin, by symmetry say $(1,0)$. Let $h(p)$ be the probability of reaching the origin before the boundary when starting at $p$; $h=0$ on the boundary (any point with a coordinate $\pm2$), $h(0,0)=1$, and $h$ is harmonic elsewhere. By the lattice symmetries there are two unknowns: $a=h(1,0)$ and $c=h(1,1)$. At $(1,1)$ the neighbours are $(0,1),(1,0)$ (value $a$ each) and $(2,1),(1,2)$ (boundary, value $0$):
+\[
+c=\tfrac14(2a)=\tfrac a2 .
+\]
+At $(1,0)$ the neighbours are $(0,0)$ (value $1$), $(2,0)$ (boundary, $0$), and $(1,\pm1)$ (value $c$ each):
+\[
+a=\tfrac14(1+0+2c)=\tfrac14(1+a)\ \Longrightarrow\ a=\tfrac13 .
+\]
+Since the first step always lands on a point equivalent to $(1,0)$, the required probability is
+\[
+\boxed{\tfrac13}.
+\]
+\end{proof}
+
+\begin{example}[Expected number of rolls until two consecutive rolls differ by $2$]
+A fair die is rolled repeatedly. What is the expected number of rolls until two consecutive rolls differ by exactly $2$?
+\end{example}
+
+\begin{proof}[Solution]
+Let $E_i$ be the expected number of \emph{further} rolls given that the last roll was $i$ and the game has not ended. The reflection $i\mapsto7-i$ preserves differences, so $E_1=E_6$, $E_2=E_5$, $E_3=E_4$. Write $a=E_1,\ b=E_2,\ c=E_3$. From $i$, one more roll is made; it ends the game if it is $i\pm2$, and otherwise leads to state $j$:
+\begin{align*}
+a&=1+\tfrac16\,(2a+2b+2c-c),\quad(\text{only }3\text{ ends the game from }1)\\
+b&=1+\tfrac16\,(2a+2b+2c-c),\quad(\text{only }4\text{ ends from }2)\\
+c&=1+\tfrac16\,(2a+2b+2c-a-b).\quad(1\text{ and }5\text{ end from }3)
+\end{align*}
+The first two equations give $a=b$. Then $6a=6+4a+c$, i.e.\ $2a=6+c$, and $6c=6+2a+2c$, i.e.\ $4c=6+2a=12+c$. So $c=4$ and $a=b=5$. The first roll leaves the state uniformly distributed among $1,\dots,6$, so
+\[
+\E[\text{rolls}]=1+\frac{2\cdot5+2\cdot5+2\cdot4}6=1+\frac{28}6=\boxed{\tfrac{17}3}.
+\]
+(Exact linear-algebra solution and simulation agree.)
+\end{proof}
+
+\begin{example}[Expected number of tosses until HTH appears]
+A fair coin is tossed until the pattern HTH first appears. What is the expected number of tosses?
+\end{example}
+
+\begin{proof}[Solution]
+Track the longest suffix that is a prefix of HTH: $\varnothing$, H, or HT. With $e_s$ the expected remaining tosses:
+\[
+e_\varnothing=1+\tfrac12e_H+\tfrac12e_\varnothing,\qquad e_H=1+\tfrac12e_H+\tfrac12e_{HT},\qquad e_{HT}=1+\tfrac12\cdot0+\tfrac12e_\varnothing
+\]
+(from HT a tail gives HTT, which resets to $\varnothing$). Then $e_\varnothing=2+e_H$, $e_H=2+e_{HT}$, so
+\[
+e_\varnothing=4+e_{HT}=4+1+\tfrac12e_\varnothing\ \Longrightarrow\ e_\varnothing=\boxed{10}.
+\]
+\emph{Shortcut (Conway's rule).} The expected waiting time for a pattern is $\sum 2^k$ over all $k$ such that the first $k$ symbols equal the last $k$ symbols. For HTH this is $k=1$ (H) and $k=3$ (HTH): $2+8=10$. The same rule gives $4$ for HT and $6$ for HH.
 \end{proof}
 
 \subsection{Brownian Motion, Regression, and Option Heuristics}
