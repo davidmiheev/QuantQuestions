@@ -3834,6 +3834,82 @@ For each nonempty subset $S\subseteq\{1,2,\dots,n\}$, multiply together the reci
 \]
 \end{proof}
 
+\begin{example}[Numbers with a prescribed digit product]
+(a) What is the smallest positive integer whose digits multiply to $10000$? (b) How many $10$-digit numbers have only prime digits and digit product exactly $100000$?
+\end{example}
+
+\begin{proof}[Solution]
+Both parts reduce to prime factorizations, since $10000=2^45^4$ and $100000=2^55^5$.
+
+\textbf{(a)} A digit is at most $9$, so a digit divisible by $5$ must be $5$ itself (as $10,15,\dots$ are not digits). Hence exactly four digits equal $5$, and the remaining digits carry the factor $2^4=16$ (digit $1$ only adds length). A single digit cannot be $16$, so at least two further digits are needed, and $16=2\cdot 8=4\cdot 4$ achieves this. The minimum length is therefore $6$, and among six-digit candidates the smallest number lists the digits increasingly: $\{2,8,5,5,5,5\}$ gives $255558$ and $\{4,4,5,5,5,5\}$ gives $445555$. Fewer digits is impossible and longer numbers are larger, so
+\[
+\boxed{255558}.
+\]
+
+\textbf{(b)} Prime digits are $2,3,5,7$. A $3$ or a $7$ would put a factor in the product that does not divide $2^55^5$, so all ten digits lie in $\{2,5\}$. The product is $2^{\#2}5^{\#5}$ with $\#2+\#5=10$, forcing $\#2=\#5=5$. Choosing which five of the ten positions hold the digit $2$:
+\[
+\boxed{\binom{10}{5}=252}.
+\]
+(Both answers were confirmed by direct enumeration.)
+\end{proof}
+
+\begin{example}[Pairwise coprime subset of $\{1,\dots,30\}$ with maximum sum]
+Among all subsets of $\{1,2,\dots,30\}$ whose elements are pairwise coprime, find the largest possible sum.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Elements that are always free.} The number $1$ is coprime to everything. The primes $17,19,23,29$ have no other multiple $\le30$ (since $2\cdot17=34>30$), so they conflict with nothing else in the set and may always be included. That contributes $1+17+19+23+29=89$.
+
+\textbf{The rest is a prime-assignment problem.} Every other number is built from the primes $\{2,3,5,7,11,13\}$, and pairwise coprimality means each of these six primes divides \emph{at most one} chosen number. So we choose disjoint ``prime packages'', each realized by its largest available number:
+\[
+\{3\}\!\to\!27,\quad \{5\}\!\to\!25,\quad \{7\}\!\to\!7,\quad \{11\}\!\to\!11,\quad \{13\}\!\to\!13,
+\]
+while the prime $2$ either goes unused or is the ``owner'' of one even number $m$, which absorbs the other primes dividing it. Case by case (the other primes then take the best remaining singletons above):
+\begin{itemize}
+    \item $2$ unused: $27+25+7+11+13=83$.
+    \item $m=28=2^27$: $28+27+25+11+13=104$.
+    \item $m=26$: $26+27+25+7+11=96$.\quad $m=22$: $22+27+25+7+13=94$.
+    \item $m=16$: $16+27+25+7+11+13=99$.\quad $m=14$: $14+27+25+11+13=90$.
+    \item $m=30,24,20,\dots$ (absorbing $3$ or $5$) lose more than they gain: e.g.\ $30+7+11+13=61$, $24+25+7+11+13=80$, $20+27+7+11+13=78$.
+\end{itemize}
+The best is $m=28$, giving the set $\{11,13,25,27,28\}$ with sum $104$. Adding the free elements,
+\[
+\boxed{104+89=193},\qquad \text{set } \{1,11,13,17,19,23,25,27,28,29\}.
+\]
+(An exhaustive search over all pairwise-coprime subsets confirms $193$.)
+\end{proof}
+
+\begin{example}[Self-referential list of statements]
+There are $100$ statements, and the $n$-th says ``at most $n-1$ of these $100$ statements are true.'' How many are true?
+\end{example}
+
+\begin{proof}[Solution]
+Let $T$ be the number of true statements. Statement $n$ is true exactly when $T\le n-1$, that is, when $n\ge T+1$. So the true statements are precisely $n=T+1,\dots,100$, and there are $100-T$ of them. Consistency requires $100-T=T$, hence
+\[
+\boxed{T=50}
+\]
+(statements $51,\dots,100$ are true, $1,\dots,50$ are false). The argument shows this is the \emph{only} consistent assignment.
+\end{proof}
+
+\begin{example}[Calendar dates with eight distinct digits]
+Write dates as MMDDYYYY. Find (a) the first date after today (2026) and (b) the most recent date before today in which all eight digits are distinct.
+\end{example}
+
+\begin{proof}[Solution]
+Constraints: the month is $01,\dots,12$, so its first digit is $0$ or $1$; the day's first digit is $0,1,2$ or $3$.
+
+\textbf{(a) Forward.} A year $20ab$ uses $2$ and $0$, so the month must start with $1$ and be $10,11,12$ -- each repeats $0$, $1$ or $2$. Years $21ab$ use $2,1$: the month is $0d$, the day must then start with $3$ (digits $0,1,2$ are used) and be $30$ or $31$, repeating $0$ or $1$. Years $22ab$ repeat $2$. For $23ab$, the day must start with $0$ or $1$ (as $2,3$ are used). If $a=0$ the month would need to start with $1$ and be $10$ or $12$, impossible; if $a=1$ both the month's $0$ and the day's leading digit $\in\{0,1\}$ collide; $a=2,3$ repeat. For $a=4$, the years $2340,\dots,2344$ fail for the same reasons ($b=0,1$ as above; $b=2,3,4$ repeat a digit), so the first admissible year is $2345$. The unused digits are $\{0,1,6,7,8,9\}$; month $01$ leaves no leading digit for the day, so the month is $0d$ with $d\ge6$ and the day must start with $1$. The earliest is month $06$ and day $17$:
+\[
+\boxed{06172345}.
+\]
+
+\textbf{(b) Backward.} Years $20ab$ are impossible by the above, so go to $19ab$ (uses $1,9$). The month must be $0d$ (since $1$ is used), and then the day starts with $2$ ($0,1$ used; $3$ would need $30$ or $31$). The latest candidate years are $199x$ and $198x$ with repeats, then $1987$: the digits $\{0,2,3,4,5,6\}$ remain, the latest month is $06$, and the latest day $2e$ with $e\ne 0,2,6$ is $25$:
+\[
+\boxed{06251987}.
+\]
+(Both dates verified by scanning the calendar.)
+\end{proof}
+
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -5079,6 +5155,65 @@ Since $R>O\iff Y>n$,
 — independent of $n$.
 \end{proof}
 
+\begin{example}[Free sundae: which place in line is best?]
+Customers enter one at a time; the first customer whose birthday matches that of someone earlier in line gets a free sundae. Birthdays are independent and uniform over $365$ days. Which position maximizes your chance of winning?
+\end{example}
+
+\begin{proof}[Solution]
+You win at position $k$ if the first $k-1$ birthdays are distinct and yours matches one of them:
+\[
+p_k=\frac{365\cdot364\cdots(365-k+2)}{365^{k-1}}\cdot\frac{k-1}{365}.
+\]
+Comparing consecutive terms,
+\[
+\frac{p_{k+1}}{p_k}=\frac{365-(k-1)}{365}\cdot\frac{k}{k-1}=\frac{k(366-k)}{365(k-1)}.
+\]
+This exceeds $1$ iff $366k-k^2>365k-365$, i.e.\ iff $k^2-k-365<0$. The positive root of $k^2-k-365=0$ is $k=\tfrac{1+\sqrt{1461}}2\approx19.6$. So $p_k$ increases while $k\le19$ (the step $k\to k+1$ with $k=19$ still has ratio $>1$) and decreases from $k=20$ on:
+\[
+\boxed{k=20}.
+\]
+(Numerically $p_{20}\approx0.0323$.)
+\end{proof}
+
+\begin{example}[Probability that the top two seeds meet in the final]
+A $128$-player single-elimination tournament is drawn uniformly at random, and the higher-rated player always wins. What is the probability that the two best players meet in the final?
+\end{example}
+
+\begin{proof}[Solution]
+The two best players meet in the final iff they lie in different halves of the draw (otherwise they would meet earlier, and in any case the stronger one always survives until they meet). Place the best player; the second best occupies one of the other $127$ slots uniformly, and $64$ of them are in the opposite half:
+\[
+\boxed{\frac{64}{127}}.
+\]
+\end{proof}
+
+\begin{example}[Penalty kicks with a self-reinforcing scoring rule]
+A player takes $100$ penalties. The first is scored and the second is missed. From the third kick on, the probability of scoring equals the fraction of kicks scored so far. What is the probability of exactly $66$ goals in total?
+\end{example}
+
+\begin{proof}[Solution]
+This is a P\'olya urn: start with one ``goal'' ball and one ``miss'' ball; each kick draws a ball and returns it together with another of the same colour. After the first two kicks there are $m=98$ kicks left. For a particular sequence with $k$ goals and $m-k$ misses, the numerators of the draw probabilities are $1,2,\dots,k$ and $1,2,\dots,m-k$ (in some interleaved order) and the denominators are $2,3,\dots,m+1$, regardless of the order, so
+\[
+\mathbb P(\text{sequence})=\frac{k!\,(m-k)!}{(m+1)!}.
+\]
+There are $\binom mk$ such sequences, so the number of future goals $K$ satisfies $\mathbb P(K=k)=\binom mk\frac{k!(m-k)!}{(m+1)!}=\frac1{m+1}$: it is \emph{uniform} on $\{0,\dots,98\}$. Total goals are $1+K$, so $66$ goals means $K=65$ and
+\[
+\boxed{\frac1{99}}.
+\]
+(Exact dynamic programming over the process confirms $1/99$.)
+\end{proof}
+
+\begin{example}[A random subset contained in another random subset]
+$A$ and $B$ are independent uniformly random subsets of an $n$-element set. What is $\mathbb P(A\subseteq B)$?
+\end{example}
+
+\begin{proof}[Solution]
+A uniformly random subset includes each element independently with probability $\tfrac12$ (each of the $2^n$ subsets has probability $2^{-n}$, matching the product of $n$ fair coin flips). For each element $x$ the pair (``$x\in A$'', ``$x\in B$'') is uniform over four possibilities, and $A\subseteq B$ forbids only $x\in A,\ x\notin B$, leaving $3$ of $4$. The $n$ elements are independent, so
+\[
+\boxed{\mathbb P(A\subseteq B)=\left(\frac34\right)^n}\qquad\Bigl(n=5:\ \tfrac{243}{1024}\Bigr).
+\]
+Equivalently, there are $3^n$ pairs $(A,B)$ with $A\subseteq B$ out of $4^n$.
+\end{proof}
+
 \subsection{Random Variables, Moments, and Common Distributions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -5794,6 +5929,103 @@ S_{ABM}+S_{BCM}+S_{CAM}=S_{ABC}=1.
 \]
 \end{proof}
 
+\begin{example}[Expected chord length between two random points on a circle]
+Two points are chosen independently and uniformly on the unit circle. Find the expected length of the chord joining them.
+\end{example}
+
+\begin{proof}[Solution]
+By rotation invariance, fix the first point; the second is at a uniform angle $\theta\in[0,2\pi)$ from it. The chord subtends angle $\theta$ and has length $2\sin(\theta/2)$ for $\theta\in[0,2\pi]$ (this is nonnegative on the whole range). Hence
+\[
+\E[\text{chord}]=\frac1{2\pi}\int_0^{2\pi}2\sin\frac\theta2\,d\theta=\frac1{2\pi}\Bigl[-4\cos\frac\theta2\Bigr]_0^{2\pi}=\frac{1}{2\pi}\,(4+4)=\boxed{\frac4\pi}.
+\]
+So the answer to ``chord $=x/\pi$'' is $x=4$ ($\approx1.273$, compared with the diameter $2$).
+\end{proof}
+
+\begin{example}[Expected number of runs in a random arrangement]
+There are $50$ red and $50$ blue marbles in uniformly random order. What is the expected number of runs (maximal blocks of one colour)?
+\end{example}
+
+\begin{proof}[Solution]
+The number of runs is $1$ plus the number of adjacent positions $(i,i+1)$ with different colours. For one adjacent pair, the two marbles are a uniformly random ordered pair of distinct marbles, so
+\[
+\mathbb P(\text{different colours})=\frac{2\cdot50\cdot50}{100\cdot99}=\frac{50}{99}.
+\]
+By linearity over the $99$ adjacent pairs,
+\[
+\E[\text{runs}]=1+99\cdot\frac{50}{99}=\boxed{51}.
+\]
+(In general, $r$ red and $b$ blue marbles give $1+\dfrac{2rb}{r+b}$.)
+\end{proof}
+
+\begin{example}[Joining noodle ends: expected number of loops]
+A bowl holds $100$ noodles. Repeatedly pick two free ends uniformly at random and tie them together, until no free ends remain. What is the expected number of loops, to the nearest integer?
+\end{example}
+
+\begin{proof}[Solution]
+Let $L_n$ be the expected number of loops starting from $n$ noodles ($2n$ free ends). Pick any one free end; its partner is uniform among the other $2n-1$ ends. With probability $\tfrac1{2n-1}$ the partner is the other end of the same strand, which closes a loop and leaves $n-1$ strands. Otherwise two different strands are joined into one longer strand, again leaving $n-1$ strands and no loop. Hence
+\[
+L_n=\frac1{2n-1}+L_{n-1},\qquad L_0=0,\qquad\text{so}\qquad L_n=\sum_{k=1}^{n}\frac1{2k-1}.
+\]
+For $n=100$ this is
+\[
+\sum_{k=1}^{100}\frac1{2k-1}=H_{200}-\tfrac12H_{100}\approx3.284,\qquad\text{so the nearest integer is }\boxed{3}.
+\]
+\end{proof}
+
+\begin{example}[Uniform draws until the sum exceeds $\ln 2$]
+Draw independent $\mathrm{Uniform}(0,1)$ numbers until their running sum exceeds $\ln2$. What is the expected number of draws?
+\end{example}
+
+\begin{proof}[Solution]
+For $0\le x\le1$ let $N$ be the number of draws needed for the sum $S_n$ to exceed $x$. Then $N>n$ iff $S_n\le x$. For $x\le1$, the event $\{S_n\le x\}$ means the point $(U_1,\dots,U_n)$ lies in the simplex $\{u_i\ge0,\ \sum u_i\le x\}$, which is contained in the unit cube, so its probability is the simplex volume $x^n/n!$. Therefore
+\[
+\E[N]=\sum_{n\ge0}\mathbb P(N>n)=\sum_{n\ge0}\frac{x^n}{n!}=e^x.
+\]
+With $x=\ln2$:
+\[
+\boxed{\E[N]=2}.
+\]
+(At $x=1$ this gives the classical value $e$.)
+\end{proof}
+
+\begin{example}[Collecting every toy, or every suit]
+(a) Each cereal box contains one of $5$ equally likely toys. What is the expected number of boxes needed to get all $5$? (b) Cards are drawn with replacement from a $52$-card deck. What is the expected number of draws until all four suits have appeared?
+\end{example}
+
+\begin{proof}[Solution]
+Both are the coupon-collector problem with $m$ equally likely types ($m=5$ toys, $m=4$ suits, each with probability $1/m$, since every suit has $13$ of the $52$ cards).
+
+When $j$ types have already been collected, each new draw gives a new type with probability $(m-j)/m$, so the waiting time for the next new type is geometric with mean $m/(m-j)$. These waiting times add up:
+\[
+\E[T_m]=\sum_{j=0}^{m-1}\frac m{m-j}=m\,H_m.
+\]
+\textbf{(a)} $5H_5=5\bigl(1+\tfrac12+\tfrac13+\tfrac14+\tfrac15\bigr)=\boxed{\tfrac{137}{12}\approx11.42}$.
+
+\textbf{(b)} $4H_4=4\bigl(1+\tfrac12+\tfrac13+\tfrac14\bigr)=\boxed{\tfrac{25}3\approx8.33}$.
+\end{proof}
+
+\begin{example}[Guessing cards from a deck of three aces and three jacks]
+Three aces and three jacks are shuffled and turned over one at a time. Before each card you guess its rank and receive $\$1$ for a correct guess; you see each card after guessing. What is your optimal expected total? (The condensed statement of this problem was reconstructed in this form.)
+\end{example}
+
+\begin{proof}[Solution]
+Optimal play guesses the rank that is more numerous among the cards not yet seen: the next card is uniform among the remaining cards, so that guess is correct with probability $\max(a,b)/(a+b)$, where $a,b$ are the remaining counts of aces and jacks. The key observation is that the \emph{sequence of remaining counts does not depend on the strategy} (guesses do not affect the shuffle), so by linearity we can add up the expected success probabilities.
+
+With $r$ cards remaining ($r=6,5,\dots,1$), the remaining multiset is a uniformly random $r$-subset of the six cards, so $a\sim\mathrm{Hypergeometric}$ and the expected gain on that turn is $\E[\max(a,b)]/r$:
+\[
+\begin{array}{c|cccccc}
+r&6&5&4&3&2&1\\\hline
+\E[\max(a,b)]&3&3&\tfrac{12}5&\tfrac{21}{10}&\tfrac75&1\\
+\E[\max(a,b)]/r&\tfrac12&\tfrac35&\tfrac35&\tfrac7{10}&\tfrac7{10}&1
+\end{array}
+\]
+Summing the last row,
+\[
+\tfrac12+\tfrac35+\tfrac35+\tfrac7{10}+\tfrac7{10}+1=\boxed{\tfrac{41}{10}=\$4.10}.
+\]
+(A direct dynamic program $f(a,b)=\frac{\max(a,b)+a f(a-1,b)+b f(a,b-1)}{a+b}$ gives the same value.)
+\end{proof}
+
 \subsection{Inequalities, Modes of Convergence, and Characteristic Functions}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -6280,6 +6512,66 @@ h(k)=\frac{r^k-r^N}{1-r^N}.
 \boxed{\mathbb P(\text{ruin}\mid K)=\begin{cases}\dfrac{(q/p)^K-(q/p)^N}{1-(q/p)^N}, & p\ne q,\\[10pt] 1-\dfrac KN, & p=q=\tfrac12.\end{cases}}
 \]
 (Consistency check: as $p\to\tfrac12$ in the first formula, writing $r=1+\epsilon$ for small $\epsilon$ and Taylor-expanding recovers $1-K/N$ in the limit, matching the second case.)
+\end{proof}
+
+\begin{example}[Expected tosses until heads is followed by tails]
+A fair coin is tossed repeatedly. What is the expected number of tosses until the pattern HT first appears?
+\end{example}
+
+\begin{proof}[Solution]
+Let $E$ be the expected remaining tosses from the start and $F$ the expected remaining tosses given that the last toss was a head (and HT has not yet occurred). From the start, one toss is made: with probability $\tfrac12$ it is a head (state $F$), with probability $\tfrac12$ a tail (still at the start):
+\[
+E=1+\tfrac12F+\tfrac12E.
+\]
+From state $F$, one more toss: a tail ends the game; a head leaves us in state $F$:
+\[
+F=1+\tfrac12\cdot0+\tfrac12F\ \Longrightarrow\ F=2.
+\]
+Then $\tfrac12E=1+1=2$, so
+\[
+\boxed{E=4}.
+\]
+(Compare HH, which has expected waiting time $6$: HT cannot overlap with itself, so it arrives sooner.)
+\end{proof}
+
+\begin{example}[Which comes first, HTH or HHT?]
+A fair coin is tossed until either HTH or HHT appears. If you win when HTH appears first, what is the probability that your friend, who wins on HHT, wins?
+\end{example}
+
+\begin{proof}[Solution]
+Track the longest useful suffix. Let $p_s$ be the probability that HHT appears first, from state $s$ (the longest suffix of the tosses that is a prefix of HTH or HHT): $\varnothing$, H, HH, HT.
+
+\begin{itemize}
+    \item From $\varnothing$: H $\to$ state H; T $\to$ $\varnothing$.
+    \item From H: H $\to$ HH; T $\to$ HT.
+    \item From HH: T completes HHT (friend wins); H keeps HH (the last two tosses are HH).
+    \item From HT: H completes HTH (you win); T gives TT, i.e.\ restart at $\varnothing$.
+\end{itemize}
+The equations are
+\[
+p_\varnothing=\tfrac12p_H+\tfrac12p_\varnothing,\qquad p_H=\tfrac12p_{HH}+\tfrac12p_{HT},\qquad p_{HH}=\tfrac12\cdot1+\tfrac12p_{HH},\qquad p_{HT}=\tfrac12\cdot0+\tfrac12p_\varnothing.
+\]
+So $p_{HH}=1$, $p_\varnothing=p_H$, and $p_H=\tfrac12+\tfrac14p_\varnothing=\tfrac12+\tfrac14p_H$, giving $p_H=\tfrac23$:
+\[
+\boxed{\mathbb P(\text{HHT before HTH})=\tfrac23},
+\]
+and you win with probability $\tfrac13$. (This is a case of Penney's game: HHT beats HTH by $2:1$.)
+\end{proof}
+
+\begin{example}[Magic doors with loops of different lengths]
+You face $5$ doors. Two lead out, after $2$ and $5$ miles of walking; the other three lead back to the start after $1$, $3$, and $4$ miles. After each return the doors are reshuffled, so each attempt is a uniformly random choice among the five. What is the expected distance walked until you escape?
+\end{example}
+
+\begin{proof}[Solution]
+Let $E$ be the expected total distance. One attempt picks a door uniformly; escape (probability $\tfrac25$) costs the exit length, and a loop (probability $\tfrac35$) costs its length and then restarts:
+\[
+E=\tfrac15(2+5)+\tfrac15(1+3+4)+\tfrac35E.
+\]
+So $\tfrac25E=\tfrac{7+8}5=3$ and
+\[
+\boxed{E=\tfrac{15}2=7.5\text{ miles}}.
+\]
+(Equivalently, by Wald: expected number of attempts is $\tfrac52$, each of mean length $\tfrac{2+5+1+3+4}5=3$, giving $\tfrac52\cdot3$.)
 \end{proof}
 
 \section{Algorithm Design}
@@ -6867,6 +7159,26 @@ If every starting index is eventually processed without a rejection, $A$ is a pe
 \[
 \boxed{O(n)\text{ time},\ O(1)\text{ extra memory}}
 \]
+\end{proof}
+
+\begin{example}[Two eggs and one hundred floors]
+You have two identical eggs and a $100$-storey building. An egg breaks when dropped from floor $f$ or higher (unknown $f\in\{1,\dots,100\}$, possibly never breaking) and survives lower drops unharmed; an unbroken egg may be reused. What is the minimum worst-case number of drops that determines $f$?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Strategy.} Use the first egg to scan upward with decreasing step sizes, and the second egg linearly in the last gap. If the first drop is from floor $n$ and the first egg breaks, the second egg must test the $n-1$ floors below one by one, for a worst case of $1+(n-1)=n$ drops. To keep the worst case at $n$ drops overall, after a survival the next step is reduced by $1$ (we have used one drop, so only $n-1$ remain): drop floors
+\[
+n,\ n+(n-1),\ n+(n-1)+(n-2),\ \dots
+\]
+The first egg reaches floor $n+(n-1)+\dots+1=\tfrac{n(n+1)}2$ with at most $n$ drops, and every outcome is then resolved within $n$ drops in total. We need $\tfrac{n(n+1)}2\ge100$.
+
+\textbf{Optimality.} With $k$ drops and two eggs, let $F(k)$ be the number of floors that can be resolved. Whichever floor is tried first, if the egg breaks the remaining egg must resolve the floors below linearly, using at most $k-1$ more drops, so at most $k-1$ floors lie below it; if it survives, the remaining $k-1$ drops resolve at most $F(k-1)$ floors above. Thus $F(k)\le(k-1)+1+F(k-1)=k+F(k-1)$, i.e.\ $F(k)\le\tfrac{k(k+1)}2$, matching the strategy.
+
+Since $13\cdot14/2=91<100\le105=14\cdot15/2$, the answer is
+\[
+\boxed{14}.
+\]
+(Practical route: floors $14,27,39,50,60,69,77,84,90,95,99,100$, then linear search with the second egg.)
 \end{proof}
 
 \end{document}
