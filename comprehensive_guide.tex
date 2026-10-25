@@ -2296,6 +2296,22 @@ Let $F(x)=a_0x+\dfrac{a_1}2x^2+\dfrac{a_2}3x^3+\cdots+\dfrac{a_n}{n+1}x^{n+1}$, 
 \]
 \end{proof}
 
+\begin{example}[Related rates: the shadow of a walking person]
+A $6$ ft person walks away from a street lamp at $40$ ft/min. When the person is $10$ ft from the base of the lamp, the shadow is $15$ ft long. How fast is the shadow growing when the person is $40$ ft from the lamp?
+\end{example}
+
+\begin{proof}[Solution]
+Let the lamp height be $h$, the distance from the lamp's base to the person $x$, and the shadow length $s$. The lamp, the top of the person's head and the tip of the shadow are collinear, so by similar triangles
+\[
+\frac h{x+s}=\frac6s\quad\Longrightarrow\quad s=\frac{6x}{h-6}.
+\]
+At $x=10$, $s=15$: $15(h-6)=60$, so $h=10$ and $s=\tfrac{3}{2}x$. Differentiating in time,
+\[
+\frac{ds}{dt}=\frac32\frac{dx}{dt}=\frac32\cdot40=\boxed{60\ \text{ft/min}},
+\]
+independent of the person's position (so it is also the answer at $x=40$). If instead the speed of the shadow's \emph{tip} is wanted, it is $\tfrac{dx}{dt}+\tfrac{ds}{dt}=100$ ft/min.
+\end{proof}
+
 \subsection{Multivariable Calculus and Constrained Optimization}
 \textbf{Definitions and formulas.}
 \begin{itemize}
@@ -3908,6 +3924,25 @@ Constraints: the month is $01,\dots,12$, so its first digit is $0$ or $1$; the d
 \boxed{06251987}.
 \]
 (Both dates verified by scanning the calendar.)
+\end{proof}
+
+\begin{example}[Median of a list containing the integers and their squares]
+The list consists of $1,2,\dots,2023$ together with $1^2,2^2,\dots,2023^2$ (so $4046$ numbers, repetitions counted). What is its median?
+\end{example}
+
+\begin{proof}[Solution]
+The median is the average of the $2023$rd and $2024$th smallest entries. For an integer $x\le2023$, the number of entries $\le x$ is
+\[
+N(x)=x+\lfloor\sqrt x\rfloor,
+\]
+(the integers $1,\dots,x$ plus the squares $k^2\le x$). Since $44^2=1936\le1979<2025=45^2$,
+\[
+N(1978)=1978+44=2022,\qquad N(1979)=2023,\qquad N(1980)=2024,
+\]
+and neither $1979$ nor $1980$ is a perfect square, so each contributes exactly one entry. Thus the $2023$rd smallest entry is $1979$ and the $2024$th is $1980$:
+\[
+\boxed{\text{median}=1979.5}.
+\]
 \end{proof}
 
 \subsection{Permutations, Combinations, and Hypergeometric Counting}
@@ -6572,6 +6607,173 @@ So $\tfrac25E=\tfrac{7+8}5=3$ and
 \boxed{E=\tfrac{15}2=7.5\text{ miles}}.
 \]
 (Equivalently, by Wald: expected number of attempts is $\tfrac52$, each of mean length $\tfrac{2+5+1+3+4}5=3$, giving $\tfrac52\cdot3$.)
+\end{proof}
+
+\subsection{Brownian Motion, Regression, and Option Heuristics}
+\textbf{Definitions and formulas.}
+\begin{itemize}
+    \item Standard Brownian motion $W$: $W_0=0$, independent increments, $W_t-W_s\sim N(0,t-s)$; hence $\Cov(W_s,W_t)=\min(s,t)$.
+    \item It\^o isometry: $\Var\!\bigl(\int_0^t f_s\,dW_s\bigr)=\E\!\int_0^t f_s^2\,ds$, and an It\^o integral of a square-integrable adapted integrand is a martingale with mean $0$.
+    \item It\^o's formula: $d\,g(W_t)=g'(W_t)\,dW_t+\tfrac12g''(W_t)\,dt$. In particular $d(W_t^n)=nW_t^{n-1}dW_t+\binom n2W_t^{n-2}dt$.
+    \item Quadratic variation: $\sum_i(W_{t_{i+1}}-W_{t_i})^2\to t$ as the mesh of the partition goes to $0$.
+    \item Simple regression of $Y$ on $X$: slope $\beta_{YX}=\Cov(X,Y)/\Var X$, intercept $\E Y-\beta_{YX}\E X$, $R^2=\rho^2$, and $\beta_{YX}\beta_{XY}=\rho^2$.
+    \item Black--Scholes at the money with zero rate: $C=S\bigl(2\Phi(\tfrac{\sigma\sqrt T}2)-1\bigr)\approx S\sigma\sqrt T/\sqrt{2\pi}$ for small $\sigma\sqrt T$.
+    \item Put--call parity (no dividends): $C-P=S-K\,B$, where $B$ is the price of a zero-coupon bond paying $1$ at expiry; a straddle is a call plus a put.
+\end{itemize}
+
+\begin{example}[Variances of Brownian sums and integrals]
+Let $W$ be standard Brownian motion. Compute (a) $\Var(W_1+W_2)$; (b) $\Var\!\bigl(\int_0^tW_s\,ds\bigr)$; (c) $\Var\!\bigl(\int_0^tW_s\,dW_s\bigr)$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} Write $W_1+W_2=2W_1+(W_2-W_1)$, a sum of independent terms with variances $4\cdot1$ and $1$:
+\[
+\Var(W_1+W_2)=\boxed{5}.
+\]
+
+\textbf{(b)} Integrate by parts (or swap the order of integration): $\int_0^tW_s\,ds=\int_0^t(t-u)\,dW_u$, since $W_s=\int_0^s dW_u$ and each $dW_u$ is counted for $s\in[u,t]$. By the It\^o isometry,
+\[
+\Var=\int_0^t(t-u)^2\,du=\boxed{\frac{t^3}3}.
+\]
+(Check with covariances: $2\int_0^t\!\int_0^s\min(s,u)\,du\,ds=2\int_0^t\tfrac{s^2}2\,ds=\tfrac{t^3}3$.)
+
+\textbf{(c)} It\^o's formula for $W^2$ gives $d(W_t^2)=2W_t\,dW_t+dt$, so $\int_0^tW\,dW=\tfrac12(W_t^2-t)$. Since $W_t^2=tZ^2$ with $Z\sim N(0,1)$ and $\Var Z^2=2$,
+\[
+\Var\Bigl(\int_0^tW\,dW\Bigr)=\tfrac14\,t^2\cdot2=\boxed{\frac{t^2}2}.
+\]
+(Isometry check: $\E\int_0^tW_s^2\,ds=\int_0^ts\,ds=\tfrac{t^2}2$.)
+\end{proof}
+
+\begin{example}[Making a martingale: an exponential walk and a Brownian polynomial]
+(a) $X_1,X_2,\dots$ are i.i.d.\ and equal $+1$ or $-1$ with probability $\tfrac12$ each, and $M_0=1$, $M_n=M_{n-1}e^{X_n+c}$. Find the constant $c$ making $(M_n)$ a martingale. (b) For which $A,B$ is $W_t^{10}-\int_0^tA\,W_s^B\,ds$ a martingale?
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} The martingale condition is $\E[M_n\mid M_{n-1}]=M_{n-1}\,e^{c}\,\E[e^{X}]=M_{n-1}$, i.e.\ $e^{c}\cosh1=1$:
+\[
+\boxed{c=-\ln\cosh1=-\log\Bigl(\tfrac12e^{1}+\tfrac12e^{-1}\Bigr)}\approx-0.434.
+\]
+
+\textbf{(b)} It\^o's formula for $W^{10}$ gives
+\[
+d(W_t^{10})=10W_t^9\,dW_t+\binom{10}2W_t^8\,dt=10W_t^9\,dW_t+45\,W_t^8\,dt.
+\]
+The first term is a martingale increment, so subtracting the drift $\int_0^t45W_s^8\,ds$ leaves a martingale: $A=45$, $B=8$, and $AB=\boxed{360}$.
+\end{proof}
+
+\begin{example}[Squared increments on a dyadic partition]
+Split $[0,t]$ into $2^n$ equal intervals, let $\Delta_iW$ be the Brownian increments, and $Q_n=\sum_{i=1}^{2^n}(\Delta_iW)^2$. Compute $\E\bigl[(Q_n-t)^2\bigr]$, and evaluate it for $t=1$, $n=5$.
+\end{example}
+
+\begin{proof}[Solution]
+Let $h=t/2^n$. Then $\Delta_iW=\sqrt h\,Z_i$ with $Z_i$ i.i.d.\ $N(0,1)$, so
+\[
+Q_n-t=h\sum_{i=1}^{2^n}(Z_i^2-1),\qquad\E[Q_n]=2^nh=t.
+\]
+Thus $\E[(Q_n-t)^2]=\Var(Q_n)=h^2\cdot2^n\cdot\Var(Z^2)=h^2\,2^n\cdot2$, i.e.
+\[
+\E\bigl[(Q_n-t)^2\bigr]=\frac{2t^2}{2^n}.
+\]
+For $t=1$, $n=5$ this is $\boxed{\tfrac1{16}=0.0625}$. The bound $2t^2/2^n\to0$ is the statement that $Q_n\to t$ in $L^2$: the quadratic variation of Brownian motion is deterministic. (Simulation gives $0.062$.)
+\end{proof}
+
+\begin{example}[Regression identities: slopes, $R^2$, and duplicated data]
+(a) $\E X=6$, $\Var X=2$, $\E Y=8$, $\Var Y=10$, $\Cov(X,Y)=0$. The best linear fit is $Y=aX+b$; find $a+b$. (b) With $\Var X=10$, $\Var Y=20$ and a regression of $Y$ on $X$ with slope $1$, what is the slope of the regression of $X$ on $Y$? (c) An OLS fit has $R^2=0.56$; what is $R^2$ after every data point is duplicated? (d) Find the sum of OLS intercept and slope for the points $(-2,3),(-1,2),(0,1),(1,1),(2,\tfrac12)$.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} $a=\Cov/\Var X=0$ and $b=\E Y-a\E X=8$, so $a+b=\boxed{8}$.
+
+\textbf{(b)} Since $\beta_{YX}\beta_{XY}=\rho^2$ and $\beta_{YX}=\rho\,\sigma_Y/\sigma_X$, we get $\rho^2=\beta_{YX}^2\,\Var X/\Var Y=1\cdot\tfrac{10}{20}=\tfrac12$. Hence
+\[
+\beta_{XY}=\frac{\rho^2}{\beta_{YX}}=\boxed{\tfrac12}
+\]
+(equivalently $\Cov=\beta_{YX}\Var X=10$ and $\beta_{XY}=10/20$).
+
+\textbf{(c)} Duplicating every point leaves all sample means unchanged and doubles both the total sum of squares and the residual sum of squares, so $R^2=1-\mathrm{SSE}/\mathrm{SST}$ stays $\boxed{0.56}$.
+
+\textbf{(d)} The $x$-values are centered ($\bar x=0$), so slope $=\sum x_iy_i/\sum x_i^2=\tfrac{-6-2+0+1+1}{10}=-0.6$ and intercept $=\bar y=\tfrac{7.5}5=1.5$. Their sum is $\boxed{0.9}$.
+\end{proof}
+
+\begin{example}[Covariance of a pair with a triangular joint density]
+$(X_1,X_2)$ has joint density $c(1-x_2)$ on $0\le x_1\le x_2\le1$. Find $\Cov(X_1,X_2)$.
+\end{example}
+
+\begin{proof}[Solution]
+Integrating out $x_1$ gives the marginal of $X_2$: $c\,x_2(1-x_2)$ on $[0,1]$. This is proportional to the $\mathrm{Beta}(2,2)$ density $6x_2(1-x_2)$, so $c=6$, $X_2\sim\mathrm{Beta}(2,2)$, and, given $X_2$, the variable $X_1$ is uniform on $[0,X_2]$ (the density is constant in $x_1$). Therefore
+\[
+\E X_2=\tfrac12,\qquad\E X_1=\tfrac12\E X_2=\tfrac14,\qquad\E[X_1X_2]=\E\bigl[X_2\cdot\tfrac{X_2}2\bigr]=\tfrac12\E X_2^2=\tfrac12\cdot\tfrac{2\cdot3}{4\cdot5}=\tfrac3{20},
+\]
+using $\E X_2^2=\tfrac{\alpha(\alpha+1)}{(\alpha+\beta)(\alpha+\beta+1)}=\tfrac{6}{20}$ for $\mathrm{Beta}(2,2)$. Hence
+\[
+\Cov(X_1,X_2)=\tfrac3{20}-\tfrac14\cdot\tfrac12=\boxed{\tfrac1{40}}.
+\]
+\end{proof}
+
+\begin{example}[Covariance of an exponential variable and a conditionally lognormal one]
+$X\sim\mathrm{Exp}(1)$, and given $X=x$ the variable $Y$ is lognormal, $Y=e^{\sqrt xZ}$ with $Z\sim N(0,1)$ independent of $X$ (log-mean $0$, log-variance $x$; the condensed problem statement did not specify the log-mean, so this is the natural reading). Find $\Cov(X,Y)$.
+\end{example}
+
+\begin{proof}[Solution]
+By the lognormal mean $\E[e^{\sqrt xZ}]=e^{x/2}$, we have $\E[Y\mid X]=e^{X/2}$. The tower property gives
+\[
+\E Y=\E\bigl[e^{X/2}\bigr]=\int_0^\infty e^{x/2}e^{-x}dx=2,\qquad
+\E[XY]=\E\bigl[Xe^{X/2}\bigr]=\int_0^\infty xe^{-x/2}dx=4,
+\]
+(the second integral is $\Gamma(2)/(1/2)^2$). With $\E X=1$:
+\[
+\Cov(X,Y)=4-1\cdot2=\boxed{2}.
+\]
+Note that $\Var Y=\infty$ ($\E[Y^2\mid X]=e^{2X}$ and $\E e^{2X}=\infty$), yet the covariance is finite because $\E|XY|<\infty$; a plain Monte Carlo estimate converges very slowly here.
+\end{proof}
+
+\begin{example}[Largest possible covariance]
+$\E X_1=-3$, $\E X_2=7$, $\Var X_1=24$, $\Var X_2=6$. What is the largest possible value of $\Cov(X_1,X_2)$?
+\end{example}
+
+\begin{proof}[Solution]
+By Cauchy--Schwarz, $\Cov(X_1,X_2)\le\sigma_1\sigma_2=\sqrt{24\cdot6}=12$, with equality iff $X_1-\E X_1=\tfrac{\sigma_1}{\sigma_2}(X_2-\E X_2)=2(X_2-7)$ almost surely. For example $X_1=2X_2-17$ has mean $-3$ and variance $4\cdot6=24$, so the bound is attained:
+\[
+\boxed{12}.
+\]
+The means play no role.
+\end{proof}
+
+\begin{example}[At-the-money option shortcuts: implied volatility and a thousand-year option]
+(a) An at-the-money three-month call on a stock with $S_0=12$ costs $2.3$. Approximate its annualized implied volatility (zero interest rate). (b) An at-the-money call has maturity $1000$ years and $S_0=190$. Estimate its Black--Scholes price without a calculator.
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{(a)} For $K=S$ and $r=0$, $C=S\bigl(2\Phi(u)-1\bigr)$ with $u=\sigma\sqrt T/2$. For small $u$, $2\Phi(u)-1\approx2u\,\varphi(0)=u\sqrt{2/\pi}$, so $C\approx S\sigma\sqrt T/\sqrt{2\pi}\approx0.4\,S\sigma\sqrt T$. Hence
+\[
+\sigma\approx\frac{C\sqrt{2\pi}}{S\sqrt T}=\frac{2.3\cdot2.5066}{12\cdot0.5}\approx\boxed{0.961}.
+\]
+(Solving the exact formula $12\bigl(2\Phi(\sigma/4)-1\bigr)=2.3$ numerically gives $0.970$; the small-$\sigma\sqrt T$ approximation slightly underestimates the volatility.)
+
+\textbf{(b)} At the money, $C=S\,\Phi(d_1)-Ke^{-rT}\Phi(d_2)$. As $T\to\infty$ with $K=S$, both $\Phi(d_1)\to1$ and $\Phi(d_2)\to1$ when $r>0$ (or, with $r=0$, $C=S(2\Phi(\sigma\sqrt T/2)-1)\to S$), while $e^{-rT}\to0$. So the call is worth essentially the stock itself:
+\[
+C\approx\boxed{190}.
+\]
+(With $\sigma=0.2$, $r=0$: $2\Phi(3.16)-1=0.998$, giving $189.7$.)
+\end{proof}
+
+\begin{example}[Detecting an arbitrage among a straddle, call, put, stock, and bond]
+All options are European with strike $K=17$ and the same expiry, there are no dividends, and a zero-coupon bond paying $1$ at expiry costs $0.9$. The market prices are: stock $14$, call $1.4$, put $4.2$, straddle $5.4$. Find a riskless profit. (The condensed statement said only ``find the arbitrage''; here are the two independent violations.)
+\end{example}
+
+\begin{proof}[Solution]
+\textbf{Violation 1: straddle vs.\ call plus put.} A straddle is a call plus a put, worth $1.4+4.2=5.6$, but it trades at $5.4$. Buy the straddle, sell one call and one put:
+\[
+-5.4+1.4+4.2=+0.2\ \text{now},\qquad\text{payoff at expiry }0.
+\]
+
+\textbf{Violation 2: put--call parity.} Parity requires $C-P=S-KB=14-17\cdot0.9=-1.3$, but $C-P=1.4-4.2=-2.8$. The portfolio ``long call, short put, short stock, long $17$ bonds'' pays at expiry $(S_T-17)-S_T+17=0$ in every scenario, and costs
+\[
+1.4-4.2-14+15.3=-1.5,
+\]
+that is, it pays $1.5$ now.
+
+Combining both, the riskless profit is $0.2+1.5=\boxed{1.7}$ per unit, with zero liabilities at expiry. (Any positive multiple of either leg is also an arbitrage.)
 \end{proof}
 
 \section{Algorithm Design}
